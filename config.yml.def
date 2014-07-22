@@ -3,8 +3,8 @@
 # all the settings in this file will be loaded at Dancer's startup.
 
 #MyDomoAtHome specific configuration
-domo_path: "http://192.168.0.24:8080"
-external_url_camera : "https://212.198.72.106:446/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=epierre&pwd=tititoto"
+domo_path: "http://ip:8080"
+external_url_camera : "http://ip:port/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=&pwd="
 
 # Your application's name
 appname: "MyDomoAtHome"

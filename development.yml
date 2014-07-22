@@ -1,7 +1,0 @@
-# appdir/environments/development.yml
-log: 'debug'
-startup_info: 1
-show_errors:  1
-domo_path: "http://192.168.0.24:8080"
-appname: "Domoticz REST Gateway DEV"
-charset: "UTF-8"

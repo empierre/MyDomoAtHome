@@ -1,6 +1,6 @@
 log: 'warning'
 startup_info: 0
 show_errors:  0
-domo_path: "http://192.168.0.24:8080"
+domo_path: "http://ip:8080"
 appname: "MyDomoAtHome REST Gateway"
 charset: "UTF-8"
