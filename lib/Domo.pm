@@ -440,18 +440,20 @@ debug($system_url);
 	if ($json) {
 		# Decode the entire JSON
 		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
-		@results = @{ $decoded->{'result'} };
-		foreach my $f ( @results ) {
-				my $name=$f->{"Name"};
-				$name=~s/\s/_/;
-				$name=~s/\s/_/;
-				$name=~s/\//_/;
-				$name=~s/%/P/;
-				my $feeds={"id" => $f->{"idx"}."_cam", "name" => $name, "type" => "DevCamera", "room" => "Switches", params =>[]};
-				my $v=$f->{"ImageURL"};my $v2=config->{external_url_camera};
-				push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
-				push (@{$feeds->{'params'}}, {"key" => "remotejpegurl", "value" => "$v2"} );
-				push (@{$feed->{'devices'}}, $feeds );
+		if ($decoded->{'result'}) {
+			@results = @{ $decoded->{'result'} };
+			foreach my $f ( @results ) {
+					my $name=$f->{"Name"};
+					$name=~s/\s/_/;
+					$name=~s/\s/_/;
+					$name=~s/\//_/;
+					$name=~s/%/P/;
+					my $feeds={"id" => $f->{"idx"}."_cam", "name" => $name, "type" => "DevCamera", "room" => "Switches", params =>[]};
+					my $v=$f->{"ImageURL"};my $v2=config->{external_url_camera};
+					push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
+					push (@{$feeds->{'params'}}, {"key" => "remotejpegurl", "value" => "$v2"} );
+					push (@{$feed->{'devices'}}, $feeds );
+			}
 		}
 	}
 	#DevGenericSensor      Generic sensor (any value)
