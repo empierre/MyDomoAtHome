@@ -222,7 +222,7 @@ debug($system_url);
 				}
 				push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
 				push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
-				"GET http://192.168.0.24:8080/json.htm?type=command&param=resetsecuritystatus&idx=202&switchcmd=Normal"
+				#"GET http://192.168.0.24:8080/json.htm?type=command&param=resetsecuritystatus&idx=202&switchcmd=Normal"
 				push (@{$feed->{'devices'}}, $feeds );				
 			}
 			#DevDoor	Door / window security sensor
