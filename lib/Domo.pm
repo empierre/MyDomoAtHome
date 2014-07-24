@@ -142,6 +142,7 @@ debug($system_url);
 			elsif ($bl eq "Off") { $rbl=0;}
 			elsif ($bl eq "Open") { $rbl=1;}
 			elsif ($bl eq "Closed") { $rbl=0;}
+			elsif ($bl eq "Panic") { $rbl=1;}
 			else { $rbl=$bl;}
 			if ($f->{"SwitchType"} eq "On/Off") {
 				my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
@@ -214,9 +215,14 @@ debug($system_url);
 				#Tripped	Is the sensor tripped ? (0 = No - 1 = Tripped)	N/A				
 				my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSmoke", "room" => "Switches", params =>[]};
 				push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
-				push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
+				if ($f->{"Type"} eq "Security") {
+					push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "1" } );
+				} else {
+					push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
+				}
 				push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
 				push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
+				"GET http://192.168.0.24:8080/json.htm?type=command&param=resetsecuritystatus&idx=202&switchcmd=Normal"
 				push (@{$feed->{'devices'}}, $feeds );				
 			}
 			#DevDoor	Door / window security sensor
