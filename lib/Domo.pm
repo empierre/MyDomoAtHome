@@ -456,7 +456,18 @@ debug($system_url);
 					$name=~s/%/P/;
 					my $feeds={"id" => $f->{"idx"}."_cam", "name" => $name, "type" => "DevCamera", "room" => "Switches", params =>[]};
 					my $v=$f->{"ImageURL"};my $v2=config->{external_url_camera};
-					push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
+					if ($v =~ /^http/) {
+						push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
+					} else {
+						if ($f->{"Username"}) {
+							$v=$f->{"Username"}.":".$f->{"Password"}."@".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
+							push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
+						} else {
+							$v=$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
+							push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
+	
+						}
+					}
 					push (@{$feeds->{'params'}}, {"key" => "remotejpegurl", "value" => "$v2"} );
 					push (@{$feed->{'devices'}}, $feeds );
 			}
