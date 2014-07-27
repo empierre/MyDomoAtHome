@@ -466,15 +466,15 @@ debug($system_url);
 						push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
 					} else {
 						if ($f->{"Username"}) {
-							$v=$f->{"Username"}.":".$f->{"Password"}."@".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
+							$v="http://".$f->{"Username"}.":".$f->{"Password"}."@".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
 							push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
 						} else {
-							$v=$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
+							$v="http://".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
 							push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
 	
 						}
 					}
-					push (@{$feeds->{'params'}}, {"key" => "remotejpegurl", "value" => "$v2"} );
+					if ($v2) {push (@{$feeds->{'params'}}, {"key" => "remotejpegurl", "value" => "$v2"} );}
 					push (@{$feed->{'devices'}}, $feeds );
 			}
 		}
