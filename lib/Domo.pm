@@ -13,7 +13,7 @@ use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 #use JSON;
 
-our $VERSION = '0.5';
+our $VERSION = '0.6';
 set warnings => 0;
 
 set serializer => 'JSON'; 
@@ -161,7 +161,6 @@ debug($system_url);
 
 				push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 				push (@{$feeds->{'params'}}, {"key" => "Level", "value" => $f->{"Level"} } );
-				push (@{$feed->{'devices'}}, $feeds );
 
 				push (@{$feed->{'devices'}}, $feeds );
 			} elsif ($f->{"SwitchType"} eq "Blinds Inverted") {
@@ -335,6 +334,13 @@ debug($system_url);
 				# "Type" : "UV","UVI" : "6.0"
 				my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevUV", "room" => "Temp", params =>[]};
 				my $v=$f->{"UVI"};
+				push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v"} );
+				push (@{$feed->{'devices'}}, $feeds );
+			} elsif ($f->{"Type"} eq "Lux")  {
+				#DevLux  Lux sensor
+				#Value  Current Lux value        index
+				my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevLux", "room" => "Temp", params =>[]};
+				my ($v)=($f->{"Data"}=~/(\d+) Lux/);
 				push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v"} );
 				push (@{$feed->{'devices'}}, $feeds );
 			} elsif ($f->{"Type"} eq "Air Quality")  {
