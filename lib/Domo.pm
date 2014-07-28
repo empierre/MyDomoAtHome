@@ -174,7 +174,7 @@ debug($system_url);
 			elsif ($bl eq "Panic") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 			elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 			else { $rbl=$bl;}
-				if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Push On Button")or($f->{"SwitchType"} eq "Push Off Button")or($f->{"SwitchType"} eq "Contact")) {
+				if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Push On Button")or($f->{"SwitchType"} eq "Push Off Button")or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
 					my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 					push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 					push (@{$feed->{'devices'}}, $feeds );
