@@ -70,8 +70,16 @@ debug($url);
 	return { success => false, errormsg => "not implemented"};
 } elsif ($actionName eq 'setAck') {
 	#setAck	
-	status 'error';
-	return { success => false, errormsg => "not implemented"};
+		my $url=config->{domo_path}."/json.htm?type=command&param=resetsecuritystatus&idx=$deviceId&switchcmd=Normal";
+	debug($url);
+		my $browser = LWP::UserAgent->new;
+		my $response = $browser->get($url);
+		if ($response->is_success){ 
+			return { success => true};
+		} else {
+			status 'error';
+			return { success => false, errormsg => $response->status_line};
+		}
 } elsif ($actionName eq 'setLevel') {
 	#setLevel	0-100 => 0-16
 	#/json.htm?type=command&param=switchlight&idx=&switchcmd=Set%20Level&level=6
