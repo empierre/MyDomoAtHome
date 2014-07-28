@@ -75,26 +75,43 @@ debug($url);
 } elsif ($actionName eq 'setLevel') {
 	#setLevel	0-100 => 0-16
 	#/json.htm?type=command&param=switchlight&idx=&switchcmd=Set%20Level&level=6
-	my $valeur=ceil($actionParam*0.16);
-	my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$valeur&passcode=";
-debug($url);
-	my $browser = LWP::UserAgent->new;
-	my $response = $browser->get($url);
-	if ($response->is_success){ 
-		return { success => true};
+	my $url;
+	if (($device_tab{$deviceId}->{"Action"}==2)or($device_tab{$deviceId}->{"Action"}==3)) {
+		if ($actionParam eq "100") {
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
+		} else {
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
+		}
 	} else {
-		status 'error';
-		return { success => false, errormsg => $response->status_line};
+		if ($actionParam eq "0") {
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
+		} elsif ($actionParam eq "0") {
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
+
+		} else {
+			my $valeur=ceil($actionParam*0.16);
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$valeur&passcode=";
+		}
 	}
-} elsif ($actionName eq 'stopShutter') {
-	#stopShutter
-	status 'error';
-	return { success => false, errormsg => "not implemented"};
-} elsif ($actionName eq 'pulseShutter') {
-	#pulseShutter	up/down
-	status 'error';
-	return { success => false, errormsg => "not implemented"};
-} elsif ($actionName eq 'launchScene') {
+
+	debug($url);
+		my $browser = LWP::UserAgent->new;
+		my $response = $browser->get($url);
+		if ($response->is_success){ 
+			return { success => true};
+		} else {
+			status 'error';
+			return { success => false, errormsg => $response->status_line};
+		}
+	} elsif ($actionName eq 'stopShutter') {
+		#stopShutter
+		status 'error';
+		return { success => false, errormsg => "not implemented"};
+	} elsif ($actionName eq 'pulseShutter') {
+		#pulseShutter	up/down
+		status 'error';
+		return { success => false, errormsg => "not implemented"};
+	} elsif ($actionName eq 'launchScene') {
 	#launchScene
 	#/json.htm?type=command&param=switchscene&idx=&switchcmd=
 	my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$deviceId&switchcmd=On&passcode=";
@@ -167,7 +184,8 @@ debug($system_url);
 				} elsif ($f->{"SwitchType"} eq "Blinds Inverted") {
 					#DevShutter
 					my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
-					my $v=$f->{"Level"};
+					my $v;
+					if ($f->{"Status"} eq "Open") {$v=100;} else {$v=0;};
 					push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"0"} );
 					push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 					push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
@@ -184,7 +202,8 @@ debug($system_url);
 				} elsif ($f->{"SwitchType"} eq "Blinds") {
 					#DevShutter
 					my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
-					my $v=$f->{"Level"};
+					my $v;
+					if ($f->{"Status"} eq "Open") {$v=100;} else {$v=0;};
 					push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"0"} );
 					push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 					push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
