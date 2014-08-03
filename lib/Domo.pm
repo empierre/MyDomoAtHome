@@ -184,6 +184,7 @@ debug($system_url);
 						#Status	Current status : 1 = On / 0 = Off	N/A
 						#Level	Current dim level (0-100)	%
 						#"idx" : "3", "Name" : "Alerte",  "Level" : 0,  "SwitchType" : "Dimmer",  "Status" : "Off","LastUpdate" : "2014-03-18 22:17:18"
+						if ($rbl=~/Set Level/) {$rbl=1;}
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevDimmer", "room" => "Switches", params =>[]};
 
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
