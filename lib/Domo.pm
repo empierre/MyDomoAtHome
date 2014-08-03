@@ -81,7 +81,7 @@ debug($url);
 			return { success => false, errormsg => $response->status_line};
 		}
 } elsif ($actionName eq 'setLevel') {
-	#setLevel	0-100 => 0-15
+	#setLevel	0-100 => 0-16
 	#/json.htm?type=command&param=switchlight&idx=&switchcmd=Set%20Level&level=6
 	my $url;
 	if (($device_tab{$deviceId}->{"Action"}==2)or($device_tab{$deviceId}->{"Action"}==3)) {
@@ -97,7 +97,7 @@ debug($url);
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
 
 		} else {
-			my $valeur=ceil($actionParam*0.15);
+			my $valeur=ceil($actionParam*0.16);
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$valeur&passcode=";
 		}
 	}
