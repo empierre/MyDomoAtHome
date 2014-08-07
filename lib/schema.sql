@@ -18,3 +18,8 @@ CREATE TABLE if not exists value (
 		value_type INT not null,
 	    	value TEXT,
 	    	lastupdate    DATE);
+CREATE TABLE if not exists variable (
+		id INT,
+		type CHAR, 
+		subtype CHAR,
+		value CHAR);

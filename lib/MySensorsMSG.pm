@@ -142,22 +142,81 @@ while (my ($k, $v) = each %tInternalTypes) {
 	$tInternalLookupNumType[$v->[0]] = $k;
 }
 
+
+sub log {
+	my ($text,$level)=@_;
+    if (! $text) {
+		print STDERR "Arduino: nil-value";
+	}else{
+		print STDERR "Arduino: $text";
+	}
+}
+sub insert_variable {
+	my $stmt = qq(INSERT INTO variable (id,type,subtype,value)
+	      VALUES ($_[0], $_[1], $_[2], $[3] ));
+	my $rv = $dbh->do($stmt) or die $DBI::errstr;
+	$sth->finish();
+}
+sub update_variable {
+	my $stmt = qq(UPDATE variable set value=$_[3] where id=$_[0] and type=$_[1] and subtype=$_[2] );
+	my $rv = $dbh->do($stmt) or die $DBI::errstr;
+	$sth->finish();
+}
+
+sub variable_set {
+my ($serviceId, $name, $deviceId, $variable)=@_;
+	my $sth = $dbh->prepare( "SELECT value FROM variable WHERE id=$deviceId AND type=$serviceId AND subtype=$name");
+	$sth->execute();
+    my $row = $sth->fetch;
+	if (!$row) {
+		insert_variable($_[0],$_[1],$_[2]);
+	} else {
+		update_variable($_[0],$_[1],$_[2]); 
+	}
+}
+
+#
+# Update variable if changed
+# Return true if changed or false if no change
+#
+sub setVariableIfChanged {
+	my ($serviceId, $name, $value, $deviceId)=@_;
+    &log($serviceId .",".$name.", ".$value.", ". $deviceId);
+    my $curValue = &variable_get($serviceId, $name, $deviceId);
+    if (($value ~= $curValue) or (! $curValue)) {
+        &variable_set($serviceId, $name, $value, $deviceId);
+        return true;        
+    } else {
+        return false;        
+    }
+}
+
+sub variable_get {
+	my ($serviceId, $name, $deviceId)=@_;
+	my $sth = $dbh->prepare( "SELECT value FROM variable WHERE id=$deviceId AND type=$serviceId AND subtype=$name");
+	my($count) = $dbh->selectrow_array($sth);
+    return $count;
+}
+
 sub setVariable {
-	my ($self, $incomingData, $childId, $nodeId)=@_;
+	my ($incomingData, $childId, $nodeId)=@_;
 	if ($childId){ 
 		# Set variable reported from a child sensor.
 		my $index = $incomingData->[3];
 		my $varType = $tVarLookupNumType[$index];
 		my $var = $tVarTypes[$varType];
 		my $value = $incomingData->[4];
-		if ($var->[1]) {
+		if ($var->[2]) {
 			&log("setVariable: RadioId: "+$incomingData->[0]+" Sensor: "+$incomingData->[1]+" ChildId: "+$childId+" Type: " +$tVarLookupNumType[$index]+" reporting value: "+ $value);
-			&setVariableIfChanged($var->[1], $var->[2], $value, $childId);
+			&setVariableIfChanged($var->[2], $var->[3], $value, $childId);
 			# Handle special variables battery level and tripped which also
 			# should update other variables to os.time(). This part should be removed...
 			if (($varType eq "TRIPPED") and ($value eq "1")) {
 				my $variable = $tInternalTypes{'LAST_TRIP'};
-				&setVariableIfChanged($variable->[1], $variable->[2], time(), $childId);
+				&setVariableIfChanged($variable->[2], $variable->[3], time(), $childId);
+			} else {
+			 	my $variable = $tInternalTypes{'LAST_UPDATE'};
+				&setVariableIfChanged($variable->[2], $variable->[3], time(),$childId);
 			}
 		}
 	}
