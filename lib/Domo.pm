@@ -392,7 +392,7 @@ debug($system_url);
 						my ($total)= ($f->{"Counter"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$usage, "unit" => "m3"} );
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "m3"} );
 						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>$total, "unit" => "m3"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchTypeVal"} eq "2") {
