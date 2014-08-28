@@ -279,7 +279,7 @@ debug($system_url);
 						my ($total)= ($f->{"Data"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$usage, "unit" => "W"} );
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W"} );
 						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>$total, "unit" => "kWh"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Usage") {
@@ -289,7 +289,7 @@ debug($system_url);
 						my ($total)= ($f->{"Data"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$total, "unit" => "W"} );
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$total", "unit" => "W"} );
 					} elsif ($f->{"Type"} eq "Current/Energy") {
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
