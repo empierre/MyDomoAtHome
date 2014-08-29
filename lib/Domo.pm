@@ -126,10 +126,19 @@ debug($url);
 			return { success => false, errormsg => $response->status_line};
 		}
 	} elsif ($actionName eq 'stopShutter') {
-		#stopShutter
-		status 'error';
-		return { success => false, errormsg => "not implemented"};
-	} elsif ($actionName eq 'pulseShutter') {
+		#stopShutter (Venetian store)
+		my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Stop&level=0&passcode=";
+debug($url);
+		my $browser = LWP::UserAgent->new;
+		my $response = $browser->get($url);
+		if ($response->is_success){ 
+			return { success => true};
+		} else {
+			status 'error';
+			return { success => false, errormsg => $response->status_line};
+		}
+		return { success => true};
+		} elsif ($actionName eq 'pulseShutter') {
 		#pulseShutter	up/down
 		status 'error';
 		return { success => false, errormsg => "not implemented"};
@@ -226,7 +235,7 @@ debug($system_url);
 						if ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=6;}
 						elsif ($bl eq "Closed") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=6;};
 
-						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"1"} );
+						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
 
@@ -240,6 +249,18 @@ debug($system_url);
 						if ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=6;}
 						elsif ($bl eq "Closed") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=6;};
 						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"0"} );
+						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
+						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
+						push (@{$feed->{'devices'}}, $feeds );
+					} elsif (($f->{"SwitchType"} eq "Venetian Blinds EU")||($f->{"SwitchType"} eq "Venetian Blinds US")) {
+						#DevShutter
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
+						my $v;
+						if ($f->{"Status"} eq "Open") {$v=100;} else {$v=0;};
+						my $bl=$f->{"Status"};my $rbl;
+						if ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=6;}
+						elsif ($bl eq "Closed") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=6;};
+						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"1"} );
 						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
 						push (@{$feed->{'devices'}}, $feeds );
