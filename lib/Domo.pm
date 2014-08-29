@@ -13,7 +13,7 @@ use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 #use JSON;
 
-our $VERSION = '0.7';
+our $VERSION = '0.8';
 set warnings => 0;
 my %device_tab;
 
@@ -90,8 +90,22 @@ debug($url);
 		} else {
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
 		}
+	} elsif (($device_tab{$deviceId}->{"Action"}==5)) {
+		#Blinds inverted
+		if ($actionParam eq "100") {
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=0&passcode=";
+		} else {
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
+		}
+	} elsif (($device_tab{$deviceId}->{"Action"}==6)) {
+		#Blinds -> On for Closed, Off for Open 
+		if ($actionParam eq "100") {
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=0&passcode=";
+		} else {
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=0&passcode=";
+		}
 	} else {
-		if ($actionParam eq "0") {
+		if ($actionParam eq "1") {
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
 		} elsif ($actionParam eq "0") {
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
@@ -196,6 +210,9 @@ debug($system_url);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
 						my $v;
 						if ($f->{"Status"} eq "Open") {$v=100;} else {$v=0;};
+						my $bl=$f->{"Status"};my $rbl;
+						if ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=5;}
+						elsif ($bl eq "Closed") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=5;};
 						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
@@ -203,7 +220,12 @@ debug($system_url);
 					} elsif ($f->{"SwitchType"} eq "Blinds Percentage") {
 						#DevShutter
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
-						my $v=$f->{"Level"};
+						my $v;
+						if ($f->{"Status"} eq "Open") {$v=100;} else {$v=$f->{"Level"}};
+						my $bl=$f->{"Status"};my $rbl;
+						if ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=6;}
+						elsif ($bl eq "Closed") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=6;};
+
 						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"1"} );
 						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
@@ -214,6 +236,9 @@ debug($system_url);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
 						my $v;
 						if ($f->{"Status"} eq "Open") {$v=100;} else {$v=0;};
+						my $bl=$f->{"Status"};my $rbl;
+						if ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=6;}
+						elsif ($bl eq "Closed") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=6;};
 						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
