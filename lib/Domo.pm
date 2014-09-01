@@ -309,11 +309,12 @@ debug($system_url);
 						#Watts  Current consumption     Watt
 						#ConsoTotal     Current total consumption       kWh
 						#"Type" : "Energy", "SubType" : "CM180", "Usage" : "408 Watt", "Data" : "187.054 kWh"
-						my ($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
+						if ($f->{"Usage"}) {
+							my ($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$usage, "unit" => "W"} );}
 						my ($total)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
-						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						if ($usage) {push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$usage, "unit" => "W"} );}
 						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>$total, "unit" => "kWh"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Energy") {
@@ -321,11 +322,12 @@ debug($system_url);
 						#Watts  Current consumption     Watt
 						#ConsoTotal     Current total consumption       kWh
 						#"Type" : "Energy", "SubType" : "CM180", "Usage" : "408 Watt", "Data" : "187.054 kWh"
-						my ($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
+						if ($f->{"Usage"}) {
+							my ($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$usage, "unit" => "W"} );}
 						my ($total)= ($f->{"Data"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
-						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$usage, "unit" => "W"} );
 						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>$total, "unit" => "kWh"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Usage") {
