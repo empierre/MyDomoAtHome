@@ -310,12 +310,13 @@ debug($system_url);
 						#ConsoTotal     Current total consumption       kWh
 						#"Type" : "Energy", "SubType" : "CM180", "Usage" : "408 Watt", "Data" : "187.054 kWh"
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						if ($f->{"Usage"}) {
+						# if ($f->{"Usage"}) {
 							my ($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$usage, "unit" => "W"} );}
+							if (!$usage) {$usage="0";}
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W"} );#}
 						my ($total)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
-						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>$total, "unit" => "kWh"} );
+						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "kWh"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Energy") {
 						#DevElectricity Electricity consumption sensor
@@ -323,12 +324,14 @@ debug($system_url);
 						#ConsoTotal     Current total consumption       kWh
 						#"Type" : "Energy", "SubType" : "CM180", "Usage" : "408 Watt", "Data" : "187.054 kWh"
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						if ($f->{"Usage"}) {
-							my ($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$usage, "unit" => "W"} );}
+						#if ($f->{"Usage"}) {
+							my $usage;
+							($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
+							if (!$usage) {$usage="0";}
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W"} );#}
 						my ($total)= ($f->{"Data"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
-						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>$total, "unit" => "kWh"} );
+						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "kWh"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Usage") {
 						#DevElectricity Electricity consumption sensor
@@ -337,7 +340,7 @@ debug($system_url);
 						my ($total)= ($f->{"Data"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$total, "unit" => "W"} );
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$total", "unit" => "W"} );
 					} elsif ($f->{"Type"} eq "Current/Energy") {
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
@@ -349,17 +352,17 @@ debug($system_url);
 						my ($l3)= ($L3 =~ /(\d+) Watt/);
 						if ($l1) {	
 							my $feeds={"id" => $f->{"idx"}."_L1", "name" => $name." L1", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$l1, "unit" => "W"} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l1", "unit" => "W"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 						if ($l2) {	
 							my $feeds={"id" => $f->{"idx"}."_L2", "name" => $name." L2", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$l2, "unit" => "W"} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l2", "unit" => "W"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 						if ($l3) {	
 							my $feeds={"id" => $f->{"idx"}."_L3", "name" => $name." L3", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>$l3, "unit" => "W"} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l3", "unit" => "W"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 					}  elsif (($f->{"Type"} =~ "Temp")||($f->{"Type"} =~ "Humidity"))  {
