@@ -304,7 +304,7 @@ debug($system_url);
 					#DevFlood	Flood security sensor
 					#DevCO2Alert	CO2 Alert sensor	
 				} else {
-					if ($f->{"Type"} eq "P1 Smart Meter") {
+					if (($f->{"Type"} eq "P1 Smart Meter") and ($f->{"SubType"} eq "Energy")) {
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
 						#ConsoTotal     Current total consumption       kWh
@@ -316,7 +316,21 @@ debug($system_url);
 							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W"} );#}
 						my ($total)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
-						 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "kWh"} );
+						push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "kWh"} );
+						push (@{$feed->{'devices'}}, $feeds );
+					} elsif (($f->{"Type"} eq "P1 Smart Meter") and ($f->{"SubType"} eq "Gas"))  {
+						# (Dutch)P1 Gas Meter
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
+						my ($usage)= ($f->{"CounterToday"} =~ /(\d+) m3/);
+						my ($total)= ($f->{"Counter"} =~ /([0-9]+(?:\.[0-9]+)?)/);
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "m3"} );
+						push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "m3"} );
+						push (@{$feed->{'devices'}}, $feeds );
+						
+						# Generic Sensor showing today's value
+						my ($usage_today)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
+						$feeds={"id" => $f->{"idx"}."_today", "name" => $name."_today", "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
+						push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$usage_today", "unit"=> "m3"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Energy") {
 						#DevElectricity Electricity consumption sensor
