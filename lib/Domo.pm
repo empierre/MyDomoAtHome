@@ -341,6 +341,7 @@ debug($system_url);
 						$total=ceil($total);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
 						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$total", "unit" => "W"} );
+						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Current/Energy") {
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
