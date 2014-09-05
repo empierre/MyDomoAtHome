@@ -168,7 +168,7 @@ debug($url);
 
 get '/devices' => sub {
 	my $feed={ "devices" => []};
-	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&order=Name";
+	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&displayhidden=1&order=Name";
 	my $decoded;
 	my @results;
 debug($system_url);
