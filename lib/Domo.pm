@@ -307,7 +307,7 @@ debug($system_url);
 					#DevFlood	Flood security sensor
 					#DevCO2Alert	CO2 Alert sensor	
 				} else {
-					if (($f->{"Type"} eq "P1 Smart Meter") and ($f->{"SubType"} eq "Energy")) {
+					if ((($f->{"Type"} eq "P1 Smart Meter") and ($f->{"SubType"} eq "Energy")) or (($f->{"Type"} eq "YouLess Meter") and ($f->{"SubType"} eq "YouLess counter"))) {
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
 						#ConsoTotal     Current total consumption       kWh
