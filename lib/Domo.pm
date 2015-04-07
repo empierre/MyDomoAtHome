@@ -166,7 +166,7 @@ debug($url);
 
 get '/devices' => sub {
 	my $feed={ "devices" => []};
-	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&displayhidden=1&order=Name";
+	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&order=Name";
 	my $decoded;
 	my @results;
 debug($system_url);
@@ -196,12 +196,18 @@ debug($system_url);
 				elsif ($bl eq "Panic") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 				elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 				else { $rbl=$bl;}
-					if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Push On Button")or($f->{"SwitchType"} eq "Push Off Button")or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
+					if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 					
-						if ($f->{"SwitchType"} eq "Push Off Button") {$rbl="0"};
-						if ($f->{"SwitchType"} eq "Push On Button") {$rbl="1"};
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
+						push (@{$feed->{'devices'}}, $feeds );
+					} elsif (($f->{"SwitchType"} eq "Push On Button")or($f->{"SwitchType"} eq "Push Off Button")) {
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
+					
+						if ($f->{"SwitchType"} eq "Push Off Button") {$rbl="0"};
+						if ($f->{"SwitchType"} eq "Push On Button") {$rbl="100"};
+						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"1"} );
+						push (@{$feeds->{'params'}}, {"key" => "Level", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif (($f->{"SwitchType"} eq "Dimmer")||($f->{"SwitchType"} eq "Doorbell")) {
 						#DevDimmer	Dimmable light
