@@ -311,7 +311,7 @@ debug($system_url);
 					#DevFlood	Flood security sensor
 					#DevCO2Alert	CO2 Alert sensor	
 				} else {
-					if ((($f->{"Type"} eq "P1 Smart Meter") and ($f->{"SubType"} eq "Energy")) or (($f->{"Type"} eq "YouLess Meter") and ($f->{"SubType"} eq "YouLess counter"))) {
+					if ((($f->{"Type"} eq "P1 Smart Meter") and ($f->{"SubType"} eq "Energy")) or (($f->{"Type"} eq "YouLess Meter") and ($f->{"SubType"} eq "YouLess counter")) or (($f->{"Type"} eq "RFXMeter") and ($f->{"SubType"} eq "RFXMeter counter"))) {
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
 						#ConsoTotal     Current total consumption       kWh
@@ -319,8 +319,9 @@ debug($system_url);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
 						# if ($f->{"Usage"}) {
 							my ($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
-							if (!$usage) {$usage="0";}
+							if (!$usage) {$usage="0";} else {
 							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W"} );#}
+	}
 						my ($total)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
 						push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "kWh"} );
