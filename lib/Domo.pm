@@ -317,11 +317,14 @@ debug($system_url);
 						#ConsoTotal     Current total consumption       kWh
 						#"Type" : "Energy", "SubType" : "CM180", "Usage" : "408 Watt", "Data" : "187.054 kWh"
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-						# if ($f->{"Usage"}) {
-							my ($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
-							if (!$usage) {$usage="0";} else {
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W"} );#}
-	}
+						my $usage;
+						if ($f->{"Usage"}) {
+							($usage)= ($f->{"Usage"} =~ /(\d+) Watt/);
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W"} );
+						} elsif ($f->{"Counter"}) {
+							($usage)= ($f->{"Counter"} =~ /(\d+) Watt/);
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W"} );
+						}
 						my ($total)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 						$total=ceil($total);
 						push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "kWh"} );
