@@ -140,6 +140,20 @@ debug($url);
 		#pulseShutter	up/down
 		status 'error';
 		return { success => false, errormsg => "not implemented"};
+#	} elsif ($actionName eq 'setSetPoint') {
+#		#DevThermostat
+#		my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Stop&level=0&passcode=";
+#		my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
+#debug($url);
+#		my $browser = LWP::UserAgent->new;
+#		my $response = $browser->get($url);
+#		if ($response->is_success){ 
+#			return { success => true};
+#		} else {
+#			status 'error';
+#			return { success => false, errormsg => $response->status_line};
+#		}
+#		return { success => true};
 	} elsif ($actionName eq 'launchScene') {
 	#launchScene
 	#/json.htm?type=command&param=switchscene&idx=&switchcmd=
@@ -189,13 +203,14 @@ debug($system_url);
 					#print $f->{"idx"} . " " . $f->{"Name"} . " " . $f->{"Status"} . $f->{"LastUpdate"}."\n";
 					#$name.="_E";
 					my $bl=$f->{"Status"};my $rbl;
-				if ($bl eq "On") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=1;}
-				elsif ($bl eq "Off") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=1;}
-				elsif ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=2;}
-				elsif ($bl eq "Closed") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=2;}
-				elsif ($bl eq "Panic") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=3;}
-				elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
-				else { $rbl=$bl;}
+					if ($bl eq "On") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=1;}
+					elsif ($bl eq "Off") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=1;}
+					elsif ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=2;}
+					elsif ($bl eq "Closed") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=2;}
+					elsif ($bl eq "Panic") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=3;}
+					elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
+					else { $rbl=$bl;}
+
 					if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")or($f->{"SwitchType"} eq "Unknown")) {
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 					
@@ -523,6 +538,11 @@ debug($system_url);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "km"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
+					} elsif ($f->{"SubType"} eq "SetPoint") {
+							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
+							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
+							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v", "unit" => "°C"} );
+							push (@{$feed->{'devices'}}, $feeds );
 					}
 				}
 			}; 
