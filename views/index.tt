@@ -54,8 +54,8 @@
 
       <div id="content">
         <div id="header">
-          <h1>Perl is dancing</h1>
-          <h2>You&rsquo;ve joined the dance floor!</h2>
+          <h1>MyDomoAtHome</h1>
+          <h2>Your ISS Gateway to Domoticz!</h2>
         </div>
 
         <div id="getting-started">
@@ -111,36 +111,47 @@
 
           <ol>          
             <li>
-              <h2>Tune your application</h2>
-
+              <h2>A quick introduction</h2>
               <p>
-              Your application is configured via a global configuration file,
-              <tt>config.yml</tt> and an "environment" configuration file,
-              <tt>environments/development.yml</tt>. Edit those files if you
-              want to change the settings of your application.
+		This is a three parties installation:</p>
+		<ul>
+			<li>ImperiHome Application on Android</li>
+			<li>MyDomoAtHome Gateway</li>
+			<li>Domoticz</li>
+		</ul>
+		<p>So a request from the first will go to the second that will go to the third, and the answers will take the opposite path. <br/><br/>
+		   Always remember that you will need to tell the Gateway (this program) how to access your Domoticz, and if there is a password on it, please define it as on the local network 127.0.0.1
+              </p>
+            </li>
+            <li>
+              <h2>How to test your first installation</h2>
+              <p>
+		Verify you can see your domoticz devices : http://domoticz_ip:8080/json.htm?type=devices <br/><br/>
+		Then check this page so the gateway process is running:	http://domo_gw:5001/ <br/><br/>
+		And finally check that the devices you have in Domoticz are well found by the Gateway:	http://domo_gw:5001/devices <br/><br/>
+		If that last list is empty, then you must use the 127.0.0.1 (if on the same machine) for the gateway configuration to access Domoticz and check again.
+
+              </p>
+            </li>
+            <li>
+              <h2>Getting support</h2>
+              <p>
+		Please submit all support request on <a href="http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713">Domoticz Forum</a>
+              </p>
+            </li>
+            <li>
+              <h2>Looking for Enhancements</h2>
+              <p>
+		Please submit all enhancements into <a href="https://github.com/empierre/MyDomoAtHome/labels/enhancement">GitHub Enhancement</a>
+              </p>
+            </li>
+            <li>
+              <h2>Submitting a bug</h2>
+              <p>
+		Please submit all bugs into <a href="https://github.com/empierre/MyDomoAtHome/issues">GitHub Issues</a>
               </p>
             </li>
 
-            <li>
-              <h2>Add your own routes</h2>
-
-              <p>
-              The default route that displays this page can be removed,
-              it's just here to help you get started. The template used to
-              generate this content is located in 
-              <code>views/index.tt</code>.
-              You can add some routes to <tt>lib/Domo.pm</tt>. 
-              </p>
-            </li>
-
-            <li>
-                <h2>Enjoy web development again</h2>
-
-                <p>
-                Once you've made your changes, restart your standalone server
-                (bin/app.pl) and you're ready to test your web application.
-                </p>
-            </li>
 
           </ol>
         </div>
