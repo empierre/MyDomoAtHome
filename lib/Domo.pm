@@ -181,9 +181,9 @@ debug($system_url);
 			foreach my $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 					my $name=$f->{"Name"};
-					$name=~s/\s/_/;
-					$name=~s/\s/_/;
-					$name=~s/\//_/;
+					#$name=~s/\s/_/;
+					#$name=~s/\s/_/;
+					#$name=~s/\//_/;
 					$name=~s/%/P/;
 				 if ($f->{"SwitchType"}) {			
 					#print $f->{"idx"} . " " . $f->{"Name"} . " " . $f->{"Status"} . $f->{"LastUpdate"}."\n";
