@@ -17,26 +17,12 @@
             <h3>Join the community</h3>
             <ul class="links">
 
-              <li><a href="http://perldancer.org/">PerlDancer</a></li>
-              <li><a href="http://twitter.com/PerlDancer/">Official Twitter</a></li>
-              <li><a href="http://github.com/sukria/Dancer/">GitHub Community</a></li>
+              <li><a href="http://www.domoticz.com/wiki/ImperiHome">Installation Wiki</a></li>
+              <li><a href="http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713">Support on the forum</a></li>
+              <li><a href="http://github.com/empierre/MyDomoAtHome">GitHub Community</a></li>
             </ul>
           </li>
           
-          <li>
-            <h3>Browse the documentation</h3>
-
-            <ul class="links">
-              <li><a
-              href="http://search.cpan.org/dist/Dancer/lib/Dancer/Introduction.pod">Introduction</a></li>
-              <li><a href="http://search.cpan.org/dist/Dancer/lib/Dancer/Cookbook.pod">Cookbook</a></li>
-              <li><a href="http://search.cpan.org/dist/Dancer/lib/Dancer/Deployment.pod">Deployment Guide</a></li>
-              <li><a
-              href="http://search.cpan.org/dist/Dancer/lib/Dancer/Tutorial.pod"
-              title="a tutorial to build a small blog engine with Dancer">Tutorial</a></li>
-            </ul>
-          </li>
-
           <li>
             <h3>Your application's environment</h3>
 
@@ -126,7 +112,7 @@
             <li>
               <h2>How to test your first installation</h2>
               <p>
-		Verify you can see your domoticz devices : http://domoticz_ip:8080/json.htm?type=devices <br/><br/>
+		Verify you can see your domoticz devices : <% settings.domo_pat %h>/json.htm?type=devices <br/><br/>
 		Then check this page so the gateway process is running:	http://domo_gw:5001/ <br/><br/>
 		And finally check that the devices you have in Domoticz are well found by the Gateway:	http://domo_gw:5001/devices <br/><br/>
 		If that last list is empty, then you must use the 127.0.0.1 (if on the same machine) for the gateway configuration to access Domoticz and check again.
@@ -151,7 +137,11 @@
 		Please submit all bugs into <a href="https://github.com/empierre/MyDomoAtHome/issues">GitHub Issues</a>
               </p>
             </li>
-
+            <h2>Securing both access to MyDomoAtHome and Domoticz</h2>
+              <p>
+		Please see the <a href="http://www.domoticz.com/wiki/Secure_Remote_Access">Secure Remote Access Wiki</a>
+	      </p>
+            </li>
 
           </ol>
         </div>
