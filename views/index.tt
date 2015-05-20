@@ -43,6 +43,7 @@
           <h1>MyDomoAtHome</h1>
           <h2>Your ISS Gateway to Domoticz!</h2>
         </div>
+	<img src="images/logo-MyDomoAtHome-w.png" style="width:70px;position:absolute;top:20px;"/>
 
         <div id="getting-started">
           <h1>Getting started</h1>
@@ -106,13 +107,15 @@
 			<li>Domoticz</li>
 		</ul>
 		<p>So a request from the first will go to the second that will go to the third, and the answers will take the opposite path. <br/><br/>
+
+		<img src="images/imperihome.png" style="width:450px;position:relative;"/>
 		   Always remember that you will need to tell the Gateway (this program) how to access your Domoticz, and if there is a password on it, please define it as on the local network 127.0.0.1
               </p>
             </li>
             <li>
               <h2>How to test your first installation</h2>
               <p>
-		Verify you can see your domoticz devices : <% settings.domo_pat %h>/json.htm?type=devices <br/><br/>
+		Verify you can see your domoticz devices : <% settings.domo_path %>/json.htm?type=devices <br/><br/>
 		Then check this page so the gateway process is running:	http://domo_gw:5001/ <br/><br/>
 		And finally check that the devices you have in Domoticz are well found by the Gateway:	http://domo_gw:5001/devices <br/><br/>
 		If that last list is empty, then you must use the 127.0.0.1 (if on the same machine) for the gateway configuration to access Domoticz and check again.
@@ -137,6 +140,7 @@
 		Please submit all bugs into <a href="https://github.com/empierre/MyDomoAtHome/issues">GitHub Issues</a>
               </p>
             </li>
+	    <li>
             <h2>Securing both access to MyDomoAtHome and Domoticz</h2>
               <p>
 		Please see the <a href="http://www.domoticz.com/wiki/Secure_Remote_Access">Secure Remote Access Wiki</a>
