@@ -509,3 +509,5 @@ use constant {
 	sTypeFHT8V => 0x1
 	sTypeFHT80 => 0x2
 };
+
+true;
