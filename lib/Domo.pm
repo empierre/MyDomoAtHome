@@ -474,41 +474,42 @@ debug($system_url);
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 					}  elsif (($f->{"Type"} =~ "Temp")||($f->{"Type"} =~ "Humidity"))  {
-						my @type=split(/ \+ /,$f->{"Type"});
-						my $cnt;
-						foreach my $curs (@type) {
-							$cnt++;
-							if ($curs eq "Temp") {
-								#DevTemperature Temperature sensor
-								#Value  Current temperature     °C
-								#"Temp" : 21.50,  "Type" : "Temp + Humidity" / Type" : "Temp",
-								my $feeds;
-								if ($cnt==1) {
-									$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}};
-								} else {
-									$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}."_".$cnt};
-								}
-								my $v=$f->{"Temp"};
-								push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
-								push (@{$feed->{'devices'}}, $feeds );
-							} elsif ($curs eq "Humidity") {
-								#DevHygrometry  Hygro sensor
-								#Value  Current hygro value     %
-								# "Humidity" : 52  "Type" : "Temp + Humidity" / Type" : "Humidity",
+						if (($f->{"Type"} =~ "Temp")&&($f->{"Type"} =~ "Humidity")) {
+							my $feeds;
+							$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
 
-								my $feeds={"id" => $f->{"idx"}."_".$cnt, "name" => $name, "type" => "DevHygrometry", "room" => "Temp", params =>[]};
-								my $v=$f->{"Humidity"};
-								push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "%", "graphable" => "true" });
+							my $v=$f->{"Temp"};
+							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
+							my $vh=$f->{"Humidity"};
+							push (@{$feeds->{'params'}}, {"key" => "hygro", "value" => "$vh", "unit" => "%", "graphable" => "true" });
+							push (@{$feed->{'devices'}}, $feeds );
+						} elsif ($f->{"Type"} eq "Temp") {
+							#DevTemperature Temperature sensor
+							#Value  Current temperature     °C
+							#"Temp" : 21.50,  "Type" : "Temp + Humidity" / Type" : "Temp",
+							my $feeds;
+							$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}};
+							my $v=$f->{"Temp"};
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
+							push (@{$feed->{'devices'}}, $feeds );
+						} elsif ($f->{"Type"} eq "Humidity") {
+							#DevHygrometry  Hygro sensor
+							#Value  Current hygro value     %
+							# "Humidity" : 52  "Type" : "Temp + Humidity" / Type" : "Humidity",
+
+							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevHygrometry", "room" => "Temp", params =>[]};
+							my $v=$f->{"Humidity"};
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "%", "graphable" => "true" });
+							push (@{$feed->{'devices'}}, $feeds );
+						}
+					 	if ($f->{"Type"} =~ "Baro") {
+							#DevPressure    Pressure sensor
+							#Value  Current pressure        mbar
+							#"Barometer" : 1022, "Type" : "Temp + Humidity + Baro"
+							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
+							my $v=$f->{"Barometer"};
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "mbar"} );
 								push (@{$feed->{'devices'}}, $feeds );
-							} elsif ($curs eq "Baro") {
-								#DevPressure    Pressure sensor
-								#Value  Current pressure        mbar
-								#"Barometer" : 1022, "Type" : "Temp + Humidity + Baro"
-								my $feeds={"id" => $f->{"idx"}."_".$cnt, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
-								my $v=$f->{"Barometer"};
-								push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "mbar"} );
-								push (@{$feed->{'devices'}}, $feeds );
-							}
 						}
 					}  elsif ($f->{"Type"} eq "Rain")  {
 						#DevRain        Rain sensor
