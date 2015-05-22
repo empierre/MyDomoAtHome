@@ -52,6 +52,8 @@ get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
 	my $type=lc(&getDeviceType($deviceId));
 	print "TYPE:$type\n";
 	if (($type eq "lux")||($type eq "energy")) {$type="counter";}
+	if (($paramKey eq "hygro")) {$type="temp";}
+	if (($paramKey eq "temp")) {$type="temp";}
 
 	my $feed={ "values" => []};
 	my $url=config->{domo_path}."/json.htm?type=graph&sensor=$type&idx=$deviceId&range=day";
@@ -69,8 +71,13 @@ debug($url);
 			foreach my $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"d"},"%Y-%m-%d %H:%M:%SS");
 					#print $dt->epoch." $value\n";
-					if ($f->{"te"}) {
+					if (($paramKey eq "temp")&&($f->{"te"})) {
 							my $value=$f->{"te"};
+							my $date=$dt->epoch*1000;
+							my $feeds={"date" => $date, "value" => $value};
+							push (@{$feed->{'values'}}, $feeds );
+					} elsif (($paramKey eq "hygro")&&($f->{"hu"})) {
+							my $value=$f->{"hu"};
 							my $date=$dt->epoch*1000;
 							my $feeds={"date" => $date, "value" => $value};
 							push (@{$feed->{'values'}}, $feeds );
