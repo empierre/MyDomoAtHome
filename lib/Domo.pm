@@ -620,7 +620,7 @@ debug($system_url);
 					} elsif ($f->{"SubType"} eq "SetPoint") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v", "unit" => "°C"} );
+							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v"} );
 							push (@{$feed->{'devices'}}, $feeds );
 					}
 				}
