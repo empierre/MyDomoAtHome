@@ -286,7 +286,7 @@ debug($system_url);
 					elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 					else { $rbl=$bl;}
 
-					if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")or($f->{"SwitchType"} eq "Unknown")) {
+					if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
@@ -321,6 +321,16 @@ debug($system_url);
 						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
+						push (@{$feed->{'devices'}}, $feeds );
+					} elsif (($f->{"SwitchType"} eq "Unknown")||($f->{"SwitchTypeVal"} eq "16")) {
+						#DevShutter
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
+						my $v=$f->{"Level"};
+
+						push (@{$feeds->{'params'}}, {"key" => "stopable", "value" =>"0"} );
+						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
+						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
+
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Blinds Percentage") {
 						#DevShutter
