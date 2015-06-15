@@ -40,7 +40,7 @@ get '/rooms' => sub {
 };
 
 get '/system' => sub {
- return {"id"=> "MyDomoAtHome","apiversion"=> 1};
+ return {"id"=> "MyDomoAtHome Dev","apiversion"=> 1};
 };
 
 get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
@@ -215,20 +215,19 @@ debug($url);
 		#pulseShutter	up/down
 		status 'error';
 		return { success => false, errormsg => "not implemented"};
-#	} elsif ($actionName eq 'setSetPoint') {
-#		#DevThermostat
-#		my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Stop&level=0&passcode=";
-#		my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
-#debug($url);
-#		my $browser = LWP::UserAgent->new;
-#		my $response = $browser->get($url);
-#		if ($response->is_success){ 
-#			return { success => true};
-#		} else {
-#			status 'error';
-#			return { success => false, errormsg => $response->status_line};
-#		}
-#		return { success => true};
+	} elsif ($actionName eq 'setSetPoint') {
+		#DevThermostat
+		my $url=config->{domo_path}."/json.htm?type=setused&idx=$deviceId&used=true&setpoint=$actionParam";
+debug($url);
+		my $browser = LWP::UserAgent->new;
+		my $response = $browser->get($url);
+		if ($response->is_success){ 
+			return { success => true};
+		} else {
+			status 'error';
+			return { success => false, errormsg => $response->status_line};
+		}
+		return { success => true};
 	} elsif ($actionName eq 'launchScene') {
 	#launchScene
 	#/json.htm?type=command&param=switchscene&idx=&switchcmd=
@@ -243,7 +242,7 @@ debug($url);
 		return { success => false, errormsg => $response->status_line};
 	}
 	return { success => true};
-} elsif ($actionName eq 'setChoice') {
+} elsif (($actionName eq 'setChoice')||($actionName eq 'setMode')) {
 	#setChoice string
 	status 'error';
 	return { success => false, errormsg => "not implemented"};
@@ -630,7 +629,11 @@ debug($system_url);
 					} elsif ($f->{"SubType"} eq "SetPoint") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v"} );
+							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v"});
+							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>"°C"} );
+							push (@{$feeds->{'params'}}, {"key" => "step", "value" => "0.5"} );
+							push (@{$feeds->{'params'}}, {"key" => "curmode", "value" => "default"} );
+							push (@{$feeds->{'params'}}, {"key" => "availablemodes", "value" => "default"} );
 							push (@{$feed->{'devices'}}, $feeds );
 					}
 				}
