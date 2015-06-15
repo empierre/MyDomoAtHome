@@ -9,6 +9,7 @@ use File::Spec;
 use LWP::UserAgent;
 use Crypt::SSLeay;
 use utf8;
+use Encode qw/ encode decode /;
 use Time::Piece;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
@@ -18,6 +19,8 @@ our $VERSION = '0.8';
 set warnings => 0;
 my %device_tab;
 my %device_list;
+
+config->{charset} = 'UTF-8';
 
 set serializer => 'JSON'; 
 set 'database'     => File::Spec->catfile( config->{domo_db});
@@ -40,7 +43,7 @@ get '/rooms' => sub {
 };
 
 get '/system' => sub {
- return {"id"=> "MyDomoAtHome Dev","apiversion"=> 1};
+ return {"id"=> "MyDomoAtHome","apiversion"=> 1};
 };
 
 get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
