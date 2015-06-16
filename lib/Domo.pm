@@ -4,6 +4,7 @@ package Domo;
 # version 2 as published by the Free Software Foundation.
 # Author: epierre <epierre@e-nef.com>
 use Dancer ':syntax';
+# set 'charset' => 'utf-8' ;
 use File::Slurp;
 use File::Spec;
 use LWP::UserAgent;
@@ -43,7 +44,7 @@ get '/rooms' => sub {
 };
 
 get '/system' => sub {
- return {"id"=> "MyDomoAtHome","apiversion"=> 1};
+ return {"id"=> "MyDomoAtHome Dev","apiversion"=> 1};
 };
 
 get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
@@ -525,7 +526,9 @@ debug($system_url);
 							#DevPressure    Pressure sensor
 							#Value  Current pressure        mbar
 							#"Barometer" : 1022, "Type" : "Temp + Humidity + Baro"
-							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
+							my $idx=$f->{"idx"};
+							if ($f->{"Type"} eq "Temp + Humidity + Baro") {$idx=$idx."_1"};
+							my $feeds={"id" => $idx, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
 							my $v=$f->{"Barometer"};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "mbar"} );
 								push (@{$feed->{'devices'}}, $feeds );
