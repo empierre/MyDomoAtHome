@@ -656,9 +656,9 @@ debug($system_url);
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 	#	debug($dt->strftime("%Y-%m-%d %H:%M:%S"));
 					my $name=$f->{"Name"};
-					$name=~s/\s/_/;
-					$name=~s/\s/_/;
-					$name=~s/\//_/;
+					#$name=~s/\s/_/;
+					#$name=~s/\s/_/;
+					#$name=~s/\//_/;
 					$name=~s/%/P/;
 					#DevScene       Scene (launchable)
 					#LastRun        Date of last run        N/A
