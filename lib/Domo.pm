@@ -294,12 +294,12 @@ debug($system_url);
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif (($f->{"SwitchType"} eq "Push On Button")or($f->{"SwitchType"} eq "Push Off Button")) {
-						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
-					
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 						if ($f->{"SwitchType"} eq "Push Off Button") {$rbl="0"};
-						if ($f->{"SwitchType"} eq "Push On Button") {$rbl="100"};
-						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"1"} );
-						push (@{$feeds->{'params'}}, {"key" => "Level", "value" =>"$rbl"} );
+						if ($f->{"SwitchType"} eq "Push On Button") {$rbl="1"};
+						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
+						#push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"1"} );
+						#push (@{$feeds->{'params'}}, {"key" => "Level", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif (($f->{"SwitchType"} eq "Dimmer")||($f->{"SwitchType"} eq "Doorbell")) {
 						#DevDimmer	Dimmable light
@@ -659,9 +659,9 @@ debug($system_url);
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 	#	debug($dt->strftime("%Y-%m-%d %H:%M:%S"));
 					my $name=$f->{"Name"};
-					$name=~s/\s/_/;
-					$name=~s/\s/_/;
-					$name=~s/\//_/;
+					#$name=~s/\s/_/;
+					#$name=~s/\s/_/;
+					#$name=~s/\//_/;
 					$name=~s/%/P/;
 					#DevScene       Scene (launchable)
 					#LastRun        Date of last run        N/A
