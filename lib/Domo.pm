@@ -16,12 +16,18 @@ use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 #use JSON;
 
-our $VERSION = '0.8';
+our $VERSION = '0.9';
 set warnings => 0;
 my %device_tab;
 my %device_list;
 
-config->{charset} = 'UTF-8';
+#config->{charset} = 'UTF-8';
+hook(
+   after_serializer => sub {
+       my $response = shift;
+       $response->{encoded} = 1;
+   }
+);
 
 set serializer => 'JSON'; 
 set 'database'     => File::Spec->catfile( config->{domo_db});
