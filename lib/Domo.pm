@@ -624,7 +624,7 @@ debug($system_url);
 						} elsif ($f->{"SubType"} eq "Visibility") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "km"} );
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "watt/m2"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Solar Radiation") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Temp", params =>[]};
