@@ -16,10 +16,12 @@ layout: "main"
 # when the charset is set to UTF-8 Dancer will handle for you
 # all the magic of encoding and decoding. You should not care
 # about unicode within your app when this setting is set (recommended).
-charset: "UTF-8"
-
-template: "simple"
+charset: UTF-8
 engines:
-      template_toolkit:
-        ENCODING: utf8
+    serializer:
+        JSON:
+            utf8: 0
+serializer: 'JSON'
+#template: "simple"
+
 
