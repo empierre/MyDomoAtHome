@@ -1,0 +1,153 @@
+  
+<!-- 
+    Credit goes to the Ruby on Rails team for this page 
+    has been heavily based on the default Rails page that is 
+    built with a scaffolded application.
+
+    Thanks a lot to them for their work.
+
+    See Ruby on Rails if you want a kickass framework in Ruby:
+    http://www.rubyonrails.org/
+-->
+
+<div id="page">
+      <div id="sidebar">
+        <ul id="sidebar-items">
+          <li>
+            <h3>Join the community</h3>
+            <ul class="links">
+
+              <li><a href="http://www.domoticz.com/wiki/ImperiHome">Installation Wiki</a></li>
+              <li><a href="http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713">Support on the forum</a></li>
+              <li><a href="http://github.com/empierre/MyDomoAtHome">GitHub Community</a></li>
+            </ul>
+          </li>
+          
+          <li>
+            <h3>Your application's environment</h3>
+
+            <ul>
+                <li>Location: <code>/home/in/Domo</code></li>
+                <li>Template engine: <code>[% settings.template %]</code></li>
+                <li>Logger: <code>[% settings.logger %]</code></li>
+                <li>Environment: <code>[% settings.environment %]</code></li>
+            </ul>
+
+          </li>
+        </ul>
+
+      </div>
+
+      <div id="content">
+        <div id="header">
+          <h1>MyDomoAtHome</h1>
+          <h2>Your ISS Gateway to Domoticz!</h2>
+        </div>
+	<img src="images/logo-MyDomoAtHome-w.png" style="width:70px;position:absolute;top:20px;"/>
+
+        <div id="getting-started">
+          <h1>Getting started</h1>
+          <h2>Here&rsquo;s how to get dancing:</h2>
+                    
+          <h3><a href="#" id="about_env_link">About your application's environment</a></h3>
+
+          <div id="about-content" style="display: none;">
+            <table>
+                <tbody>
+                <tr>
+                    <td>Perl version</td>
+                    <td><tt>[% perl_version %]</tt></td>
+                </tr>
+                <tr>
+                    <td>Dancer version</td>
+                    <td><tt>[% dancer_version %]</tt></td>
+                </tr>
+                <tr>
+                    <td>Backend</td>
+                    <td><tt>[% settings.apphandler %]</tt></td>
+                </tr>
+                <tr>
+                    <td>Appdir</td>
+                    <td><tt>/home/in/Domo</tt></td>
+                </tr>
+                <tr>
+                    <td>Template engine</td>
+                    <td><tt>[% settings.template %]</tt></td>
+                </tr>
+                <tr>
+                    <td>Logger engine</td>
+                    <td><tt>[% settings.logger %]</tt></td>
+                </tr>
+                <tr>
+                    <td>Running environment</td>
+                    <td><tt>[% settings.environment %]</tt></td>
+                </tr>
+                </tbody>
+            </table>
+          </div>
+
+    <script type="text/javascript">
+    $('#about_env_link').click(function() {
+        $('#about-content').slideToggle('fast', function() {
+            // ok
+        });
+        return( false );
+    });
+    </script>
+
+
+          <ol>          
+            <li>
+              <h2>A quick introduction</h2>
+              <p>
+		This is a three parties installation:</p>
+		<ul>
+			<li>ImperiHome Application on Android</li>
+			<li>MyDomoAtHome Gateway</li>
+			<li>Domoticz</li>
+		</ul>
+		<p>So a request from the first will go to the second that will go to the third, and the answers will take the opposite path. <br/><br/>
+
+		<img src="images/imperihome.png" style="width:450px;position:relative;"/>
+		   Always remember that you will need to tell the Gateway (this program) how to access your Domoticz, and if there is a password on it, please define it as on the local network 127.0.0.1
+              </p>
+            </li>
+            <li>
+              <h2>How to test your first installation</h2>
+              <p>
+		Verify you can see your domoticz devices : [% settings.domo_path %]/json.htm?type=devices <br/><br/>
+		Then check this page so the gateway process is running:	http://domo_gw:5001/ <br/><br/>
+		And finally check that the devices you have in Domoticz are well found by the Gateway:	http://domo_gw:5001/devices <br/><br/>
+		If that last list is empty, then you must use the 127.0.0.1 (if on the same machine) for the gateway configuration to access Domoticz and check again.
+
+              </p>
+            </li>
+            <li>
+              <h2>Getting support</h2>
+              <p>
+		Please submit all support request on <a href="http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713">Domoticz Forum</a>
+              </p>
+            </li>
+            <li>
+              <h2>Looking for Enhancements</h2>
+              <p>
+		Please submit all enhancements into <a href="https://github.com/empierre/MyDomoAtHome/labels/enhancement">GitHub Enhancement</a>
+              </p>
+            </li>
+            <li>
+              <h2>Submitting a bug</h2>
+              <p>
+		Please submit all bugs into <a href="https://github.com/empierre/MyDomoAtHome/issues">GitHub Issues</a>
+              </p>
+            </li>
+	    <li>
+            <h2>Securing both access to MyDomoAtHome and Domoticz</h2>
+              <p>
+		Please see the <a href="http://www.domoticz.com/wiki/Secure_Remote_Access">Secure Remote Access Wiki</a>
+	      </p>
+            </li>
+
+          </ol>
+        </div>
+      </div>
+    </div>
