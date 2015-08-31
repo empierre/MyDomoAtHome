@@ -509,7 +509,11 @@ debug($system_url);
 							$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
 
 							my $v=$f->{"Temp"};
+<<<<<<< HEAD
 							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
+=======
+							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => "*C", "graphable" => "true"} );
+>>>>>>> 96d6269015440f25512a9698c82d4a6fbd2e5f38
 							my $vh=$f->{"Humidity"};
 							push (@{$feeds->{'params'}}, {"key" => "hygro", "value" => "$vh", "unit" => "%", "graphable" => "true" });
 							push (@{$feed->{'devices'}}, $feeds );
@@ -520,7 +524,11 @@ debug($system_url);
 							my $feeds;
 							$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}};
 							my $v=$f->{"Temp"};
+<<<<<<< HEAD
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
+=======
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "*C", "graphable" => "true"} );
+>>>>>>> 96d6269015440f25512a9698c82d4a6fbd2e5f38
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"Type"} eq "Humidity") {
 							#DevHygrometry  Hygro sensor
@@ -581,7 +589,7 @@ debug($system_url);
 						my ($dir)=($f->{"Direction"}=~/(\d+)/);
 						my ($speed)=($f->{"Speed"}=~/(\d+)/);
 						push (@{$feeds->{'params'}}, {"key" => "Speed", "value" => "$speed", "unit" => "km/h", "graphable" => "true"});
-						push (@{$feeds->{'params'}}, {"key" => "Direction", "value" => "$dir", "unit" => "°"});
+						push (@{$feeds->{'params'}}, {"key" => "Direction", "value" => "$dir", "unit" => "*"});
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "RFXMeter")  {
 						if ($f->{"SwitchTypeVal"} eq "1") {
@@ -634,19 +642,27 @@ debug($system_url);
 						} elsif ($f->{"SubType"} eq "Visibility") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
+<<<<<<< HEAD
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "km"} );
+=======
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "m"} );
+>>>>>>> 96d6269015440f25512a9698c82d4a6fbd2e5f38
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Solar Radiation") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "km"} );
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "Watt/m2"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 					} elsif (($f->{"SubType"})&&($f->{"SubType"} eq "SetPoint")) {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v"});
+<<<<<<< HEAD
 							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>$t_unit} );
+=======
+							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>"*C"} );
+>>>>>>> 96d6269015440f25512a9698c82d4a6fbd2e5f38
 							push (@{$feeds->{'params'}}, {"key" => "step", "value" => "0.5"} );
 							push (@{$feeds->{'params'}}, {"key" => "curmode", "value" => "default"} );
 							push (@{$feeds->{'params'}}, {"key" => "availablemodes", "value" => "default"} );
