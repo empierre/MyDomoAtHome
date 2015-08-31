@@ -505,18 +505,18 @@ debug($system_url);
 							$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
 
 							my $v=$f->{"Temp"};
-							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
+							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => "*C", "graphable" => "true"} );
 							my $vh=$f->{"Humidity"};
 							push (@{$feeds->{'params'}}, {"key" => "hygro", "value" => "$vh", "unit" => "%", "graphable" => "true" });
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"Type"} eq "Temp") {
 							#DevTemperature Temperature sensor
-							#Value  Current temperature     °C
+							#Value  Current temperature     *C
 							#"Temp" : 21.50,  "Type" : "Temp + Humidity" / Type" : "Temp",
 							my $feeds;
 							$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}};
 							my $v=$f->{"Temp"};
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "*C", "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"Type"} eq "Humidity") {
 							#DevHygrometry  Hygro sensor
@@ -577,7 +577,7 @@ debug($system_url);
 						my ($dir)=($f->{"Direction"}=~/(\d+)/);
 						my ($speed)=($f->{"Speed"}=~/(\d+)/);
 						push (@{$feeds->{'params'}}, {"key" => "Speed", "value" => "$speed", "unit" => "km/h", "graphable" => "true"});
-						push (@{$feeds->{'params'}}, {"key" => "Direction", "value" => "$dir", "unit" => "°"});
+						push (@{$feeds->{'params'}}, {"key" => "Direction", "value" => "$dir", "unit" => "*"});
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "RFXMeter")  {
 						if ($f->{"SwitchTypeVal"} eq "1") {
@@ -642,7 +642,7 @@ debug($system_url);
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v"});
-							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>"°C"} );
+							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>"*C"} );
 							push (@{$feeds->{'params'}}, {"key" => "step", "value" => "0.5"} );
 							push (@{$feeds->{'params'}}, {"key" => "curmode", "value" => "default"} );
 							push (@{$feeds->{'params'}}, {"key" => "availablemodes", "value" => "default"} );
