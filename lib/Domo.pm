@@ -267,8 +267,7 @@ debug($url);
 
 get '/devices' => sub {
 	my $feed={ "devices" => []};
-	my $u="°C";
-	my $t_unit= Encode::encode('UTF-8',$u, Encode::FB_CROAK);
+	my $t_unit="°C";
 	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&order=Name";
 	my $decoded;
 	my @results;
