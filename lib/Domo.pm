@@ -15,8 +15,10 @@ use Time::Piece;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 #use JSON;
+use warnings;
+use strict;
 
-our $VERSION = '0.9';
+our $VERSION = '0.10';
 set warnings => 0;
 my %device_tab;
 my %device_list;
@@ -68,7 +70,7 @@ get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
 	my $feed={ "values" => []};
 	my $url=config->{domo_path}."/json.htm?type=graph&sensor=$type&idx=$deviceId&range=day";
 	my $decoded;
-	my @results;
+	my @results=();
 debug($url);
 	my $ua = LWP::UserAgent->new();
 	$ua->agent("MyDomoREST/$VERSION");
@@ -78,7 +80,8 @@ debug($url);
 		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
-			foreach my $f ( @results ) {
+			my $f={};
+			foreach $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"d"},"%Y-%m-%d %H:%M:%SS");
 					#print $dt->epoch." $value\n";
 					if (($paramKey eq "temp")&&($f->{"te"})) {
@@ -264,6 +267,7 @@ debug($url);
 
 get '/devices' => sub {
 	my $feed={ "devices" => []};
+	my $t_unit= Encode::encode('UTF-8','°C', Encode::FB_CROAK);
 	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&order=Name";
 	my $decoded;
 	my @results;
@@ -505,18 +509,18 @@ debug($system_url);
 							$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
 
 							my $v=$f->{"Temp"};
-							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
+							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
 							my $vh=$f->{"Humidity"};
 							push (@{$feeds->{'params'}}, {"key" => "hygro", "value" => "$vh", "unit" => "%", "graphable" => "true" });
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"Type"} eq "Temp") {
 							#DevTemperature Temperature sensor
-							#Value  Current temperature     °C
+							#Value  Current temperature     *C
 							#"Temp" : 21.50,  "Type" : "Temp + Humidity" / Type" : "Temp",
 							my $feeds;
 							$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}};
 							my $v=$f->{"Temp"};
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"Type"} eq "Humidity") {
 							#DevHygrometry  Hygro sensor
@@ -630,7 +634,7 @@ debug($system_url);
 						} elsif ($f->{"SubType"} eq "Visibility") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "watt/m2"} );
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "km"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Solar Radiation") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Temp", params =>[]};
@@ -638,15 +642,18 @@ debug($system_url);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "km"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
-					} elsif ($f->{"SubType"} eq "SetPoint") {
+					} elsif (($f->{"SubType"})&&($f->{"SubType"} eq "SetPoint")) {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v"});
-							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>"°C"} );
+							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>$t_unit} );
 							push (@{$feeds->{'params'}}, {"key" => "step", "value" => "0.5"} );
 							push (@{$feeds->{'params'}}, {"key" => "curmode", "value" => "default"} );
 							push (@{$feeds->{'params'}}, {"key" => "availablemodes", "value" => "default"} );
 							push (@{$feed->{'devices'}}, $feeds );
+					} else {
+						#catchall
+						if ($f->{"SubType"}) {print "UNK".$f->{"SubType"};}
 					}
 				}
 			}; 
