@@ -18,7 +18,7 @@ use POSIX qw(ceil);
 use warnings;
 use strict;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 set warnings => 0;
 my %device_tab;
 my %device_list;
@@ -267,7 +267,8 @@ debug($url);
 
 get '/devices' => sub {
 	my $feed={ "devices" => []};
-	my $t_unit= Encode::encode('UTF-8','°C', Encode::FB_CROAK);
+	my $u="°C";
+	my $t_unit= Encode::encode('UTF-8',$u, Encode::FB_CROAK);
 	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&order=Name";
 	my $decoded;
 	my @results;
@@ -581,7 +582,7 @@ debug($system_url);
 						my ($dir)=($f->{"Direction"}=~/(\d+)/);
 						my ($speed)=($f->{"Speed"}=~/(\d+)/);
 						push (@{$feeds->{'params'}}, {"key" => "Speed", "value" => "$speed", "unit" => "km/h", "graphable" => "true"});
-						push (@{$feeds->{'params'}}, {"key" => "Direction", "value" => "$dir", "unit" => "*"});
+						push (@{$feeds->{'params'}}, {"key" => "Direction", "value" => "$dir", "unit" => "°"});
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "RFXMeter")  {
 						if ($f->{"SwitchTypeVal"} eq "1") {
@@ -736,8 +737,8 @@ debug($system_url);
 	#Value  Current value   N/A
 
 
-
-	return($feed);
+	
+	return to_json($feed, { utf8 => 1} );
 	return { success => true};
 };
 
