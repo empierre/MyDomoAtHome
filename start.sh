@@ -8,4 +8,4 @@
 # Short-Description: Start imperihome  
 # Description:       Imperihome.  
 ### END INIT INFO
-nohup plackup -E production -s Starman --workers=2 -p 5001 -a bin/app.pl &
+nohup plackup -E production -s Starman --workers=2 -p 5001 -a bin/app.pl --pid /tmp/mydomoathome.pid &
