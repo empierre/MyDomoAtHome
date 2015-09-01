@@ -18,7 +18,7 @@ use POSIX qw(ceil);
 use warnings;
 use strict;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 set warnings => 0;
 my %device_tab;
 my %device_list;
@@ -52,7 +52,7 @@ get '/rooms' => sub {
 };
 
 get '/system' => sub {
- return {"id"=> "MyDomoAtHome Dev","apiversion"=> 1};
+ return {"id"=> "MyDomoAtHome","apiversion"=> 1};
 };
 
 get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
@@ -242,23 +242,40 @@ debug($url);
 		}
 		return { success => true};
 	} elsif ($actionName eq 'launchScene') {
-	#launchScene
-	#/json.htm?type=command&param=switchscene&idx=&switchcmd=
-	my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$deviceId&switchcmd=On&passcode=";
-debug($url);
-	my $browser = LWP::UserAgent->new;
-	my $response = $browser->get($url);
-	if ($response->is_success){ 
+		#launchScene
+		#/json.htm?type=command&param=switchscene&idx=&switchcmd=
+		my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$deviceId&switchcmd=On&passcode=";
+	debug($url);
+		my $browser = LWP::UserAgent->new;
+		my $response = $browser->get($url);
+		if ($response->is_success){ 
+			return { success => true};
+		} else {
+			status 'error';
+			return { success => false, errormsg => $response->status_line};
+		}
 		return { success => true};
-	} else {
+	} elsif ($actionName eq 'setChoice') {
+		if ($deviceId=~/^S/) {
+			my ($sc)=$deviceId=~/S(\d+)/;
+			my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$sc&switchcmd=$actionParam&passcode=";
+		debug($url);
+			my $browser = LWP::UserAgent->new;
+			my $response = $browser->get($url);
+			if ($response->is_success){ 
+				return { success => true};
+			} else {
+				status 'error';
+				return { success => false, errormsg => $response->status_line};
+			}
+		} else {
+			status 'error';
+			return { success => false, errormsg => "not implemented"};
+		}
+	} elsif ($actionName eq 'setMode') {
+		#setChoice string
 		status 'error';
-		return { success => false, errormsg => $response->status_line};
-	}
-	return { success => true};
-} elsif (($actionName eq 'setChoice')||($actionName eq 'setMode')) {
-	#setChoice string
-	status 'error';
-	return { success => false, errormsg => "not implemented"};
+		return { success => false, errormsg => "not implemented"};
     } else {
         status 'not_found';
         return "What?";
@@ -672,17 +689,24 @@ debug($system_url);
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 	#	debug($dt->strftime("%Y-%m-%d %H:%M:%S"));
 					my $name=$f->{"Name"};
-					#$name=~s/\s/_/;
-					#$name=~s/\s/_/;
-					#$name=~s/\//_/;
 					$name=~s/%/P/;
 					#DevScene       Scene (launchable)
 					#LastRun        Date of last run        N/A
 					#"idx" : "3", "Name" : "Alerte", "Type" : "Scenes", "LastUpdate" : "2014-03-18 22:17:18"
-					my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevScene", "room" => "Scenes", params =>[]};
-					my $v=$dt->strftime("%Y-%m-%d %H:%M:%S");
-					push (@{$feeds->{'params'}}, {"key" => "LastRun", "value" => "$v"} );
-					push (@{$feed->{'devices'}}, $feeds );
+					if ($f->{"Type"} eq "Group") {
+						my $feeds={"id" => "S".$f->{"idx"}, "name" => $name, "type" => "DevMultiSwitch", "room" => "Scenes", params =>[]};
+						my $v=$dt->strftime("%Y-%m-%d %H:%M:%S");
+						push (@{$feeds->{'params'}}, {"key" => "LastRun", "value" => "$v"} );
+						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => $f->{"Status"}} );
+						push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "On,Off"} );
+						push (@{$feed->{'devices'}}, $feeds );
+
+					} else {
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevScene", "room" => "Scenes", params =>[]};
+						my $v=$dt->strftime("%Y-%m-%d %H:%M:%S");
+						push (@{$feeds->{'params'}}, {"key" => "LastRun", "value" => "$v"} );
+						push (@{$feed->{'devices'}}, $feeds );
+					}
 			}
 		}
 	}
