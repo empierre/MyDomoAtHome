@@ -18,7 +18,7 @@ use POSIX qw(ceil);
 use warnings;
 use strict;
 
-our $VERSION = '0.12';
+our $VERSION = '0.11';
 set warnings => 0;
 my %device_tab;
 my %device_list;
@@ -52,7 +52,7 @@ get '/rooms' => sub {
 };
 
 get '/system' => sub {
- return {"id"=> "MyDomoAtHome","apiversion"=> 1};
+ return {"id"=> "MyDomoAtHome Dev","apiversion"=> 1};
 };
 
 get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
@@ -665,7 +665,7 @@ debug($system_url);
 	#warn "Could not get $system_url!" unless defined $json;
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			foreach my $f ( @results ) {
