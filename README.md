@@ -13,12 +13,26 @@ To install:
   - cp production.yml.def production.yml
   - cp development.yml.def development.yml
   - edit config.yml, production.yml, development.yml
+  - edit  MyDomoAtHome.sh and change the path line 20 to your home installation
+  - sh ./run_once.sh
+  
+To run the service:
+-------------------
+
+To start the service:
+   sudo service MyDomoAtHome.sh start
+
+To stop the service :
+   sudo service MyDomoAtHome.sh stop
+
+To restart the service :
+   sudo service MyDomoAtHome.sh reload
 
 To update:
 ----------
 
   - cd ~/domoticz/MyDomoAtHome
-  - git pull
+  - sh ./update-mdah.sh
   
 To setup:
 ---------
@@ -26,5 +40,5 @@ To setup:
   - Setup: http://domoticz.com/wiki/ImperiHome
   - Remember to add the gateway in the local networks under setup in domoticz !
   - Support: http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713
-  - to send domoticz.db for an undeteced device: domoticz at e-nef.com
+  - to send domoticz.db for an undetected device: domoticz at e-nef.com
 
