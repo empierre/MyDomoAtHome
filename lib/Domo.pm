@@ -658,7 +658,7 @@ debug($system_url);
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "Watt/m2"} );
 							push (@{$feed->{'devices'}}, $feeds );
-						} elsif ((($f->{"SubType"} eq "Text")||($f->{"SubType"} eq "Alert")) {	   
+						} elsif (($f->{"SubType"} eq "Text")||($f->{"SubType"} eq "Alert")) {	   
 	    						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
 							my $v= $f->{"Data"};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => ""} );
