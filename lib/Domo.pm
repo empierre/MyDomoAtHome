@@ -298,7 +298,7 @@ debug($system_url);
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			#Own device
-			my $feeds={"id" => 0, "name" => "MyDomoAtHome "type" => "DevMultiSwitch", "room" => "noroom", params =>[]};
+			my $feeds={"id" => 0, "name" => "MyDomoAtHome", "type" => "DevMultiSwitch", "room" => "noroom", params =>[]};
 			push (@{$feeds->{'params'}}, {"key" => "Value", "value" => $VERSION} );
 			push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "Future update list"} );
 			push (@{$feed->{'devices'}}, $feeds );
