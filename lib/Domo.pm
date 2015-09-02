@@ -12,16 +12,19 @@ use Crypt::SSLeay;
 use utf8;
 use Encode qw/ encode decode /;
 use Time::Piece;
+use DateTime;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 #use JSON;
 use warnings;
 use strict;
 
-our $VERSION = '0.12';
+our $VERSION = '0.11';
 set warnings => 0;
 my %device_tab;
 my %device_list;
+my $last_version;
+my $last_version_dt;
 
 #config->{charset} = 'UTF-8';
 hook(
@@ -83,40 +86,40 @@ debug($url);
 			my $f={};
 			foreach $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"d"},"%Y-%m-%d %H:%M:%SS");
-					#print $dt->epoch." $value\n";
+					print $dt->epoch." \n";
 					if (($paramKey eq "temp")&&($f->{"te"})) {
 							my $value=$f->{"te"};
 							my $date=$dt->epoch*1000;
-							my $feeds={"date" => $date, "value" => $value};
+							my $feeds={"date" => "$date", "value" => "$value"};
 							push (@{$feed->{'values'}}, $feeds );
 					} elsif (($paramKey eq "hygro")&&($f->{"hu"})) {
 							my $value=$f->{"hu"};
 							my $date=$dt->epoch*1000;
-							my $feeds={"date" => $date, "value" => $value};
+							my $feeds={"date" => "$date", "value" => "$value"};
 							push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"mm"}) {
 						my $value=$f->{"mm"};
 						my $date=$dt->epoch*1000;
-						my $feeds={"date" => $date, "value" => $value};
+						my $feeds={"date" => "$date", "value" => "$value"};
 						push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"uvi"}) {
 						my $value=$f->{"uvi"};
 						my $date=$dt->epoch*1000;
-						my $feeds={"date" => $date, "value" => $value};
+						my $feeds={"date" => "$date", "value" => "$value"};
 						push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"v"}) {
 						my $value=$f->{"v"};
 						my $date=$dt->epoch*1000;
-						my $feeds={"date" => $date, "value" => $value};
+						my $feeds={"date" => "$date", "value" => "$value"};
 						push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"sp"}) {
 						my $value=$f->{"sp"};
 						my $date=$dt->epoch*1000;
-						my $feeds={"date" => $date, "value" => $value};
+						my $feeds={"date" => "$date", "value" => "$value"};
 						push (@{$feed->{'values'}}, $feeds );
 					}
 				}
-			return($feed);
+			return to_json($feed, { utf8 => 1} );
 			return { success => true};
 		} else {
 			status 'error';
@@ -255,6 +258,17 @@ debug($url);
 			return { success => false, errormsg => $response->status_line};
 		}
 		return { success => true};
+	} elsif ($actionName eq 'setColor') {
+			my $url=config->{domo_path}."/json.htm?type=command&param=setcolorbrightnessvalue&idx=$deviceId&passcode=";
+		debug($url);
+			my $browser = LWP::UserAgent->new;
+			my $response = $browser->get($url);
+			if ($response->is_success){ 
+				return { success => true};
+			} else {
+				status 'error';
+				return { success => false, errormsg => $response->status_line};
+			}
 	} elsif ($actionName eq 'setChoice') {
 		if ($deviceId=~/^S/) {
 			my ($sc)=$deviceId=~/S(\d+)/;
@@ -294,14 +308,23 @@ debug($system_url);
 	my $json = $ua->get( $system_url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			#Own device
 			my $feeds={"id" => 0, "name" => "MyDomoAtHome", "type" => "DevMultiSwitch", "room" => "noroom", params =>[]};
-			my $ver="version $VERSION";
-			push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "On"} );
-			push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "$ver"} );
+			my $ver="$VERSION";
+			my @and=&getLastVersion();
+			my $an1;my $an2;
+			if (($ver ne $and[0])&&($and[0] ne "err")) {
+				$an1="new version ".$and[0];
+				$an2="new version ".$and[0].","."your version is $ver";
+			} else {
+				$an1=$ver;
+				$an2=$ver;
+			}
+			push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$an1"} );
+			push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "$an2"} );
 			push (@{$feed->{'devices'}}, $feeds );
 			#Parse the devices tree
 			foreach my $f ( @results ) {
@@ -323,7 +346,7 @@ debug($system_url);
 					elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 					else { $rbl=$bl;}
 
-					if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
+					if ((($f->{"SwitchType"} eq "On/Off")and($f->{"SubType"} ne "RGBW"))or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
@@ -334,6 +357,10 @@ debug($system_url);
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 						#push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"1"} );
 						#push (@{$feeds->{'params'}}, {"key" => "Level", "value" =>"$rbl"} );
+						push (@{$feed->{'devices'}}, $feeds );
+					} elsif (($f->{"SwitchType"} eq "On/Off")and($f->{"SubType"} eq "RGBW")) {
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevRGBLight", "room" => "Switches", params =>[]};
+						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif (($f->{"SwitchType"} eq "Dimmer")||($f->{"SwitchType"} eq "Doorbell")) {
 						#DevDimmer	Dimmable light
@@ -799,6 +826,35 @@ debug($url);
 				}
 			}
 		}
+	}
+}
+sub getLastVersion() {
+	my $dt = DateTime->now();
+	if ($last_version_dt < $dt->add( hours => 4 )) {
+		my @res;
+		push @res,$last_version;
+		push @res,"";
+		return(@res);
+	} else {
+		my $url="https://api.github.com/repos/empierre/MyDomoAtHome/releases/latest";
+		my $decoded;
+		my @results;
+	debug($url);
+		my $ua = LWP::UserAgent->new();
+		$ua->agent("MyDomoREST/$VERSION");
+		my $json = $ua->get( $url );
+		if ($json->is_success) {
+			# Decode the entire JSON
+			$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+			if ($decoded) {
+				my @res;
+				push @res,$decoded->{tag_name};
+				push @res,$decoded->{body};
+				$last_version_dt=DateTime->now;
+				$last_version=$decoded->{tag_name};
+				return(@res);
+			}
+		} else {return "err";}
 	}
 }
 1;
