@@ -663,7 +663,7 @@ debug($system_url);
 							my $v= $f->{"Data"};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => ""} );
 							push (@{$feed->{'devices'}}, $feeds );
-						} else  {#UNK}
+						} else  {print STDERR "unk!\n";}
 					} elsif (($f->{"SubType"})&&($f->{"SubType"} eq "SetPoint")) {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
