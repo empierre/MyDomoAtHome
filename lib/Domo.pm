@@ -299,7 +299,7 @@ debug($system_url);
 			@results = @{ $decoded->{'result'} };
 			#Own device
 			my $feeds={"id" => 0, "name" => "MyDomoAtHome", "type" => "DevMultiSwitch", "room" => "noroom", params =>[]};
-			my $ver="$version $VERSION";
+			my $ver="version $VERSION";
 			push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "On"} );
 			push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "$version"} );
 			push (@{$feed->{'devices'}}, $feeds );
