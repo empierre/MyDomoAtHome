@@ -299,7 +299,8 @@ debug($system_url);
 			@results = @{ $decoded->{'result'} };
 			#Own device
 			my $feeds={"id" => 0, "name" => "MyDomoAtHome", "type" => "DevMultiSwitch", "room" => "noroom", params =>[]};
-			push (@{$feeds->{'params'}}, {"key" => "Value", "value" => $VERSION*100} );
+			my $ver=$VERSION*100;
+			push (@{$feeds->{'params'}}, {"key" => "Value", "value" => $ver} );
 			push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "Future update list"} );
 			push (@{$feed->{'devices'}}, $feeds );
 			#Parse the devices tree
