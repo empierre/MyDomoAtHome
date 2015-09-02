@@ -19,7 +19,7 @@ use POSIX qw(ceil);
 use warnings;
 use strict;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 set warnings => 0;
 my %device_tab;
 my %device_list;
