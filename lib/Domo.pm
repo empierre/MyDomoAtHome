@@ -297,6 +297,12 @@ debug($system_url);
 		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
+			#Own device
+			my $feeds={"id" => 0, "name" => "MyDomoAtHome "type" => "DevMultiSwitch", "room" => "noroom", params =>[]};
+			push (@{$feeds->{'params'}}, {"key" => "Value", "value" => $VERSION} );
+			push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "Future update list"} );
+			push (@{$feed->{'devices'}}, $feeds );
+			#Parse the devices tree
 			foreach my $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 					my $name=$f->{"Name"};
