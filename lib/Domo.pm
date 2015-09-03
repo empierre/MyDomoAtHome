@@ -650,8 +650,8 @@ debug($system_url);
 							#Water
 							my ($usage)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 							my ($total)= ($f->{"Counter"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							$total=ceil($total);
-							my $totalm3=($total/1000);
+							#$total=ceil($total);
+							my $totalm3=ceil($total);
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
 							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "m3", "graphable" => "true"} );
 							 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$totalm3", "unit" => "m3"} );
