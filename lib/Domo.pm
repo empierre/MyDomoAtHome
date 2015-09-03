@@ -25,6 +25,7 @@ my %device_tab;
 my %device_list;
 my $last_version;
 my $last_version_dt;
+my @unk_dev;
 
 #config->{charset} = 'UTF-8';
 hook(
@@ -311,22 +312,23 @@ debug($system_url);
 		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
-			#Own device
-			my $feeds={"id" => 0, "name" => "MyDomoAtHome", "type" => "DevMultiSwitch", "room" => "noroom", params =>[]};
+			#Own device version
+			my $feeds={"id" => "S0", "name" => "MyDomoAtHome", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
 			my $ver="$VERSION";
+			push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$ver", "unit"=> "", "graphable" => "false"} );
+			push (@{$feed->{'devices'}}, $feeds );
+			#Check for new version
 			my @and=&getLastVersion();
 			my $an1;my $an2;
 			if (($ver ne $and[0])&&($and[0] ne "err")) {
-				$an1="new version ".$and[0];
-				$an2="new version ".$and[0].","."your version is $ver";
-			} else {
-				$an1=$ver;
-				$an2=$ver;
+				my $feeds={"id" => "S1", "name" => "New version found", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
+				$an1=$and[0];
+				push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$an1", "unit"=> "", "graphable" => "false"} );
+				push (@{$feed->{'devices'}}, $feeds );
 			}
-			push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$an1"} );
-			push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "$an2"} );
-			push (@{$feed->{'devices'}}, $feeds );
+			#
 			#Parse the devices tree
+			#
 			foreach my $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 					my $name=$f->{"Name"};
@@ -664,7 +666,8 @@ debug($system_url);
 							my $v=$f->{"Counter"};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v"} );
 							push (@{$feed->{'devices'}}, $feeds );
-						} else {print STDERR "unk!\n";
+						} else {
+							push @unk_dev,$f->{"idx"}."-".$f->{"Name"}."-".$f->{"Type"}."-".$f->{"SubType"}."-".$f->{"SwitchTypeVal"};
 						}
 					} elsif ($f->{"Type"} eq "General")  {
 							if ($f->{"SubType"} eq "Percentage") {
@@ -692,12 +695,14 @@ debug($system_url);
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "Watt/m2"} );
 							push (@{$feed->{'devices'}}, $feeds );
-						} elsif (($f->{"SubType"} eq "Text")||($f->{"SubType"} eq "Alert")) {	   
+						} elsif (($f->{"SubType"} eq "Text")||($f->{"SubType"} eq "Alert")||($f->{"SubType"} eq "Unknown")) {	   
 	    						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
 							my $v= $f->{"Data"};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => ""} );
 							push (@{$feed->{'devices'}}, $feeds );
-						} else  {print STDERR "unk!\n";}
+						} else { 
+							push @unk_dev,$f->{"idx"}."-".$f->{"Name"}."-".$f->{"Type"}."-".$f->{"SubType"}."-".$f->{"SwitchTypeVal"};
+						}
 					} elsif (($f->{"SubType"})&&($f->{"SubType"} eq "SetPoint")) {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
@@ -709,11 +714,16 @@ debug($system_url);
 							push (@{$feed->{'devices'}}, $feeds );
 					} else {
 						#catchall
-						if ($f->{"SubType"}) {print "UNK".$f->{"SubType"};}
-					}
+						if ($f->{"idx"}>5) {push @unk_dev,$f->{"idx"}."-".$f->{"Name"}."-".$f->{"Type"}."-".$f->{"SubType"}."-".$f->{"SwitchTypeVal"};}					}
 				}
 			}; 
 		}
+	}
+	my $ind_unk=2;
+	foreach my $devt ( @unk_dev)  {
+		my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
+		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
+		push (@{$feed->{'devices'}}, $feeds );
 	}
 	#Get Scenes
 	$system_url=config->{domo_path}."/json.htm?type=scenes";
