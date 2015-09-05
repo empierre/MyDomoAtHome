@@ -1,7 +1,7 @@
 #!/bin/sh
 
 sudo service MyDomoAtHome.sh stop
-sleep 5
+sleep 2
 git pull
-sleep 5
+sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl 
 sudo service MyDomoAtHome.sh start

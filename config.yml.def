@@ -5,6 +5,8 @@
 #MyDomoAtHome specific configuration
 domo_path: "http://ip:8080"
 external_url_camera : "http://ip:port/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=&pwd="
+volumio_path: ""
+
 
 # Your application's name
 appname: "MyDomoAtHome"
