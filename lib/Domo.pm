@@ -685,7 +685,7 @@ debug($system_url);
 							$feeds={"id" => $f->{"idx"}."_l", "name" => $name."_l", "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$usage2", "unit"=> "L"} );
 							push (@{$feed->{'devices'}}, $feeds );
-						} elsif ($f->{"SwitchTypeVal"} eq "3") {
+						} elsif (($f->{"SwitchTypeVal"} eq "3")||($f->{"SubType"} eq "RFXMeter counter")) {
 							#Counter
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevCounter", "room" => "Temp", params =>[]};
 							my $v=$f->{"Counter"};
