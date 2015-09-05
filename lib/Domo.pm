@@ -4,7 +4,6 @@ package Domo;
 # version 2 as published by the Free Software Foundation.
 # Author: epierre <epierre@e-nef.com>
 use Dancer ':syntax';
-# set 'charset' => 'utf-8' ;
 use File::Slurp;
 use File::Spec;
 use LWP::UserAgent;
@@ -18,16 +17,17 @@ use POSIX qw(ceil);
 #use JSON;
 use warnings;
 use strict;
+use Audio::MPD;
+
 
 our $VERSION = '0.12';
 set warnings => 0;
 my %device_tab;
 my %device_list;
-my $last_version;
-my $last_version_dt;
-my @unk_dev;
+my $last_version;    #last version in github
+my $last_version_dt; # last version text in github
+my @unk_dev;         # list of unknown devices
 
-#config->{charset} = 'UTF-8';
 hook(
    after_serializer => sub {
        my $response = shift;
@@ -39,6 +39,8 @@ set serializer => 'JSON';
 set 'database'     => File::Spec->catfile( config->{domo_db});
 prefix undef;
 
+my $mpd_host=config->{volumio_path};
+my $mpd;
 
 get '/' => sub {
     template 'index';
@@ -52,6 +54,7 @@ get '/rooms' => sub {
 		{ "id"=> "Scenes", "name"=> "Scenes" },
 		{ "id"=> "Temp", "name"=> "Weather" },
 		{ "id"=> "Utility", "name"=> "Utility" },
+		{ "id"=> "Volumio", "name"=> "Volumio" },
 			]};
 };
 
@@ -66,7 +69,7 @@ get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
 	my $enddate = params->{enddate}||"";
 
 	my $type=lc(&getDeviceType($deviceId));
-	print "TYPE:$type\n";
+	#print "TYPE:$type\n";
 	if (($type eq "lux")||($type eq "energy")) {$type="counter";}
 	if (($paramKey eq "hygro")) {$type="temp";}
 	if (($paramKey eq "temp")) {$type="temp";}
@@ -179,14 +182,16 @@ debug($url);
 		if ($actionParam eq "100") {
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
 		} else {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
+			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
 		}
 	} elsif (($device_tab{$deviceId}->{"Action"}==5)) {
 		#Blinds inverted
 		if ($actionParam eq "100") {
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=0&passcode=";
 		} else {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
+			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
 		}
 	} elsif (($device_tab{$deviceId}->{"Action"}==6)) {
 		#Blinds -> On for Closed, Off for Open 
@@ -202,7 +207,8 @@ debug($url);
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
 
 		} else {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$actionParam&passcode=";
+			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$setLevel&passcode=";
 		}
 	}
 
@@ -228,7 +234,7 @@ debug($url);
 			return { success => false, errormsg => $response->status_line};
 		}
 		return { success => true};
-		} elsif ($actionName eq 'pulseShutter') {
+	} elsif ($actionName eq 'pulseShutter') {
 		#pulseShutter	up/down
 		status 'error';
 		return { success => false, errormsg => "not implemented"};
@@ -282,6 +288,23 @@ debug($url);
 			} else {
 				status 'error';
 				return { success => false, errormsg => $response->status_line};
+			}
+		} elsif ($deviceId=~/^V/) {
+			my ($sc)=$deviceId=~/V(\d+)/;
+			if ($actionParam eq "play") {
+				$mpd->play;
+			}elsif ($actionParam eq "pause") {
+				$mpd->pause;
+			}elsif ($actionParam eq "stop") {
+				$mpd->stop;
+			}elsif ($actionParam eq "next") {
+				$mpd->next;
+			}elsif ($actionParam eq "prev") {
+				$mpd->next;
+			}elsif ($actionParam eq "volumeUP") {
+				$mpd->volume("+1");
+			}elsif ($actionParam eq "volumeDOWN") {
+				$mpd->volume("-1");
 			}
 		} else {
 			status 'error';
@@ -370,6 +393,7 @@ debug($system_url);
 						#Level	Current dim level (0-100)	%
 						#"idx" : "3", "Name" : "Alerte",  "Level" : 0,  "SwitchType" : "Dimmer",  "Status" : "Off","LastUpdate" : "2014-03-18 22:17:18"
 						if ($rbl=~/Set Level/) {$rbl=1;}
+						$device_tab{$f->{"idx"}}->{"MaxDimLevel"} = $f->{"MaxDimLevel"};
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevDimmer", "room" => "Switches", params =>[]};
 
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
@@ -701,6 +725,11 @@ debug($system_url);
 							my $v= $f->{"Data"};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => ""} );
 							push (@{$feed->{'devices'}}, $feeds );
+						} elsif ($f->{"SubType"} eq "Sound Level") {	   
+							my ($v)= ($f->{"Data"} =~ /^([0-9]+) dB/);
+	    						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevNoise", "room" => "Utility", params =>[]};
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "dB", graphable => "false"} );
+							push (@{$feed->{'devices'}}, $feeds );
 						} else { 
 							push @unk_dev,$f->{"idx"}."-".$f->{"Name"}."-".$f->{"Type"}."-".$f->{"SubType"}."-".$f->{"SwitchTypeVal"};
 						}
@@ -720,12 +749,28 @@ debug($system_url);
 			}; 
 		}
 	}
+
+	#Unknown device list
 	my $ind_unk=2;
 	foreach my $devt ( @unk_dev)  {
 		my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
 		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
 		push (@{$feed->{'devices'}}, $feeds );
 	}
+	#MPD
+	if ($mpd_host ne '') {
+		$mpd=Audio::MPD->new ( host => $mpd_host);
+	}
+	#Status
+	if ($mpd_host) {
+		my $status = $mpd->status;
+		my $song = $mpd->current;
+		my $feeds={"id" => "V2", "name" => $song->artist." - ".$song->album, "type" => "DevMultiSwitch", "room" => "Volumio", params =>[]};
+		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>$status->state, "unit"=> "", "graphable" => "false"} );
+		push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "play,stop,pause,next,prev,volumeUP,volumeDOWN"});
+		push (@{$feed->{'devices'}}, $feeds );
+	}
+
 	#Get Scenes
 	$system_url=config->{domo_path}."/json.htm?type=scenes";
 	$json = $ua->get( $system_url );
