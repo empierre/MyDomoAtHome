@@ -70,12 +70,11 @@ get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
 	my $type=lc(&getDeviceType($deviceId));
 	my $ptype=$type;
 debug("TYPE:$type\n");
- print "TYPE:$type\n";
+	if (($type eq "lux")||($type eq "energy")) {$type="counter";}
+	if ($type eq "air quality") {$type="counter";}
+	if (($ptype eq "general")) {$type="Percentage";}
 	if (($paramKey eq "hygro")) {$type="temp";}
 	if (($paramKey eq "temp")) {$type="temp";}
-	if (($type eq "lux")||($type eq "energy")||($type eq "counter")||($type="air quality")) {$type="counter";}
-	if (($ptype eq "general")) {$type="Percentage";}
- print "TYPE:$type\n";
 
 	my $feed={ "values" => []};
 	my $url=config->{domo_path}."/json.htm?type=graph&sensor=$type&idx=$deviceId&range=day";
@@ -786,9 +785,9 @@ debug($system_url);
 		#Unknown device list
 		my $ind_unk=2;
 		foreach my $devt ( @unk_dev)  {
-			#my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
-			#push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
-			#push (@{$feed->{'devices'}}, $feeds );
+			my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
+			push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
+			push (@{$feed->{'devices'}}, $feeds );
 		}
 	} else {
 		my $feeds={"id" => "S00", "name" => "Unable to connect to Domoticz", "type" => "DevGenericSensor",  params =>[]};
