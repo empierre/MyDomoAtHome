@@ -49,7 +49,6 @@ get '/' => sub {
 get '/rooms' => sub {
        #Room list
   return {"rooms" => [ 
-		{ "id"=> "noroom", "name"=> "noroom" },
 		{ "id"=> "Switches", "name"=> "Switches" },
 		{ "id"=> "Scenes", "name"=> "Scenes" },
 		{ "id"=> "Temp", "name"=> "Weather" },
@@ -336,7 +335,7 @@ debug($system_url);
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			#Own device version
-			my $feeds={"id" => "S0", "name" => "MyDomoAtHome", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
+			my $feeds={"id" => "S0", "name" => "MyDomoAtHome", "type" => "DevGenericSensor",  params =>[]};
 			my $ver="$VERSION";
 			push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$ver", "unit"=> "", "graphable" => "false"} );
 			push (@{$feed->{'devices'}}, $feeds );
@@ -793,7 +792,7 @@ debug($system_url);
 						my $v=$dt->strftime("%Y-%m-%d %H:%M:%S");
 						push (@{$feeds->{'params'}}, {"key" => "LastRun", "value" => "$v"} );
 						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => $f->{"Status"}} );
-						push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "On,Off,Mixed"} );
+						push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "Mixed,On,Off"} );
 						push (@{$feed->{'devices'}}, $feeds );
 
 					} else {
