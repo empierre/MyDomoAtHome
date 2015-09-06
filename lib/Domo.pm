@@ -786,9 +786,9 @@ debug($system_url);
 		#Unknown device list
 		my $ind_unk=2;
 		foreach my $devt ( @unk_dev)  {
-			my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
-			push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
-			push (@{$feed->{'devices'}}, $feeds );
+			#my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
+			#push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
+			#push (@{$feed->{'devices'}}, $feeds );
 		}
 	} else {
 		my $feeds={"id" => "S00", "name" => "Unable to connect to Domoticz", "type" => "DevGenericSensor",  params =>[]};
