@@ -793,7 +793,7 @@ debug($system_url);
 						my $v=$dt->strftime("%Y-%m-%d %H:%M:%S");
 						push (@{$feeds->{'params'}}, {"key" => "LastRun", "value" => "$v"} );
 						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => $f->{"Status"}} );
-						push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "On,Off"} );
+						push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "On,Off,Mixed"} );
 						push (@{$feed->{'devices'}}, $feeds );
 
 					} else {
