@@ -332,7 +332,7 @@ debug($system_url);
 	my $json = $ua->get( $system_url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			#Own device version
