@@ -747,15 +747,24 @@ debug($system_url);
 				}
 			}; 
 		}
-	}
 
-	#Unknown device list
-	my $ind_unk=2;
-	foreach my $devt ( @unk_dev)  {
-		my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
-		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
+		#Unknown device list
+		my $ind_unk=2;
+		foreach my $devt ( @unk_dev)  {
+			my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
+			push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
+			push (@{$feed->{'devices'}}, $feeds );
+		}
+	} else {
+		my $feeds={"id" => "S00", "name" => "Unable to connect to Domoticz", "type" => "DevGenericSensor",  params =>[]};
+		my $ver=config->{domo_path};
+		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$ver", "unit"=> "", "graphable" => "false"} );
+		push (@{$feed->{'devices'}}, $feeds );
+		$feeds={"id" => "S01", "name" => "Please add this gateway in Setup/settings/Local Networks", "type" => "DevGenericSensor",  params =>[]};
+		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"", "unit"=> "", "graphable" => "false"} );
 		push (@{$feed->{'devices'}}, $feeds );
 	}
+
 	#MPD
 	if ($mpd_host ne '') {
 		$mpd=Audio::MPD->new ( host => $mpd_host);
