@@ -68,7 +68,7 @@
                 </tr>
                 <tr>
                     <td>Appdir</td>
-                    <td><tt>/home/in/Domo</tt></td>
+                    <td><tt>/home/pi/domoticz/MyDomoAtHome</tt></td>
                 </tr>
                 <tr>
                     <td>Template engine</td>
@@ -116,8 +116,8 @@
               <h2>How to test your first installation</h2>
               <p>
 		Verify you can see your domoticz devices : <% settings.domo_path %>/json.htm?type=devices <br/><br/>
-		Then check this page so the gateway process is running:	http://domo_gw:5001/ <br/><br/>
-		And finally check that the devices you have in Domoticz are well found by the Gateway:	http://domo_gw:5001/devices <br/><br/>
+		Then check this page so the gateway process is running:	http://domo_gw:3001/ <br/><br/>
+		And finally check that the devices you have in Domoticz are well found by the Gateway:	http://domo_gw:3001/devices <br/><br/>
 		If that last list is empty, then you must use the 127.0.0.1 (if on the same machine) for the gateway configuration to access Domoticz and check again.
 
               </p>
