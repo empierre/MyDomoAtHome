@@ -17,7 +17,7 @@ NAME="MyDomoAtHome"
 CWD=`pwd`
 # Defaults
 RUN="no"
-OPTIONS="-E production -s Starman --workers=4 -p 5001 -a /home/pi/domoticz/MyDomoAtHome/bin/app.pl --pid /tmp/mydomoathome.pid" # CHANGE TO YOUR PATH HERE
+OPTIONS="-E production -s Starman --workers=4 -p 3001 -a /home/pi/domoticz/MyDomoAtHome/bin/app.pl --pid /tmp/mydomoathome.pid" # CHANGE TO YOUR PATH HERE
  
 # PIDFILE="$NAME.pid"
 PIDFILE="/tmp/mydomoathome.pid"
