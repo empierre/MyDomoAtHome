@@ -3,6 +3,7 @@ package Domo;
 # modify it under the terms of the GNU General Public License
 # version 2 as published by the Free Software Foundation.
 # Author: epierre <epierre@e-nef.com>
+
 use Dancer ':syntax';
 use File::Slurp;
 use File::Spec;
@@ -387,7 +388,7 @@ debug($system_url);
 					elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 					else { $rbl=$bl;}
 
-					if ((($f->{"SwitchType"} eq "On/Off")and($f->{"SubType"} ne "RGBW"))or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
+					if (((($f->{"SwitchType"} eq "On/Off")||($f->{"SwitchType"} eq "Lighting Limitless/Applamp"))and($f->{"SubType"} ne "RGBW"))or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
@@ -399,8 +400,14 @@ debug($system_url);
 						#push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"1"} );
 						#push (@{$feeds->{'params'}}, {"key" => "Level", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
-					} elsif (($f->{"SwitchType"} eq "On/Off")and($f->{"SubType"} eq "RGBW")) {
+					} elsif (($f->{"SubType"} eq "RGBW")) {
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevRGBLight", "room" => "Switches", params =>[]};
+						if ($rbl=~/Set Level/) {$rbl=1;
+							$device_tab{$f->{"idx"}}->{"MaxDimLevel"} = $f->{"MaxDimLevel"};
+							push (@{$feeds->{'params'}}, {"key" => "dimmable", "value" => "1" } );
+							push (@{$feeds->{'params'}}, {"key" => "Level", "value" => $f->{"Level"} } );
+						}
+
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif (($f->{"SwitchType"} eq "Dimmer")||($f->{"SwitchType"} eq "Doorbell")) {
