@@ -714,9 +714,9 @@ debug($system_url);
 						} elsif (($f->{"SwitchTypeVal"} eq "3")||($f->{"SubType"} eq "RFXMeter counter")) {
 							#Counter
 							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
-							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevCounter", "room" => "Temp", params =>[]};
-							my $v=$f->{"Counter"};
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v"} );
+							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
+							my ($v)=($f->{"Counter"}=~/^([^\s]+)/);
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" => "$v"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} else {
 							push @unk_dev,$f->{"idx"}."-".$f->{"Name"}."-".$f->{"Type"}."-".$f->{"SubType"}."-".$f->{"SwitchTypeVal"};
