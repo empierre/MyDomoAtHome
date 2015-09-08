@@ -452,7 +452,7 @@ debug($system_url);
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
 
 						push (@{$feed->{'devices'}}, $feeds );
-					} elsif ($f->{"SwitchType"} eq "Blinds") {
+					} elsif (($f->{"SwitchType"} eq "Blinds")&&($f->{"SubType"} ne "RollerTrol, Hasta new")) {
 						#DevShutter
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
 						my $v;
@@ -464,7 +464,7 @@ debug($system_url);
 						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
 						push (@{$feed->{'devices'}}, $feeds );
-					} elsif (($f->{"SwitchType"} eq "Venetian Blinds EU")||($f->{"SwitchType"} eq "Venetian Blinds US")) {
+					} elsif (($f->{"SwitchType"} eq "Venetian Blinds EU")||($f->{"SwitchType"} eq "Venetian Blinds US")||($f->{"SubType"} eq "RollerTrol, Hasta new")) {
 						#DevShutter
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
 						my $v;
