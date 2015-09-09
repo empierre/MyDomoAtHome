@@ -1,0 +1,36 @@
+{
+  "name": "MyDomoAtHome",
+  "version": "0.12",
+  "description": "Rest interface for Domoticz to Imperihome",
+  "main": "start.sh",
+  "bin": {
+    "ohmysensors": "./bin/app.pl"
+  },
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/empierre/MyDomoAtHome.git"
+  },
+  "keywords": [
+    "domoticz",
+    "imperihome",
+    "rest",
+    "dancer"
+    "home",
+    "automation",
+    "controller"
+  ],
+  "author": "Emmanuel PIIERRE",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/empierre/MyDomoAtHome/issues"
+  },
+  "homepage": "https://github.com/empierre/MyDomoAtHome#readme",
+  "devDependencies": {
+  },
+  "dependencies": {
+  },
+  "engines": {
+  }
+}
