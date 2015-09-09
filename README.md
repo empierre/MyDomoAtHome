@@ -16,7 +16,7 @@ DOMO/  REST Gateway between Domoticz and Imperihome ISS
 - [ ] Auto updatable
 - [x] MPD based players support (Volumio...)
 - [ ] Kodi support
-- 
+
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) Goal reached
@@ -53,9 +53,8 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
   - Remember to add the gateway in the local networks under setup in domoticz !
  
 ## Support: 
-    - Tracking: https://github.com/empierre/MyDomoAtHome/issues
-    - English : http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713
-    - French  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
-
+  - Tracking: https://github.com/empierre/MyDomoAtHome/issues
+  - English : http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713
+  - French  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
   - Send domoticz.db for an undetected device: domoticz at e-nef.com
 
