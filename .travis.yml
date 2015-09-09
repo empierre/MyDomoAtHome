@@ -7,3 +7,14 @@ before_install:
   - sudo apt-get install -y libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl 
 install:
     - cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org .
+script: "start2.sh"
+# branches:
+#   only:
+#     - master
+notifications:
+  recipients:
+    - domoticz@e-nef.com
+  email:
+    on_success: change
+    on_failure: always
+#env:
