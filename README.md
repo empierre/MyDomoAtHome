@@ -1,44 +1,60 @@
 DOMO/ REST Gateway between Domoticz and Imperihome
-==================================================
 
-(french speaking installation and support forum: http://easydomoticz.com/forum/viewtopic.php?f=12&t=573 )
+![MyDomoAtHome](http://domoticz.com/wiki/images/5/55/Imperihome.png "MyDomoAtHome")
 
-To install:
------------
-  
-  - cd ~/domoticz/
-  - git clone https://github.com/empierre/MyDomoAtHome MyDomoAtHome
-  - cd MyDomoAtHome
-  - cp config.yml.def config.yml
-  - cp production.yml.def production.yml
-  - cp development.yml.def development.yml
+# Features and goals
+- [x] Free
+- [x] Multi-platform (Linux, Mac OS X, Windows)
+- [ ] Support every single type of sensors/feature of Domoticz
+  - [x] Weather and Environmental sensors  
+  - [x] Energy sensors (Electricity, Gas, Water)
+  - [ ] RGB lamps
+  - [ ] Alarm pannel
+- [x] Dependency-less 
+- [x] Perl Dancer engine
+- [ ] Auto updatable
+- [x] MPD based players support (Volumio...)
+- [ ] Kodi support
+- 
+The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
+
+![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) Goal reached
+
+
+# Install procedure
+  - `cd ~/domoticz/`
+  - `git clone https://github.com/empierre/MyDomoAtHome MyDomoAtHome`
+  - `cd MyDomoAtHome`
+  - `cp config.yml.def config.yml`
+  - `cp production.yml.def production.yml`
+  - `cp development.yml.def development.yml`
   - edit config.yml, production.yml, development.yml
   - edit  MyDomoAtHome.sh and change the path line 20 to your home installation
-  - sh ./run_once.sh
+  - `sh ./run_once.sh`
   
-To run the service:
--------------------
+# Usage
 
-To start the service:
-   sudo service MyDomoAtHome.sh start
+## Start the service:
+   `sudo service MyDomoAtHome.sh start`
 
-To stop the service :
-   sudo service MyDomoAtHome.sh stop
+## Stop the service :
+   `sudo service MyDomoAtHome.sh stop`
 
-To restart the service :
-   sudo service MyDomoAtHome.sh reload
+## Restart the service :
+   `sudo service MyDomoAtHome.sh reload`
 
-To update:
-----------
-
-  - cd ~/domoticz/MyDomoAtHome
-  - sh ./update-mdah.sh
+## Update:
+  - `cd ~/domoticz/MyDomoAtHome`
+  - `sh ./update-mdah.sh`
   
-To setup:
----------
-
+# More detailed setup :
   - Setup: http://domoticz.com/wiki/ImperiHome
   - Remember to add the gateway in the local networks under setup in domoticz !
-  - Support: http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713
-  - to send domoticz.db for an undetected device: domoticz at e-nef.com
+ 
+#S upport: 
+    - Tracking: https://github.com/empierre/MyDomoAtHome/issues
+    - English : http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713
+    - French  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
+
+  - Send domoticz.db for an undetected device: domoticz at e-nef.com
 
