@@ -1,4 +1,5 @@
-DOMO/ REST Gateway between Domoticz and Imperihome
+# MyDomoAtHome
+DOMO/  REST Gateway between Domoticz and Imperihome ISS
 
 ![MyDomoAtHome](http://domoticz.com/wiki/images/5/55/Imperihome.png "MyDomoAtHome")
 
@@ -21,7 +22,7 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) Goal reached
 
 
-# Install procedure
+## Install procedure
   - `cd ~/domoticz/`
   - `git clone https://github.com/empierre/MyDomoAtHome MyDomoAtHome`
   - `cd MyDomoAtHome`
@@ -32,26 +33,26 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
   - edit  MyDomoAtHome.sh and change the path line 20 to your home installation
   - `sh ./run_once.sh`
   
-# Usage
+## Usage
 
-## Start the service:
+### Start the service:
    `sudo service MyDomoAtHome.sh start`
 
-## Stop the service :
+### Stop the service :
    `sudo service MyDomoAtHome.sh stop`
 
-## Restart the service :
+### Restart the service :
    `sudo service MyDomoAtHome.sh reload`
 
-## Update:
+### Update:
   - `cd ~/domoticz/MyDomoAtHome`
   - `sh ./update-mdah.sh`
   
-# More detailed setup :
+## More detailed setup :
   - Setup: http://domoticz.com/wiki/ImperiHome
   - Remember to add the gateway in the local networks under setup in domoticz !
  
-#S upport: 
+## Support: 
     - Tracking: https://github.com/empierre/MyDomoAtHome/issues
     - English : http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713
     - French  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
