@@ -1,1 +1,7 @@
 language: perl
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y libdancer-perl libfile-slurp-perl  liblwp-protocol-psgi-perl 
+  - sudo apt-get install -y libtime-piece-perl libjson-perl libplack-perl starman libcrypt-ssleay-perl libdatetime-perl
+  - sudo apt-get install -y libdbd-sqlite3-perl libdbi-perl sqlite3
+  - sudo apt-get install -y libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl 
