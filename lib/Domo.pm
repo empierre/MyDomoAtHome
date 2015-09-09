@@ -27,7 +27,7 @@ my %device_tab;
 my %device_list;
 my $last_version;    #last version in github
 my $last_version_dt; # last version text in github
-my @unk_dev;         # list of unknown devices
+
 
 hook(
    after_serializer => sub {
@@ -343,6 +343,7 @@ get '/devices' => sub {
 	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&order=Name";
 	my $decoded;
 	my @results;
+	my @unk_dev;         # list of unknown devices
 debug($system_url);
 	my $ua = LWP::UserAgent->new();
 	$ua->agent("MyDomoREST/$VERSION");
