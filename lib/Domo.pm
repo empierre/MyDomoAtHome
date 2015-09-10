@@ -87,7 +87,7 @@ debug($url);
 	my $json = $ua->get( $url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			my $f={};
@@ -861,7 +861,7 @@ debug($system_url);
 	$json = $ua->get( $system_url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			foreach my $f ( @results ) {
@@ -921,7 +921,7 @@ debug($url);
 	my $json = $ua->get( $url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			foreach my $f ( @results ) {
