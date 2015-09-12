@@ -5,7 +5,8 @@
 #MyDomoAtHome specific configuration
 domo_path: "http://ip:8080"
 external_url_camera : "http://ip:port/cgi-bin/CGIProxy.fcgi?cmd=snapPicture2&usr=&pwd="
-volumio_path: ""  #Just the IP here assuming default port and no login/password, if void inactive
+volumio_path: ""  
+#Just the IP here assuming default port and no login/password, if void inactive
 
 
 # Your application's name
