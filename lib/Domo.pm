@@ -486,7 +486,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Motion Sensor") {
 						#DevMotion	Motion security sensor
-						#Status	Current status : 1 = On / 0 = Off	N/A
+						#Status	CM180 status : 1 = On / 0 = Off	N/A
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevMotion", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
@@ -495,7 +495,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Door Lock") {
 						#DevLock	Door / window lock
-						#Status	Current status : 1 = On / 0 = Off	N/A
+						#Status	CM180 status : 1 = On / 0 = Off	N/A
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevDoor", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
@@ -741,6 +741,12 @@ debug($system_url);
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "V"} );
+							push (@{$feed->{'devices'}}, $feeds );
+						} elsif ($f->{"SubType"} eq "kWh") {
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
+							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
+							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "kWh"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Pressure") {
 							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
