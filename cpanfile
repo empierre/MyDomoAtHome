@@ -1,0 +1,9 @@
+requires 'File::Slurp';
+requires 'File::Spec';
+requires 'LWP::UserAgent';
+requires 'Crypt::SSLeay';
+requires 'utf8';
+requires 'Encode';
+requires 'Time::Piece';
+requires 'DateTime';
+requires 'POSIX';
