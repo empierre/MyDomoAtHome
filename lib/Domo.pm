@@ -54,7 +54,7 @@ get '/rooms' => sub {
 		{ "id"=> "Scenes", "name"=> "Scenes" },
 		{ "id"=> "Temp", "name"=> "Weather" },
 		{ "id"=> "Utility", "name"=> "Utility" },
-		{ "id"=> "Volumio", "name"=> "Volumio" },
+#		{ "id"=> "Volumio", "name"=> "Volumio" },
 			]};
 };
 
@@ -743,11 +743,11 @@ debug($system_url);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "V"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "kWh") {
-							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
-							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
-							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "kWh"} );
-							push (@{$feed->{'devices'}}, $feeds );
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
+						my $usage;
+						($usage)= ($f->{"Usage"} =~ /^(\d+\.\d+) Watt/);
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "kWh", "graphable" => "true"} );
+						push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Pressure") {
 							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
