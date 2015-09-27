@@ -746,7 +746,7 @@ debug($system_url);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
 						my $usage;
 						($usage)= ($f->{"Usage"} =~ /^(\d+\.\d+) Watt/);
-						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "kWh", "graphable" => "true"} );
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "kWh", "graphable" => "false"} );
 						push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Pressure") {
 							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
