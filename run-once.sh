@@ -13,7 +13,7 @@ sudo apt-get -y install whiptail  2>&1 > /dev/null
 
 
 echo "Now getting getting and installing dependencies..."
-sudo apt-get -y install libdancer-perl libfile-slurp-perl  liblwp-protocol-psgi-perl  2>&1 
+sudo apt-get -y install libdancer-perl libdancer2-perl libfile-slurp-perl  liblwp-protocol-psgi-perl  2>&1 
 sudo apt-get -y install libtime-piece-perl libjson-perl libplack-perl starman  libcrypt-ssleay-perl libdatetime-perl 2>&1 
 sudo apt-get -y install libdbd-sqlite3-perl libdbi-perl sqlite3 2>&1 
 sudo apt-get -y install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl  2>&1 
