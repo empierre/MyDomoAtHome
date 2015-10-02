@@ -4,7 +4,6 @@ package Domo2;
 # version 2 as published by the Free Software Foundation.
 # Author: epierre <epierre@e-nef.com>
 use Dancer2 appname => 'Domo';
-# set 'charset' => 'utf-8' ;
 use File::Slurp;
 use File::Spec;
 use LWP::UserAgent;
@@ -14,18 +13,23 @@ use Encode qw/ encode decode /;
 use Time::Piece;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
-#use JSON;
+use Audio::MPD;
+use warnings;
+use strict;
 
-our $VERSION = '0.9';
+our $VERSION = '0.12';
 set warnings => 0;
 my %device_tab;
 my %device_list;
-
+my $last_version;    #last version in github
+my $last_version_dt; # last version text in github
 
 set serializer => 'JSON'; 
 set 'database'     => File::Spec->catfile( config->{domo_db});
 prefix undef;
 
+my $mpd_host=config->{volumio_path};
+my $mpd;
 
 get '/' => sub {
     template 'index2';
@@ -34,11 +38,11 @@ get '/' => sub {
 get '/rooms' => sub {
        #Room list
   return {"rooms" => [ 
-		{ "id"=> "noroom", "name"=> "noroom" },
 		{ "id"=> "Switches", "name"=> "Switches" },
 		{ "id"=> "Scenes", "name"=> "Scenes" },
 		{ "id"=> "Temp", "name"=> "Weather" },
 		{ "id"=> "Utility", "name"=> "Utility" },
+#		{ "id"=> "Volumio", "name"=> "Volumio" },
 			]};
 };
 
@@ -53,60 +57,78 @@ get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
 	my $enddate = params->{enddate}||"";
 
 	my $type=lc(&getDeviceType($deviceId));
-	print "TYPE:$type\n";
+	my $ptype=$type;
+debug("TYPE:$type\n");
 	if (($type eq "lux")||($type eq "energy")) {$type="counter";}
+	if ($type eq "air quality") {$type="counter";}
+	if (($ptype eq "general")) {$type="Percentage";}
 	if (($paramKey eq "hygro")) {$type="temp";}
 	if (($paramKey eq "temp")) {$type="temp";}
 
 	my $feed={ "values" => []};
 	my $url=config->{domo_path}."/json.htm?type=graph&sensor=$type&idx=$deviceId&range=day";
 	my $decoded;
-	my @results;
+	my @results=();
 debug($url);
 	my $ua = LWP::UserAgent->new();
 	$ua->agent("MyDomoREST/$VERSION");
 	my $json = $ua->get( $url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
-			foreach my $f ( @results ) {
+			my $f={};
+			foreach $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"d"},"%Y-%m-%d %H:%M:%SS");
-					#print $dt->epoch." $value\n";
-					if (($paramKey eq "temp")&&($f->{"te"})) {
+					#print $dt->epoch." \n";
+					if ((($paramKey eq "temp")&&($f->{"te"}))||($type eq "temp")) {
 							my $value=$f->{"te"};
 							my $date=$dt->epoch*1000;
-							my $feeds={"date" => $date, "value" => $value};
+							my $feeds={"date" => "$date", "value" => "$value"};
 							push (@{$feed->{'values'}}, $feeds );
-					} elsif (($paramKey eq "hygro")&&($f->{"hu"})) {
+					} elsif ((($paramKey eq "hygro")&&($f->{"hu"}))||($type eq "Humidity")) {
 							my $value=$f->{"hu"};
 							my $date=$dt->epoch*1000;
-							my $feeds={"date" => $date, "value" => $value};
+							my $feeds={"date" => "$date", "value" => "$value"};
+							push (@{$feed->{'values'}}, $feeds );
+					} elsif (($ptype eq "air quality")) {
+							my $value=$f->{"co2"};
+							my $date=$dt->epoch*1000;
+							my $feeds={"date" => "$date", "value" => "$value"};
+							push (@{$feed->{'values'}}, $feeds );
+					} elsif (($type eq "counter")||($type eq "Percentage")) {
+							my $value=$f->{"v"};
+							my $date=$dt->epoch*1000;
+							my $feeds={"date" => "$date", "value" => "$value"};
 							push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"mm"}) {
 						my $value=$f->{"mm"};
 						my $date=$dt->epoch*1000;
-						my $feeds={"date" => $date, "value" => $value};
+						my $feeds={"date" => "$date", "value" => "$value"};
 						push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"uvi"}) {
 						my $value=$f->{"uvi"};
 						my $date=$dt->epoch*1000;
-						my $feeds={"date" => $date, "value" => $value};
+						my $feeds={"date" => "$date", "value" => "$value"};
 						push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"v"}) {
 						my $value=$f->{"v"};
 						my $date=$dt->epoch*1000;
-						my $feeds={"date" => $date, "value" => $value};
+						my $feeds={"date" => "$date", "value" => "$value"};
 						push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"sp"}) {
 						my $value=$f->{"sp"};
 						my $date=$dt->epoch*1000;
-						my $feeds={"date" => $date, "value" => $value};
+						my $feeds={"date" => "$date", "value" => "$value"};
 						push (@{$feed->{'values'}}, $feeds );
 					}
+					#di direction
+					#gu gust
+					#v counter percentage
+					#
 				}
-			return($feed);
+			return to_json($feed, { utf8 => 1} );
 			return { success => true};
 		} else {
 			status 'error';
@@ -165,14 +187,16 @@ debug($url);
 		if ($actionParam eq "100") {
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
 		} else {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
+			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
 		}
 	} elsif (($device_tab{$deviceId}->{"Action"}==5)) {
 		#Blinds inverted
 		if ($actionParam eq "100") {
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=0&passcode=";
 		} else {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
+			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
 		}
 	} elsif (($device_tab{$deviceId}->{"Action"}==6)) {
 		#Blinds -> On for Closed, Off for Open 
@@ -188,7 +212,8 @@ debug($url);
 			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
 
 		} else {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$actionParam&passcode=";
+			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$setLevel&passcode=";
 		}
 	}
 
@@ -214,7 +239,7 @@ debug($url);
 			return { success => false, errormsg => $response->status_line};
 		}
 		return { success => true};
-		} elsif ($actionName eq 'pulseShutter') {
+	} elsif ($actionName eq 'pulseShutter') {
 		#pulseShutter	up/down
 		status 'error';
 		return { success => false, errormsg => "not implemented"};
@@ -232,23 +257,68 @@ debug($url);
 		}
 		return { success => true};
 	} elsif ($actionName eq 'launchScene') {
-	#launchScene
-	#/json.htm?type=command&param=switchscene&idx=&switchcmd=
-	my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$deviceId&switchcmd=On&passcode=";
-debug($url);
-	my $browser = LWP::UserAgent->new;
-	my $response = $browser->get($url);
-	if ($response->is_success){ 
+		#launchScene
+		#/json.htm?type=command&param=switchscene&idx=&switchcmd=
+		my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$deviceId&switchcmd=On&passcode=";
+	debug($url);
+		my $browser = LWP::UserAgent->new;
+		my $response = $browser->get($url);
+		if ($response->is_success){ 
+			return { success => true};
+		} else {
+			status 'error';
+			return { success => false, errormsg => $response->status_line};
+		}
 		return { success => true};
-	} else {
+	} elsif ($actionName eq 'setColor') {
+			my $url=config->{domo_path}."/json.htm?type=command&param=setcolorbrightnessvalue&idx=$deviceId&passcode=";
+		debug($url);
+			my $browser = LWP::UserAgent->new;
+			my $response = $browser->get($url);
+			if ($response->is_success){ 
+				return { success => true};
+			} else {
+				status 'error';
+				return { success => false, errormsg => $response->status_line};
+			}
+	} elsif ($actionName eq 'setChoice') {
+		if ($deviceId=~/^S/) {
+			my ($sc)=$deviceId=~/S(\d+)/;
+			my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$sc&switchcmd=$actionParam&passcode=";
+		debug($url);
+			my $browser = LWP::UserAgent->new;
+			my $response = $browser->get($url);
+			if ($response->is_success){ 
+				return { success => true};
+			} else {
+				status 'error';
+				return { success => false, errormsg => $response->status_line};
+			}
+		} elsif ($deviceId=~/^V/) {
+			my ($sc)=$deviceId=~/V(\d+)/;
+			if ($actionParam eq "play") {
+				$mpd->play;
+			}elsif ($actionParam eq "pause") {
+				$mpd->pause;
+			}elsif ($actionParam eq "stop") {
+				$mpd->stop;
+			}elsif ($actionParam eq "next") {
+				$mpd->next;
+			}elsif ($actionParam eq "prev") {
+				$mpd->next;
+			}elsif ($actionParam eq "volumeUP") {
+				$mpd->volume("+1");
+			}elsif ($actionParam eq "volumeDOWN") {
+				$mpd->volume("-1");
+			}
+		} else {
+			status 'error';
+			return { success => false, errormsg => "not implemented"};
+		}
+	} elsif ($actionName eq 'setMode') {
+		#setChoice string
 		status 'error';
-		return { success => false, errormsg => $response->status_line};
-	}
-	return { success => true};
-} elsif (($actionName eq 'setChoice')||($actionName eq 'setMode')) {
-	#setChoice string
-	status 'error';
-	return { success => false, errormsg => "not implemented"};
+		return { success => false, errormsg => "not implemented"};
     } else {
         status 'not_found';
         return "What?";
@@ -257,24 +327,43 @@ debug($url);
 
 get '/devices' => sub {
 	my $feed={ "devices" => []};
+	my $t_unit="°C";
 	my $system_url = config->{domo_path}."/json.htm?type=devices&filter=all&used=true&order=Name";
 	my $decoded;
 	my @results;
+	my @unk_dev;         # list of unknown devices
 debug($system_url);
 	my $ua = LWP::UserAgent->new();
 	$ua->agent("MyDomoREST/$VERSION");
 	my $json = $ua->get( $system_url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
+			#Own device version
+			my $feeds={"id" => "S0", "name" => "MyDomoAtHome", "type" => "DevGenericSensor",  params =>[]};
+			my $ver="$VERSION";
+			push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$ver", "unit"=> "", "graphable" => "false"} );
+			push (@{$feed->{'devices'}}, $feeds );
+			#Check for new version
+			my @and=&getLastVersion();
+			my $an1;my $an2;
+			if (($ver ne $and[0])&&($and[0] ne "err")) {
+				my $feeds={"id" => "S1", "name" => "New version found", "type" => "DevGenericSensor",  params =>[]};
+				$an1=$and[0];
+				push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$an1", "unit"=> "", "graphable" => "false"} );
+				push (@{$feed->{'devices'}}, $feeds );
+			}
+			#
+			#Parse the devices tree
+			#
 			foreach my $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 					my $name=$f->{"Name"};
 					#$name=~s/\s/_/;
 					#$name=~s/\s/_/;
-					#$name=~s/\//_/;
+					#$name=~s/\//_/; 
 					$name=~s/%/P/;
 				 if ($f->{"SwitchType"}) {			
 					#print $f->{"idx"} . " " . $f->{"Name"} . " " . $f->{"Status"} . $f->{"LastUpdate"}."\n";
@@ -288,7 +377,7 @@ debug($system_url);
 					elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 					else { $rbl=$bl;}
 
-					if (($f->{"SwitchType"} eq "On/Off")or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
+					if (((($f->{"SwitchType"} eq "On/Off")||($f->{"SwitchType"} eq "Lighting Limitless/Applamp"))and($f->{"SubType"} ne "RGBW"))or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
@@ -300,12 +389,23 @@ debug($system_url);
 						#push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"1"} );
 						#push (@{$feeds->{'params'}}, {"key" => "Level", "value" =>"$rbl"} );
 						push (@{$feed->{'devices'}}, $feeds );
+					} elsif (($f->{"SubType"} eq "RGBW")) {
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevRGBLight", "room" => "Switches", params =>[]};
+						if ($rbl=~/Set Level/) {$rbl=1;
+							$device_tab{$f->{"idx"}}->{"MaxDimLevel"} = $f->{"MaxDimLevel"};
+							push (@{$feeds->{'params'}}, {"key" => "dimmable", "value" => "1" } );
+							push (@{$feeds->{'params'}}, {"key" => "Level", "value" => $f->{"Level"} } );
+						}
+
+						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
+						push (@{$feed->{'devices'}}, $feeds );
 					} elsif (($f->{"SwitchType"} eq "Dimmer")||($f->{"SwitchType"} eq "Doorbell")) {
 						#DevDimmer	Dimmable light
 						#Status	Current status : 1 = On / 0 = Off	N/A
 						#Level	Current dim level (0-100)	%
 						#"idx" : "3", "Name" : "Alerte",  "Level" : 0,  "SwitchType" : "Dimmer",  "Status" : "Off","LastUpdate" : "2014-03-18 22:17:18"
 						if ($rbl=~/Set Level/) {$rbl=1;}
+						$device_tab{$f->{"idx"}}->{"MaxDimLevel"} = $f->{"MaxDimLevel"};
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevDimmer", "room" => "Switches", params =>[]};
 
 						push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
@@ -348,7 +448,7 @@ debug($system_url);
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
 
 						push (@{$feed->{'devices'}}, $feeds );
-					} elsif ($f->{"SwitchType"} eq "Blinds") {
+					} elsif (($f->{"SwitchType"} eq "Blinds")&&($f->{"SubType"} ne "RollerTrol, Hasta new")) {
 						#DevShutter
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
 						my $v;
@@ -360,7 +460,7 @@ debug($system_url);
 						push (@{$feeds->{'params'}}, {"key" => "pulseable", "value" =>"0"} );
 						push (@{$feeds->{'params'}}, {"key" => "Level", "value" => "$v" } );
 						push (@{$feed->{'devices'}}, $feeds );
-					} elsif (($f->{"SwitchType"} eq "Venetian Blinds EU")||($f->{"SwitchType"} eq "Venetian Blinds US")) {
+					} elsif (($f->{"SwitchType"} eq "Venetian Blinds EU")||($f->{"SwitchType"} eq "Venetian Blinds US")||($f->{"SubType"} eq "RollerTrol, Hasta new")) {
 						#DevShutter
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevShutter", "room" => "Switches", params =>[]};
 						my $v;
@@ -374,7 +474,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Motion Sensor") {
 						#DevMotion	Motion security sensor
-						#Status	Current status : 1 = On / 0 = Off	N/A
+						#Status	CM180 status : 1 = On / 0 = Off	N/A
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevMotion", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
@@ -383,7 +483,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Door Lock") {
 						#DevLock	Door / window lock
-						#Status	Current status : 1 = On / 0 = Off	N/A
+						#Status	CM180 status : 1 = On / 0 = Off	N/A
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevDoor", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
@@ -498,23 +598,25 @@ debug($system_url);
 							$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
 
 							my $v=$f->{"Temp"};
-							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
+							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
 							my $vh=$f->{"Humidity"};
 							push (@{$feeds->{'params'}}, {"key" => "hygro", "value" => "$vh", "unit" => "%", "graphable" => "true" });
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"Type"} eq "Temp") {
 							#DevTemperature Temperature sensor
-							#Value  Current temperature     °C
+							#Value  Current temperature     *C
 							#"Temp" : 21.50,  "Type" : "Temp + Humidity" / Type" : "Temp",
+							$device_tab{$f->{"idx"}}->{"graph"} = 'te';
 							my $feeds;
 							$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}};
 							my $v=$f->{"Temp"};
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "°C", "graphable" => "true"} );
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"Type"} eq "Humidity") {
 							#DevHygrometry  Hygro sensor
 							#Value  Current hygro value     %
 							# "Humidity" : 52  "Type" : "Temp + Humidity" / Type" : "Humidity",
+							$device_tab{$f->{"idx"}}->{"graph"} = 'hu';
 
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevHygrometry", "room" => "Temp", params =>[]};
 							my $v=$f->{"Humidity"};
@@ -526,6 +628,7 @@ debug($system_url);
 							#Value  Current pressure        mbar
 							#"Barometer" : 1022, "Type" : "Temp + Humidity + Baro"
 							my $idx=$f->{"idx"};
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 							if ($f->{"Type"} eq "Temp + Humidity + Baro") {$idx=$idx."_1"};
 							my $feeds={"id" => $idx, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
 							my $v=$f->{"Barometer"};
@@ -537,16 +640,18 @@ debug($system_url);
 						#Value  Current instant rain value      mm/h
 						#Accumulation   Total rain accumulation mm
 						#"Rain" : "0.0", "RainRate" : "0.0", "Type" : "Rain"
-								my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevRain", "room" => "Temp", params =>[]};
-								my $v0=$f->{"RainRate"};
-								my $v1=$f->{"Rain"};
-								push (@{$feeds->{'params'}}, {"key" => "Accumulation", "value" => "$v1", "unit" => "mm", "graphable" => "true"} );
-								push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v0", "unit" => "mm/h"} );
-								push (@{$feed->{'devices'}}, $feeds );
+						$device_tab{$f->{"idx"}}->{"graph"} = 'mm';
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevRain", "room" => "Temp", params =>[]};
+						my $v0=$f->{"RainRate"};
+						my $v1=$f->{"Rain"};
+						push (@{$feeds->{'params'}}, {"key" => "Accumulation", "value" => "$v1", "unit" => "mm", "graphable" => "true"} );
+						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v0", "unit" => "mm/h"} );
+						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "UV")  {
 						#DevUV  UV sensor
 						#Value  Current UV index        index
 						# "Type" : "UV","UVI" : "6.0"
+						$device_tab{$f->{"idx"}}->{"graph"} = 'uvi';
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevUV", "room" => "Temp", params =>[]};
 						my $v=$f->{"UVI"};
 						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "graphable" => "true"} );
@@ -554,18 +659,23 @@ debug($system_url);
 					} elsif ($f->{"Type"} eq "Lux")  {
 						#DevLux  Lux sensor
 						#Value  Current Lux value        index
+						$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevLuminosity", "room" => "Temp", params =>[]};
 						my ($v)=($f->{"Data"}=~/(\d+) Lux/);
+						$device_tab{$f->{"idx"}}->{"graph"} = 'uvi';
 						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "graphable" => "true"} );
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Air Quality")  {
 						#DevCO2  CO2 sensor
+						$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevCO2", "room" => "Temp", params =>[]};
 						my ($v)=($f->{"Data"}=~/(\d+) ppm/);
-						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "ppm"});
+						$device_tab{$f->{"idx"}}->{"graph"} = 'v';
+						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "ppm", "graphable" => "true"});
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"Type"} eq "Wind")  {
 						#DevWind wind
+						$device_tab{$f->{"idx"}}->{"graph"} = 'sp';
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevWind", "room" => "Temp", params =>[]};
 						my ($dir)=($f->{"Direction"}=~/(\d+)/);
 						my ($speed)=($f->{"Speed"}=~/(\d+)/);
@@ -586,89 +696,156 @@ debug($system_url);
 							#Water
 							my ($usage)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
 							my ($total)= ($f->{"Counter"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							$total=ceil($total);
-							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "m3", "graphable" => "true"} );
-							 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "m3"} );
+							my $totalm3=ceil($total);
+							my $usagem3=ceil($usage/1000);
+							my $feeds={"id" => $f->{"idx"}, "name" => "$name", "type" => "DevElectricity", "room" => "Utility", params =>[]};
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usagem3", "unit" => "m3", "graphable" => "true"} );
+							 push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$totalm3", "unit" => "m3"} );
 							push (@{$feed->{'devices'}}, $feeds );
 							#Water by liter
-							my $usage2=$usage*1000; #move to liters
+							my $usage2=$usage; #move to liters
 							$feeds={"id" => $f->{"idx"}."_l", "name" => $name."_l", "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$usage2", "unit"=> "L"} );
 							push (@{$feed->{'devices'}}, $feeds );
-						} elsif ($f->{"SwitchTypeVal"} eq "3") {
+						} elsif (($f->{"SwitchTypeVal"} eq "3")||($f->{"SubType"} eq "RFXMeter counter")) {
 							#Counter
-							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevCounter", "room" => "Temp", params =>[]};
-							my $v=$f->{"Counter"};
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v"} );
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
+							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
+							my ($v)=($f->{"Counter"}=~/^([^\s]+)/);
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" => "$v"} );
 							push (@{$feed->{'devices'}}, $feeds );
-						} else {print STDERR "unk!\n";
+						} else {
+							push @unk_dev,$f->{"idx"}."-".$f->{"Name"}."-".$f->{"Type"}."-".$f->{"SubType"}."-".$f->{"SwitchTypeVal"};
 						}
 					} elsif ($f->{"Type"} eq "General")  {
 							if ($f->{"SubType"} eq "Percentage") {
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "%"} );
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "%", "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Voltage") {
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "V"} );
 							push (@{$feed->{'devices'}}, $feeds );
+						} elsif ($f->{"SubType"} eq "kWh") {
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
+						my $usage;
+						($usage)= ($f->{"Usage"} =~ /^(\d+\.\d+) Watt/);
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "kWh", "graphable" => "false"} );
+						push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Pressure") {
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "mbar", "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Visibility") {
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "km"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Solar Radiation") {
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "Watt/m2"} );
 							push (@{$feed->{'devices'}}, $feeds );
+						} elsif (($f->{"SubType"} eq "Text")||($f->{"SubType"} eq "Alert")||($f->{"SubType"} eq "Unknown")) {	   
+	    						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevGenericSensor", "room" => "Utility", params =>[]};
+							my $v= $f->{"Data"};
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => ""} );
+							push (@{$feed->{'devices'}}, $feeds );
+						} elsif ($f->{"SubType"} eq "Sound Level") {	   
+							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
+							my ($v)= ($f->{"Data"} =~ /^([0-9]+) dB/);
+	    						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevNoise", "room" => "Utility", params =>[]};
+							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "dB", graphable => "true"} );
+							push (@{$feed->{'devices'}}, $feeds );
+						} else { 
+							push @unk_dev,$f->{"idx"}."-".$f->{"Name"}."-".$f->{"Type"}."-".$f->{"SubType"}."-".$f->{"SwitchTypeVal"};
 						}
-					} elsif ($f->{"SubType"} eq "SetPoint") {
+					} elsif (($f->{"SubType"})&&($f->{"SubType"} eq "SetPoint")) {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
 							push (@{$feeds->{'params'}}, {"key" => "cursetpoint", "value" => "$v"});
-							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>"°C"} );
+							push (@{$feeds->{'params'}}, {"key" => "curtemp", "value" => "$v", "unit"=>$t_unit} );
 							push (@{$feeds->{'params'}}, {"key" => "step", "value" => "0.5"} );
 							push (@{$feeds->{'params'}}, {"key" => "curmode", "value" => "default"} );
 							push (@{$feeds->{'params'}}, {"key" => "availablemodes", "value" => "default"} );
 							push (@{$feed->{'devices'}}, $feeds );
-					}
+					} else {
+						#catchall
+						if ($f->{"idx"}>5) {push @unk_dev,$f->{"idx"}."-".$f->{"Name"}."-".$f->{"Type"}."-".$f->{"SubType"}."-".$f->{"SwitchTypeVal"};}					}
 				}
 			}; 
 		}
+
+		#Unknown device list
+		my $ind_unk=2;
+		foreach my $devt ( @unk_dev)  {
+			my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
+			push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
+			push (@{$feed->{'devices'}}, $feeds );
+		}
+	} else {
+		my $feeds={"id" => "S00", "name" => "Unable to connect to Domoticz", "type" => "DevGenericSensor",  params =>[]};
+		my $ver=config->{domo_path};
+		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$ver", "unit"=> "", "graphable" => "false"} );
+		push (@{$feed->{'devices'}}, $feeds );
+		$feeds={"id" => "S01", "name" => "Please add this gateway in Setup/settings/Local Networks", "type" => "DevGenericSensor",  params =>[]};
+		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"", "unit"=> "", "graphable" => "false"} );
+		push (@{$feed->{'devices'}}, $feeds );
 	}
+
+	#MPD
+	if ($mpd_host ne '') {
+		$mpd=Audio::MPD->new ( host => $mpd_host);
+	}
+	#Status
+	if ($mpd_host) {
+		my $status = $mpd->status;
+		my $song = $mpd->current;
+		my $feeds={"id" => "V2", "name" => $song->artist." - ".$song->album, "type" => "DevMultiSwitch", "room" => "Volumio", params =>[]};
+		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>$status->state, "unit"=> "", "graphable" => "false"} );
+		push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "play,stop,pause,next,prev,volumeUP,volumeDOWN"});
+		push (@{$feed->{'devices'}}, $feeds );
+	}
+
 	#Get Scenes
 	$system_url=config->{domo_path}."/json.htm?type=scenes";
 	$json = $ua->get( $system_url );
 	#warn "Could not get $system_url!" unless defined $json;
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			foreach my $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 	#	debug($dt->strftime("%Y-%m-%d %H:%M:%S"));
 					my $name=$f->{"Name"};
-					#$name=~s/\s/_/;
-					#$name=~s/\s/_/;
-					#$name=~s/\//_/;
 					$name=~s/%/P/;
 					#DevScene       Scene (launchable)
 					#LastRun        Date of last run        N/A
 					#"idx" : "3", "Name" : "Alerte", "Type" : "Scenes", "LastUpdate" : "2014-03-18 22:17:18"
-					my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevScene", "room" => "Scenes", params =>[]};
-					my $v=$dt->strftime("%Y-%m-%d %H:%M:%S");
-					push (@{$feeds->{'params'}}, {"key" => "LastRun", "value" => "$v"} );
-					push (@{$feed->{'devices'}}, $feeds );
+					if ($f->{"Type"} eq "Group") {
+						my $feeds={"id" => "S".$f->{"idx"}, "name" => $name, "type" => "DevMultiSwitch", "room" => "Scenes", params =>[]};
+						my $v=$dt->strftime("%Y-%m-%d %H:%M:%S");
+						push (@{$feeds->{'params'}}, {"key" => "LastRun", "value" => "$v"} );
+						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => $f->{"Status"}} );
+						push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "Mixed,On,Off"} );
+						push (@{$feed->{'devices'}}, $feeds );
+
+					} else {
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevScene", "room" => "Scenes", params =>[]};
+						my $v=$dt->strftime("%Y-%m-%d %H:%M:%S");
+						push (@{$feeds->{'params'}}, {"key" => "LastRun", "value" => "$v"} );
+						push (@{$feed->{'devices'}}, $feeds );
+					}
 			}
 		}
 	}
@@ -678,7 +855,7 @@ debug($system_url);
 	$json = $ua->get( $system_url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			foreach my $f ( @results ) {
@@ -722,8 +899,8 @@ debug($system_url);
 	#Value  Current value   N/A
 
 
-
-	return($feed);
+	
+	return to_json($feed, { utf8 => 1} );
 	return { success => true};
 };
 
@@ -738,7 +915,7 @@ debug($url);
 	my $json = $ua->get( $url );
 	if ($json->is_success) {
 		# Decode the entire JSON
-		$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
 			@results = @{ $decoded->{'result'} };
 			foreach my $f ( @results ) {
@@ -749,6 +926,35 @@ debug($url);
 				}
 			}
 		}
+	}
+}
+sub getLastVersion() {
+	my $dt = DateTime->now();
+	if ($last_version_dt < $dt->add( hours => 4 )) {
+		my @res;
+		push @res,$last_version;
+		push @res,"";
+		return(@res);
+	} else {
+		my $url="https://api.github.com/repos/empierre/MyDomoAtHome/releases/latest";
+		my $decoded;
+		my @results;
+	debug($url);
+		my $ua = LWP::UserAgent->new();
+		$ua->agent("MyDomoREST/$VERSION");
+		my $json = $ua->get( $url );
+		if ($json->is_success) {
+			# Decode the entire JSON
+			$decoded = JSON->new->utf8(0)->decode( $json->decoded_content );
+			if ($decoded) {
+				my @res;
+				push @res,$decoded->{tag_name};
+				push @res,$decoded->{body};
+				$last_version_dt=DateTime->now;
+				$last_version=$decoded->{tag_name};
+				return(@res);
+			}
+		} else {return "err";}
 	}
 }
 start;
