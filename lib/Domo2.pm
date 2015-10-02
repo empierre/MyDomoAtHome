@@ -17,9 +17,10 @@ use Audio::MPD;
 use warnings;
 use strict;
 
-our $VERSION = '0.13';
+our $VERSION = '0.12';
 set warnings => 0;
 my %device_tab;
+my %room_tab;
 my %device_list;
 my $last_version;    #last version in github
 my $last_version_dt; # last version text in github
@@ -36,17 +37,11 @@ get '/' => sub {
 };
 
 get '/rooms' => sub {
-     #Room list
-	 #my %room={};
-	 #if ($mpd_host ne '') {push $room,{ "id"=> "Volumio", "name"=> "Volumio" }};
-	 
-  return {"rooms" => [ 
-		{ "id"=> "Switches", "name"=> "Switches" },
-		{ "id"=> "Scenes", "name"=> "Scenes" },
-		{ "id"=> "Temp", "name"=> "Weather" },
-		{ "id"=> "Utility", "name"=> "Utility" },
-#		{ "id"=> "Volumio", "name"=> "Volumio" },
-			]};
+    #Room list
+	my %room={};
+	foreach my $key (keys %room_tab) {
+		push @room,  "id"=> "$key", "name"=> "$key" };	 
+	}
 };
 
 get '/system' => sub {
@@ -144,148 +139,24 @@ debug($url);
 };
 
 get '/devices/:deviceId/action/:actionName/?:actionParam?' => sub {
-my $deviceId = params->{deviceId};
-my $actionName = params->{actionName};
-my $actionParam = params->{actionParam}||"";
+	my $deviceId = params->{deviceId};
+	my $actionName = params->{actionName};
+	my $actionParam = params->{actionParam}||"";
 
 
-switch ($actionName){
+	switch ($actionName){
 
-case 'setStatus' {
-		debug("actionParam=".$actionParam."\n");
-		#setStatus	0/1
-		my $action;
-		if ($actionParam) {
-			$action="On";
-		} else {
-			$action="Off";
-		}
-		my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=$action&level=0&passcode=";
-		debug($url);
-		my $browser = LWP::UserAgent->new;
-		my $response = $browser->get($url);
-		if ($response->is_success){ 
-			return { success => true};
-		} else {
-			status 'error';
-			return { success => false, errormsg => $response->status_line};
-		}
-	}
-case 'setArmed') {
-	#setArmed	0/1
-	status 'error';
-	return { success => false, errormsg => "not implemented"};
-	}
-case 'setAck') {
-	#setAck	
-		my $url=config->{domo_path}."/json.htm?type=command&param=resetsecuritystatus&idx=$deviceId&switchcmd=Normal";
-	debug($url);
-		my $browser = LWP::UserAgent->new;
-		my $response = $browser->get($url);
-		if ($response->is_success){ 
-			return { success => true};
-		} else {
-			status 'error';
-			return { success => false, errormsg => $response->status_line};
-		}
-	}
-case 'setLevel' {
-	#/json.htm?type=command&param=switchlight&idx=&switchcmd=Set%20Level&level=6
-	my $url;
-	if (($device_tab{$deviceId}->{"Action"}==2)or($device_tab{$deviceId}->{"Action"}==3)) {
-		if ($actionParam eq "100") {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
-		} else {
-			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
-		}
-	} elsif (($device_tab{$deviceId}->{"Action"}==5)) {
-		#Blinds inverted
-		if ($actionParam eq "100") {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=0&passcode=";
-		} else {
-			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
-		}
-	} elsif (($device_tab{$deviceId}->{"Action"}==6)) {
-		#Blinds -> On for Closed, Off for Open 
-		if ($actionParam eq "100") {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=0&passcode=";
-		} else {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=0&passcode=";
-		}
-	} else {
-		if ($actionParam eq "1") {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
-		} elsif ($actionParam eq "0") {
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
-
-		} else {
-			my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
-			$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$setLevel&passcode=";
-		}
-	}
-
-	debug($url);
-		my $browser = LWP::UserAgent->new;
-		my $response = $browser->get($url);
-		if ($response->is_success){ 
-			return { success => true};
-		} else {
-			status 'error';
-			return { success => false, errormsg => $response->status_line};
-		}
-	} 
-case 'stopShutter' {
-		#stopShutter (Venetian store)
-		my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Stop&level=0&passcode=";
-debug($url);
-		my $browser = LWP::UserAgent->new;
-		my $response = $browser->get($url);
-		if ($response->is_success){ 
-			return { success => true};
-		} else {
-			status 'error';
-			return { success => false, errormsg => $response->status_line};
-		}
-		return { success => true};
-	}
-case 'pulseShutter' {
-		#pulseShutter	up/down
-		status 'error';
-		return { success => false, errormsg => "not implemented"};
-	} elsif ($actionName eq 'setSetPoint') {
-		#DevThermostat
-		my $url=config->{domo_path}."/json.htm?type=setused&idx=$deviceId&used=true&setpoint=$actionParam";
-debug($url);
-		my $browser = LWP::UserAgent->new;
-		my $response = $browser->get($url);
-		if ($response->is_success){ 
-			return { success => true};
-		} else {
-			status 'error';
-			return { success => false, errormsg => $response->status_line};
-		}
-		return { success => true};
-	}
-case 'launchScene' {
-		#launchScene
-		#/json.htm?type=command&param=switchscene&idx=&switchcmd=
-		my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$deviceId&switchcmd=On&passcode=";
-	debug($url);
-		my $browser = LWP::UserAgent->new;
-		my $response = $browser->get($url);
-		if ($response->is_success){ 
-			return { success => true};
-		} else {
-			status 'error';
-			return { success => false, errormsg => $response->status_line};
-		}
-		return { success => true};
-	}
-case 'setColor' {
-		my $url=config->{domo_path}."/json.htm?type=command&param=setcolorbrightnessvalue&idx=$deviceId&passcode=";
-		debug($url);
+		case 'setStatus' {
+			debug("actionParam=".$actionParam."\n");
+			#setStatus	0/1
+			my $action;
+			if ($actionParam) {
+				$action="On";
+			} else {
+				$action="Off";
+			}
+			my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=$action&level=0&passcode=";
+			debug($url);
 			my $browser = LWP::UserAgent->new;
 			my $response = $browser->get($url);
 			if ($response->is_success){ 
@@ -294,51 +165,177 @@ case 'setColor' {
 				status 'error';
 				return { success => false, errormsg => $response->status_line};
 			}
-	}
-case 'setChoice' {
-		if ($deviceId=~/^S/) {
-			my ($sc)=$deviceId=~/S(\d+)/;
-			my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$sc&switchcmd=$actionParam&passcode=";
-		debug($url);
-			my $browser = LWP::UserAgent->new;
-			my $response = $browser->get($url);
-			if ($response->is_success){ 
-				return { success => true};
-			} else {
-				status 'error';
-				return { success => false, errormsg => $response->status_line};
-			}
-		} elsif ($deviceId=~/^V/) {
-			my ($sc)=$deviceId=~/V(\d+)/;
-			if ($actionParam eq "play") {
-				$mpd->play;
-			}elsif ($actionParam eq "pause") {
-				$mpd->pause;
-			}elsif ($actionParam eq "stop") {
-				$mpd->stop;
-			}elsif ($actionParam eq "next") {
-				$mpd->next;
-			}elsif ($actionParam eq "prev") {
-				$mpd->next;
-			}elsif ($actionParam eq "volumeUP") {
-				$mpd->volume("+1");
-			}elsif ($actionParam eq "volumeDOWN") {
-				$mpd->volume("-1");
-			}
-		} else {
+		}
+		case 'setArmed') {
+			#setArmed	0/1
 			status 'error';
 			return { success => false, errormsg => "not implemented"};
 		}
+		case 'setAck') {
+			#setAck	
+			my $url=config->{domo_path}."/json.htm?type=command&param=resetsecuritystatus&idx=$deviceId&switchcmd=Normal";
+		debug($url);
+			my $browser = LWP::UserAgent->new;
+			my $response = $browser->get($url);
+			if ($response->is_success){ 
+				return { success => true};
+			} else {
+				status 'error';
+				return { success => false, errormsg => $response->status_line};
+			}
+		}
+		case 'setLevel' {
+			#/json.htm?type=command&param=switchlight&idx=&switchcmd=Set%20Level&level=6
+			my $url;
+			if (($device_tab{$deviceId}->{"Action"}==2)or($device_tab{$deviceId}->{"Action"}==3)) {
+				if ($actionParam eq "100") {
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
+				} else {
+					my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
+				}
+			} elsif (($device_tab{$deviceId}->{"Action"}==5)) {
+				#Blinds inverted
+				if ($actionParam eq "100") {
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=0&passcode=";
+				} else {
+					my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
+				}
+			} elsif (($device_tab{$deviceId}->{"Action"}==6)) {
+				#Blinds -> On for Closed, Off for Open 
+				if ($actionParam eq "100") {
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=0&passcode=";
+				} else {
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=0&passcode=";
+				}
+			} else {
+				if ($actionParam eq "1") {
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$actionParam&passcode=";
+				} elsif ($actionParam eq "0") {
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
+
+				} else {
+					my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Set%20Level&level=$setLevel&passcode=";
+				}
+			}
+
+				debug($url);
+				my $browser = LWP::UserAgent->new;
+				my $response = $browser->get($url);
+				if ($response->is_success){ 
+					return { success => true};
+				} else {
+					status 'error';
+					return { success => false, errormsg => $response->status_line};
+				}
+		} 
+		case 'stopShutter' {
+			#stopShutter (Venetian store)
+			my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Stop&level=0&passcode=";
+		debug($url);
+			my $browser = LWP::UserAgent->new;
+			my $response = $browser->get($url);
+			if ($response->is_success){ 
+				return { success => true};
+			} else {
+				status 'error';
+				return { success => false, errormsg => $response->status_line};
+			}
+			return { success => true};
+		}
+		case 'pulseShutter' {
+				#pulseShutter	up/down
+				status 'error';
+				return { success => false, errormsg => "not implemented"};
+		}
+		case 'setSetPoint' {
+			#DevThermostat
+			my $url=config->{domo_path}."/json.htm?type=setused&idx=$deviceId&used=true&setpoint=$actionParam";
+			debug($url);
+			my $browser = LWP::UserAgent->new;
+			my $response = $browser->get($url);
+			if ($response->is_success){ 
+				return { success => true};
+			} else {
+				status 'error';
+				return { success => false, errormsg => $response->status_line};
+			}
+			return { success => true};
+		}
+		case 'launchScene' {
+			#launchScene
+			#/json.htm?type=command&param=switchscene&idx=&switchcmd=
+			my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$deviceId&switchcmd=On&passcode=";
+		debug($url);
+			my $browser = LWP::UserAgent->new;
+			my $response = $browser->get($url);
+			if ($response->is_success){ 
+				return { success => true};
+			} else {
+				status 'error';
+				return { success => false, errormsg => $response->status_line};
+			}
+			return { success => true};
+		}
+		case 'setColor' {
+			my $url=config->{domo_path}."/json.htm?type=command&param=setcolorbrightnessvalue&idx=$deviceId&passcode=";
+			debug($url);
+				my $browser = LWP::UserAgent->new;
+				my $response = $browser->get($url);
+				if ($response->is_success){ 
+					return { success => true};
+				} else {
+					status 'error';
+					return { success => false, errormsg => $response->status_line};
+				}
+		}
+		case 'setChoice' {
+			if ($deviceId=~/^S/) {
+				my ($sc)=$deviceId=~/S(\d+)/;
+				my $url=config->{domo_path}."/json.htm?type=command&param=switchscene&idx=$sc&switchcmd=$actionParam&passcode=";
+			debug($url);
+				my $browser = LWP::UserAgent->new;
+				my $response = $browser->get($url);
+				if ($response->is_success){ 
+					return { success => true};
+				} else {
+					status 'error';
+					return { success => false, errormsg => $response->status_line};
+				}
+			} elsif ($deviceId=~/^V/) {
+				my ($sc)=$deviceId=~/V(\d+)/;
+				if ($actionParam eq "play") {
+					$mpd->play;
+				}elsif ($actionParam eq "pause") {
+					$mpd->pause;
+				}elsif ($actionParam eq "stop") {
+					$mpd->stop;
+				}elsif ($actionParam eq "next") {
+					$mpd->next;
+				}elsif ($actionParam eq "prev") {
+					$mpd->next;
+				}elsif ($actionParam eq "volumeUP") {
+					$mpd->volume("+1");
+				}elsif ($actionParam eq "volumeDOWN") {
+					$mpd->volume("-1");
+				}
+			} else {
+				status 'error';
+				return { success => false, errormsg => "not implemented"};
+			}
+		}
+		case 'setMode' {
+				#setChoice string
+				status 'error';
+				return { success => false, errormsg => "not implemented"};
+			}
+		else {
+				status 'not_found';
+				return "What?";
+	   }
 	}
-case 'setMode' {
-		#setChoice string
-		status 'error';
-		return { success => false, errormsg => "not implemented"};
-    }
-else {
-        status 'not_found';
-        return "What?";
-   }
 };
 
 get '/devices' => sub {
@@ -395,6 +392,7 @@ debug($system_url);
 				}
 				switch($f->{"Type"}) {
 					case "switch" {
+						$room_tab{"Switches"}=1;
 						switch($f->{"SwitchType"}) {
 							case ["On/Off"),"Lighting Limitless/Applamp","Contact","Dusk Sensor"] {
 								if (($f->{"SubType"} ne "RGBW") {
@@ -545,6 +543,7 @@ debug($system_url);
 						}
 					}
 					case ["P1 Smart Meter","YouLess Meter"] {
+						$room_tab{"Utility"}=1;
 						switch($f->{"SubType"}) {
 							case ["Energy","YouLess counter"] {
 								#DevElectricity Electricity consumption sensor
@@ -582,6 +581,7 @@ debug($system_url);
 						}
 					}
 					case "Energy" {
+						$room_tab{"Utility"}=1;
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
 						#ConsoTotal     Current total consumption       kWh
@@ -598,6 +598,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Usage" {
+						$room_tab{"Utility"}=1;
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
 						#"Type" : "Usage", "SubType" : "Electric", "Data" : "122.3 Watt"
@@ -608,6 +609,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Current/Energy" {
+						$room_tab{"Utility"}=1;
 						#DevElectricity Electricity consumption sensor
 						#Watts  Current consumption     Watt
 						#ConsoTotal     Current total consumption       kWh
@@ -633,6 +635,7 @@ debug($system_url);
 						}
 					}
 					case [/Temp/,/Humidity/]  {
+						$room_tab{"Weather"}=1;
 						if (($f->{"Type"} =~ "Temp")&&($f->{"Type"} =~ "Humidity")) {
 							my $feeds;
 							$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
@@ -677,6 +680,7 @@ debug($system_url);
 						}
 					}
 					case "Rain"  {
+						$room_tab{"Weather"}=1;
 						#DevRain        Rain sensor
 						#Value  Current instant rain value      mm/h
 						#Accumulation   Total rain accumulation mm
@@ -690,6 +694,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "UV"  {
+						$room_tab{"Weather"}=1;
 						#DevUV  UV sensor
 						#Value  Current UV index        index
 						# "Type" : "UV","UVI" : "6.0"
@@ -700,6 +705,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Lux"  {
+						$room_tab{"Utility"}=1;
 						#DevLux  Lux sensor
 						#Value  Current Lux value        index
 						$device_tab{$f->{"idx"}}->{"graph"} = 'v';
@@ -710,6 +716,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Air Quality"  {
+						$room_tab{"Utility"}=1;
 						#DevCO2  CO2 sensor
 						$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevCO2", "room" => "Temp", params =>[]};
@@ -719,6 +726,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Wind"  {
+						$room_tab{"Weather"}=1;
 						#DevWind wind
 						$device_tab{$f->{"idx"}}->{"graph"} = 'sp';
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevWind", "room" => "Temp", params =>[]};
@@ -729,6 +737,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "RFXMeter"  {
+						$room_tab{"Utility"}=1;
 						switch($f->{"SwitchTypeVal"}) {
 							case "1" {
 								#Gas
@@ -774,6 +783,7 @@ debug($system_url);
 						}
 					}
 					case "General"  {
+						$room_tab{"Utility"}=1;
 						switch($f->{"SubType"}) {
 							case "Percentage" {
 								$device_tab{$f->{"idx"}}->{"graph"} = 'v';
@@ -836,6 +846,7 @@ debug($system_url);
 						}
 					}
 					case "Thermostat" {
+						$room_tab{"Weather"}=1;
 						if ($f->{"SubType"} eq "SetPoint") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
@@ -886,6 +897,7 @@ debug($system_url);
 	#MPD
 	if ($mpd_host ne '') {
 		$mpd=Audio::MPD->new ( host => $mpd_host);
+		$room_tab{"Music"}=1;
 	}
 	#Status
 	if ($mpd_host) {
@@ -905,6 +917,7 @@ debug($system_url);
 		# Decode the entire JSON
 		$decoded = JSON->new->utf8(1)->decode( $json->decoded_content );
 		if ($decoded->{'result'}) {
+			$room_tab{"Scene"}=1;
 			@results = @{ $decoded->{'result'} };
 			foreach my $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
