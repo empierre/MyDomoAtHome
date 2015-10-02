@@ -1,6 +1,6 @@
 # DOCKER-VERSION 0.3.4
 #FROM        perl:latest
-FROM armbuild/ubuntu:latest
+FROM ubuntu:latest
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
 RUN apt-get update

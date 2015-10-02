@@ -14,6 +14,7 @@ use Time::Piece;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 use Audio::MPD;
+use Switch;
 use warnings;
 use strict;
 
@@ -38,9 +39,9 @@ get '/' => sub {
 
 get '/rooms' => sub {
     #Room list
-	my %room={};
+	my @room={};
 	foreach my $key (keys %room_tab) {
-		push @room,  "id"=> "$key", "name"=> "$key" };	 
+		push @room, { "id"=> "$key", "name"=> "$key" };	 
 	}
 };
 
@@ -143,10 +144,8 @@ get '/devices/:deviceId/action/:actionName/?:actionParam?' => sub {
 	my $actionName = params->{actionName};
 	my $actionParam = params->{actionParam}||"";
 
-
-	switch ($actionName){
-
-		case 'setStatus' {
+	switch($actionName) {
+		case "setStatus" {
 			debug("actionParam=".$actionParam."\n");
 			#setStatus	0/1
 			my $action;
@@ -166,12 +165,12 @@ get '/devices/:deviceId/action/:actionName/?:actionParam?' => sub {
 				return { success => false, errormsg => $response->status_line};
 			}
 		}
-		case 'setArmed') {
+		case "setArmed" {
 			#setArmed	0/1
 			status 'error';
 			return { success => false, errormsg => "not implemented"};
 		}
-		case 'setAck') {
+		case "setAck" {
 			#setAck	
 			my $url=config->{domo_path}."/json.htm?type=command&param=resetsecuritystatus&idx=$deviceId&switchcmd=Normal";
 		debug($url);
@@ -184,14 +183,14 @@ get '/devices/:deviceId/action/:actionName/?:actionParam?' => sub {
 				return { success => false, errormsg => $response->status_line};
 			}
 		}
-		case 'setLevel' {
+		case "setLevel" {
 			#/json.htm?type=command&param=switchlight&idx=&switchcmd=Set%20Level&level=6
 			my $url;
 			if (($device_tab{$deviceId}->{"Action"}==2)or($device_tab{$deviceId}->{"Action"}==3)) {
 				if ($actionParam eq "100") {
 					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=On&level=$actionParam&passcode=";
 				} else {
-					my $setLevel=ceil($actionParam*$device_tab{$deviceId}->{"MaxDimLevel"}/100);
+					my $setLevel=ceil($actionParam*($device_tab{$deviceId}->{"MaxDimLevel"})/100);
 					$url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Off&level=$setLevel&passcode=";
 				}
 			} elsif (($device_tab{$deviceId}->{"Action"}==5)) {
@@ -231,7 +230,7 @@ get '/devices/:deviceId/action/:actionName/?:actionParam?' => sub {
 					return { success => false, errormsg => $response->status_line};
 				}
 		} 
-		case 'stopShutter' {
+		case "stopShutter"{
 			#stopShutter (Venetian store)
 			my $url=config->{domo_path}."/json.htm?type=command&param=switchlight&idx=$deviceId&switchcmd=Stop&level=0&passcode=";
 		debug($url);
@@ -245,12 +244,12 @@ get '/devices/:deviceId/action/:actionName/?:actionParam?' => sub {
 			}
 			return { success => true};
 		}
-		case 'pulseShutter' {
+		case "pulseShutter" {
 				#pulseShutter	up/down
 				status 'error';
 				return { success => false, errormsg => "not implemented"};
 		}
-		case 'setSetPoint' {
+		case "setSetPoint" {
 			#DevThermostat
 			my $url=config->{domo_path}."/json.htm?type=setused&idx=$deviceId&used=true&setpoint=$actionParam";
 			debug($url);
@@ -378,10 +377,11 @@ debug($system_url);
 				#$name=~s/\s/_/;
 				#$name=~s/\//_/; 
 				$name=~s/%/P/;
+				my $rbl;
 				 if ($f->{"SwitchType"}) {			
 					#print $f->{"idx"} . " " . $f->{"Name"} . " " . $f->{"Status"} . $f->{"LastUpdate"}."\n";
 					#$name.="_E";
-					my $bl=$f->{"Status"};my $rbl;
+					my $bl=$f->{"Status"};
 					if ($bl eq "On") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=1;}
 					elsif ($bl eq "Off") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=1;}
 					elsif ($bl eq "Open") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=2;}
@@ -394,8 +394,8 @@ debug($system_url);
 					case "switch" {
 						$room_tab{"Switches"}=1;
 						switch($f->{"SwitchType"}) {
-							case ["On/Off"),"Lighting Limitless/Applamp","Contact","Dusk Sensor"] {
-								if (($f->{"SubType"} ne "RGBW") {
+							case ["On/Off","Lighting Limitless/Applamp","Contact","Dusk Sensor"] {
+								if ($f->{"SubType"} ne "RGBW") {
 									my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
 									push (@{$feeds->{'params'}}, {"key" => "Status", "value" =>"$rbl"} );
 									push (@{$feed->{'devices'}}, $feeds );
@@ -766,7 +766,7 @@ debug($system_url);
 								push (@{$feed->{'devices'}}, $feeds );
 							}
 							case "3" {
-								if $f->{"SubType"} eq "RFXMeter counter")) {
+								if ($f->{"SubType"} eq "RFXMeter counter") {
 									#Counter
 									$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 									my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
@@ -806,7 +806,7 @@ debug($system_url);
 								push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "kWh", "graphable" => "false"} );
 								push (@{$feed->{'devices'}}, $feeds );
 							}
-							case "Pressure") {
+							case "Pressure" {
 								$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 								my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
 								my ($v)= ($f->{"Data"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
