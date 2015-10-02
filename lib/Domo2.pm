@@ -6,6 +6,7 @@ package Domo2;
 use Dancer2 appname => 'Domo';
 use File::Slurp;
 use File::Spec;
+use DateTime;
 use LWP::UserAgent;
 use Crypt::SSLeay;
 use utf8;
@@ -15,10 +16,11 @@ use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 use Audio::MPD;
 use Switch;
+use Plack::Builder;
 use warnings;
 use strict;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 set warnings => 0;
 my %device_tab;
 my %room_tab;
@@ -40,9 +42,13 @@ get '/' => sub {
 get '/rooms' => sub {
     #Room list
 	my @room={};
+	my $feed={ "rooms" => []};
 	foreach my $key (keys %room_tab) {
-		push @room, { "id"=> "$key", "name"=> "$key" };	 
+		print "ROOM: $key\n";
+		push (@{$feed->{'rooms'}}, { "id"=> "$key", "name"=> "$key" });	 
 	}
+	return($feed);
+
 };
 
 get '/system' => sub {
@@ -391,7 +397,7 @@ debug($system_url);
 					else { $rbl=$bl;}
 				}
 				switch($f->{"Type"}) {
-					case "switch" {
+					case /Lighting/ {
 						$room_tab{"Switches"}=1;
 						switch($f->{"SwitchType"}) {
 							case ["On/Off","Lighting Limitless/Applamp","Contact","Dusk Sensor"] {
@@ -519,29 +525,27 @@ debug($system_url);
 								push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
 								push (@{$feed->{'devices'}}, $feeds );
 							}
-							case "Smoke Detector" {
-								#DevSmoke	Smoke security sensor
-								#Armable	Ability to arm the device : 1 = Yes / 0 = No	N/A
-								#Ackable	Ability to acknowledge alerts : 1 = Yes / 0 = No	N/A
-								#Armed	Current arming status : 1 = On / 0 = Off	N/A
-								#Tripped	Is the sensor tripped ? (0 = No - 1 = Tripped)	N/A				
-								my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSmoke", "room" => "Switches", params =>[]};
-								push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
-								if ($f->{"Type"} eq "Security") {
-									push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "1" } );
-								} else {
-									push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
-								}
-								push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
-								push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
-								#"GET http://192.168.0.24:8080/json.htm?type=command&param=resetsecuritystatus&idx=202&switchcmd=Normal"
-								push (@{$feed->{'devices'}}, $feeds );				
-							}
 							#DevDoor	Door / window security sensor
 							#DevFlood	Flood security sensor
 							#DevCO2Alert	CO2 Alert sensor
 						}
 					}
+					case "Security" {
+						#DevSmoke	Smoke security sensor
+						#Armable	Ability to arm the device : 1 = Yes / 0 = No	N/A
+						#Ackable	Ability to acknowledge alerts : 1 = Yes / 0 = No	N/A
+						#Armed	Current arming status : 1 = On / 0 = Off	N/A
+						#Tripped	Is the sensor tripped ? (0 = No - 1 = Tripped)	N/A				
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSmoke", "room" => "Switches", params =>[]};
+						push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
+						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "1" } );
+						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
+						push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
+						push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
+						#"GET http://192.168.0.24:8080/json.htm?type=command&param=resetsecuritystatus&idx=202&switchcmd=Normal"
+						push (@{$feed->{'devices'}}, $feeds );				
+					}
+
 					case ["P1 Smart Meter","YouLess Meter"] {
 						$room_tab{"Utility"}=1;
 						switch($f->{"SubType"}) {
@@ -634,38 +638,25 @@ debug($system_url);
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 					}
-					case [/Temp/,/Humidity/]  {
-						$room_tab{"Weather"}=1;
-						if (($f->{"Type"} =~ "Temp")&&($f->{"Type"} =~ "Humidity")) {
-							my $feeds;
-							$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
-
-							my $v=$f->{"Temp"};
-							push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
-							my $vh=$f->{"Humidity"};
-							push (@{$feeds->{'params'}}, {"key" => "hygro", "value" => "$vh", "unit" => "%", "graphable" => "true" });
-							push (@{$feed->{'devices'}}, $feeds );
-						} elsif ($f->{"Type"} eq "Temp") {
-							#DevTemperature Temperature sensor
-							#Value  Current temperature     *C
-							#"Temp" : 21.50,  "Type" : "Temp + Humidity" / Type" : "Temp",
-							$device_tab{$f->{"idx"}}->{"graph"} = 'te';
-							my $feeds;
-							$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}};
-							my $v=$f->{"Temp"};
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
-							push (@{$feed->{'devices'}}, $feeds );
-						} elsif ($f->{"Type"} eq "Humidity") {
-							#DevHygrometry  Hygro sensor
-							#Value  Current hygro value     %
-							# "Humidity" : 52  "Type" : "Temp + Humidity" / Type" : "Humidity",
-							$device_tab{$f->{"idx"}}->{"graph"} = 'hu';
-
-							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevHygrometry", "room" => "Temp", params =>[]};
-							my $v=$f->{"Humidity"};
-							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "%", "graphable" => "true" });
-							push (@{$feed->{'devices'}}, $feeds );
-						}
+					case "Temp + Humidity"  {
+						$room_tab{"Temp"}=1;
+						my $feeds;
+						$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
+						my $v=$f->{"Temp"};
+						push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
+						my $vh=$f->{"Humidity"};
+						push (@{$feeds->{'params'}}, {"key" => "hygro", "value" => "$vh", "unit" => "%", "graphable" => "true" });
+						push (@{$feed->{'devices'}}, $feeds );
+					}
+					case "Temp + Humidity + Baro"  {
+						$room_tab{"Temp"}=1;
+						my $feeds;
+						$feeds={params =>[],"room" => "Temp","type" => "DevTempHygro","name" => $name, "id" => $f->{"idx"}};
+						my $v=$f->{"Temp"};
+						push (@{$feeds->{'params'}}, {"key" => "temp", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
+						my $vh=$f->{"Humidity"};
+						push (@{$feeds->{'params'}}, {"key" => "hygro", "value" => "$vh", "unit" => "%", "graphable" => "true" });
+						push (@{$feed->{'devices'}}, $feeds );
 						if ($f->{"Type"} =~ "Baro") {
 							#DevPressure    Pressure sensor
 							#Value  Current pressure        mbar
@@ -679,8 +670,30 @@ debug($system_url);
 								push (@{$feed->{'devices'}}, $feeds );
 						}
 					}
+					case "Temp" {
+						#DevTemperature Temperature sensor
+						#Value  Current temperature     *C
+						#"Temp" : 21.50,  "Type" : "Temp + Humidity" / Type" : "Temp",
+						$device_tab{$f->{"idx"}}->{"graph"} = 'te';
+						my $feeds;
+						$feeds={params =>[],"room" => "Temp","type" => "DevTemperature","name" => $name, "id" => $f->{"idx"}};
+						my $v=$f->{"Temp"};
+						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => $t_unit, "graphable" => "true"} );
+						push (@{$feed->{'devices'}}, $feeds );
+					}
+					case "Humidity" {
+						#DevHygrometry  Hygro sensor
+						#Value  Current hygro value     %
+						# "Humidity" : 52  "Type" : "Temp + Humidity" / Type" : "Humidity",
+						$device_tab{$f->{"idx"}}->{"graph"} = 'hu';
+
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevHygrometry", "room" => "Temp", params =>[]};
+						my $v=$f->{"Humidity"};
+						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "%", "graphable" => "true" });
+						push (@{$feed->{'devices'}}, $feeds );
+					}
 					case "Rain"  {
-						$room_tab{"Weather"}=1;
+						$room_tab{"Temp"}=1;
 						#DevRain        Rain sensor
 						#Value  Current instant rain value      mm/h
 						#Accumulation   Total rain accumulation mm
@@ -694,7 +707,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "UV"  {
-						$room_tab{"Weather"}=1;
+						$room_tab{"Temp"}=1;
 						#DevUV  UV sensor
 						#Value  Current UV index        index
 						# "Type" : "UV","UVI" : "6.0"
@@ -726,7 +739,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Wind"  {
-						$room_tab{"Weather"}=1;
+						$room_tab{"Temp"}=1;
 						#DevWind wind
 						$device_tab{$f->{"idx"}}->{"graph"} = 'sp';
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevWind", "room" => "Temp", params =>[]};
@@ -846,7 +859,7 @@ debug($system_url);
 						}
 					}
 					case "Thermostat" {
-						$room_tab{"Weather"}=1;
+						$room_tab{"Temp"}=1;
 						if ($f->{"SubType"} eq "SetPoint") {
 							my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevThermostat", "room" => "Temp", params =>[]};
 							my ($v)= ($f->{"SetPoint"} =~ /^([0-9]+(?:\.[0-9]+)?)/);
@@ -871,7 +884,7 @@ debug($system_url);
 			#Unknown device list
 			my $ind_unk=2;
 			foreach my $devt ( @unk_dev)  {
-				my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "noroom", params =>[]};
+				my $feeds={"id" => "S".$ind_unk++, "name" => "$devt", "type" => "DevGenericSensor", "room" => "", params =>[]};
 				push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"unk", "unit"=> "", "graphable" => "false"} );
 				push (@{$feed->{'devices'}}, $feeds );
 			}
@@ -993,7 +1006,7 @@ debug($system_url);
 	#DevGenericSensor      Generic sensor (any value)
 	#Value  Current value   N/A
 
-	return to_json($feed, { utf8 => 1} );
+	return to_json($feed, { utf8 => 0} );
 	return { success => true};
 };
 
@@ -1022,7 +1035,7 @@ debug($url);
 	}
 }
 sub getLastVersion() {
-	my $dt = DateTime->now();
+	my $dt = DateTime->now;
 	if ($last_version_dt < $dt->add( hours => 4 )) {
 		my @res;
 		push @res,$last_version;
