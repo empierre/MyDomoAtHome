@@ -12,27 +12,19 @@ DOMO/  REST Gateway between Domoticz and Imperihome ISS
   - [ ] RGB lamps
   - [ ] Alarm pannel
 - [x] Dependency-less 
-- [x] Perl Dancer engine
+- [x] Perl Dancer 1 engine
 - [ ] Auto updatable
 - [x] MPD based players support (Volumio...)
 - [ ] Kodi support
 - [X] Provide Docker images
+- [ ] Perl Dancer2 engine
 - [ ] Provide Synology package
 
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached
 
-[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=5&item_name=thanks "Donate once-off to this project using Paypal")
-
-<form name="_xclick" action="https://www.paypal.com/fr/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_xclick">
-<input type="hidden" name="business" value="epierre@e-nef.com">
-<input type="hidden" name="item_name" value="Thay a big thank to the developper">
-<input type="hidden" name="currency_code" value="EUR">
-<input type="hidden" name="amount" value="5,00">
-<input type="image" src="http://www.paypal.com/fr_FR/i/btn/x-click-butcc-donate.gif" border="0" name="submit" alt="Effectuez vos paiements via PayPal : une solution rapide, gratuite et sécurisée">
-</form>
+[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 
 ## Docker container
