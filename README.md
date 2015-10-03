@@ -23,6 +23,16 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) Goal reached
 
+<form name="_xclick" action="https://www.paypal.com/fr/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="epierre@e-nef.com">
+<input type="hidden" name="item_name" value="Thay a big thank to the developper">
+<input type="hidden" name="currency_code" value="EUR">
+<input type="hidden" name="amount" value="5,00">
+<input type="image" src="http://www.paypal.com/fr_FR/i/btn/x-click-butcc-donate.gif" border="0" name="submit" alt="Effectuez vos paiements via PayPal : une solution rapide, gratuite et sécurisée">
+</form>
+
+
 ## Docker container
 docker pull epierre/mydomoathome
 
