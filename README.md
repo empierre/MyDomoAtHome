@@ -22,7 +22,7 @@ DOMO/  REST Gateway between Domoticz and Imperihome ISS
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) Goal reached
-[![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&business=epierre@e-nef.com&currency_code=EUR&amount=5 "Donate once-off to this project using Paypal")
+[![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=5&item_name=thanks "Donate once-off to this project using Paypal")
 
 <form name="_xclick" action="https://www.paypal.com/fr/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_xclick">
