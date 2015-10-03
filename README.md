@@ -1,5 +1,8 @@
 # MyDomoAtHome
 DOMO/  REST Gateway between Domoticz and Imperihome ISS
+(https://img.shields.io/badge/Perl-powered-green.svg)
+(https://img.shields.io/badge/Plackup-powered-green.svg)
+(https://img.shields.io/badge/Dancer%20version-1-green.svg)
 
 ![MyDomoAtHome](http://domoticz.com/wiki/images/5/55/Imperihome.png "MyDomoAtHome")
 
