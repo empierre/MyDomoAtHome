@@ -1,8 +1,10 @@
 # MyDomoAtHome
-DOMO/  REST Gateway between Domoticz and Imperihome ISS
+DOMO/REST Gateway between Domoticz and Imperihome ISS
+
 ![Perl](https://img.shields.io/badge/Perl-powered-green.svg)
-[![Plack](https://img.shields.io/badge/Plackup-powered-green.svg)]
-[![Dancer1](https://img.shields.io/badge/Dancer%20version-1-green.svg)]
+![Plack](https://img.shields.io/badge/Plackup-powered-green.svg)
+![Dancer1](https://img.shields.io/badge/Dancer%20version-1-green.svg)
+[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 ![MyDomoAtHome](http://domoticz.com/wiki/images/5/55/Imperihome.png "MyDomoAtHome")
 
@@ -27,7 +29,7 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached
 
-[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
+
 
 
 ## Docker container
