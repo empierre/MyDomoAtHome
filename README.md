@@ -4,9 +4,13 @@ DOMO/REST Gateway between Domoticz and Imperihome ISS
 ![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
 ![Perl](https://img.shields.io/badge/Perl-powered-green.svg)
 ![Plack](https://img.shields.io/badge/Plackup-powered-green.svg)
-![REST](https://img.shields.io/badge/REST API-powered-green.svg)
 ![Dancer1](https://img.shields.io/badge/Dancer%20version-1-green.svg)
+![REST](https://img.shields.io/badge/REST API-powered-green.svg)
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
+
+![REST](https://img.shields.io/badge/RPI-tested ok-green.svg)
+![REST](https://img.shields.io/badge/Odroid-tested ok-green.svg)
+![REST](https://img.shields.io/badge/Intel-tested ok-green.svg)
 
 ![MyDomoAtHome](http://domoticz.com/wiki/images/5/55/Imperihome.png "MyDomoAtHome")
 
