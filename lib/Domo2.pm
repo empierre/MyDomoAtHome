@@ -1063,4 +1063,4 @@ sub getLastVersion() {
 		} else {return "err";}
 	}
 }
-start;
+1;
