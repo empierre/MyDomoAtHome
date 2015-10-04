@@ -63,6 +63,8 @@ docker pull epierre/mydomoathome
   
 ## Usage
 
+The default port is now 3001.
+
 ### Start the service:
    `sudo service MyDomoAtHome.sh start`
 
