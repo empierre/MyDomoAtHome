@@ -16,7 +16,9 @@ DOMO/REST Gateway between Domoticz and Imperihome ISS
 
 # Features and goals
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
+
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached
+
 - [x] Free
 - [x] Multi-platform (Linux, Mac OS X, Windows)
 - [x] Support major type of sensors/feature of Domoticz
@@ -29,7 +31,10 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 - [x] MPD based players support (Volumio...)
 
 
-Next milestone will provide extended support to other platforms wioth Docker and Synology 
+Next M2 milestone will provide extended support to other platforms wioth Docker and Synology 
+
+[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
+
 - [ ] Extended platform (support)
   - [x] Provide Docker images
   - [ ] Provide Synology package
@@ -40,7 +45,7 @@ Next milestone will provide extended support to other platforms wioth Docker and
   - [x] Dynamic room creation
   - [ ] RGB lamps
   - [ ] Alarm pannel
-[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
+
 
 ## Docker container
 docker pull epierre/mydomoathome
