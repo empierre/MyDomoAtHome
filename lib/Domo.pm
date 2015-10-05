@@ -68,6 +68,12 @@ get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
 	my $startdate = params->{startdate}||"";
 	my $enddate = params->{enddate}||"";
 
+	my $PLine;
+	if ($deviceId =~/L/) {
+		my $pid;
+		($pid,$PLine)=($deviceId=~/(\d+)_L(.)/);
+		$deviceId=$pid;
+	}
 	my $type=lc(&getDeviceType($deviceId));
 	my $ptype=$type;
 debug("TYPE:$type\n");
@@ -76,6 +82,7 @@ debug("TYPE:$type\n");
 	if (($ptype eq "general")) {$type="Percentage";}
 	if (($paramKey eq "hygro")) {$type="temp";}
 	if (($paramKey eq "temp")) {$type="temp";}
+	if (($paramKey eq "Watts")) {$type="counter";}
 
 	my $feed={ "values" => []};
 	my $url=config->{domo_path}."/json.htm?type=graph&sensor=$type&idx=$deviceId&range=day";
@@ -110,7 +117,7 @@ debug($url);
 							my $feeds={"date" => "$date", "value" => "$value"};
 							push (@{$feed->{'values'}}, $feeds );
 					} elsif (($type eq "counter")||($type eq "Percentage")) {
-							my $value=$f->{"v"};
+							my $value=$f->{"v$PLine"};
 							my $date=$dt->epoch*1000;
 							my $feeds={"date" => "$date", "value" => "$value"};
 							push (@{$feed->{'values'}}, $feeds );
@@ -486,7 +493,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Motion Sensor") {
 						#DevMotion	Motion security sensor
-						#Status	CM180 status : 1 = On / 0 = Off	N/A
+						#Status	: 1 = On / 0 = Off	N/A
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevMotion", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
@@ -495,7 +502,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Door Lock") {
 						#DevLock	Door / window lock
-						#Status	CM180 status : 1 = On / 0 = Off	N/A
+						#Status	: 1 = On / 0 = Off	N/A
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevDoor", "room" => "Switches", params =>[]};
 						push (@{$feeds->{'params'}}, { "key" => "Armable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
@@ -591,17 +598,17 @@ debug($system_url);
 						my ($l3)= ($L3 =~ /(\d+) Watt/);
 						if ($l1) {	
 							my $feeds={"id" => $f->{"idx"}."_L1", "name" => $name." L1", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l1", "unit" => "W"} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l1", "unit" => "W",  "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 						if ($l2) {	
 							my $feeds={"id" => $f->{"idx"}."_L2", "name" => $name." L2", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l2", "unit" => "W"} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l2", "unit" => "W",  "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 						if ($l3) {	
 							my $feeds={"id" => $f->{"idx"}."_L3", "name" => $name." L3", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l3", "unit" => "W"} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l3", "unit" => "W",  "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 					}  elsif (($f->{"Type"} =~ "Temp")||($f->{"Type"} =~ "Humidity"))  {
@@ -746,7 +753,7 @@ debug($system_url);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
 						my $usage;
 						($usage)= ($f->{"Usage"} =~ /^(\d+\.\d+) Watt/);
-						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "kWh", "graphable" => "false"} );
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "kWh", "graphable" => "true"} );
 						push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Pressure") {
 							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
