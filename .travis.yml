@@ -18,7 +18,7 @@ addons:
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
   - sudo apt-get update -qq
-  - vapt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
+  - sudo apt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
   - sudo apt-get install libtime-piece-perl libjson-perl libplack-perl starman libcrypt-ssleay-perl 
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
   - cpanm DateTime # optional dependency
