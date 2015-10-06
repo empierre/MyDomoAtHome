@@ -20,10 +20,11 @@ before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
   - sudo apt-get update -qq
   - sudo apt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
-  - sudo apt-get install libtime-piece-perl libjson-perl libplack-perl starman libcrypt-ssleay-perl libdatetime-perl
+  - sudo apt-get install libtime-piece-perl libjson-perl libplack-perl starman libcrypt-ssleay-perl 
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
   - curl -L http://cpanmin.us | perl - --sudo Dancer2
   - cpanm Test::Pod # optional dependency
+  - cpanm DateTime # optional dependency
 install:
     - cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
 script: "start2.sh"
