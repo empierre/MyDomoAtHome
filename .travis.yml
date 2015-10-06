@@ -21,7 +21,6 @@ before_install:
   - sudo apt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
   - sudo apt-get install libjson-perl libplack-perl libcrypt-ssleay-perl 
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
-  - cpanm DateTime # optional dependency
   - cpanm Time::Piece
   - cpanm starman
   - curl -L http://cpanmin.us | perl - --sudo Dancer2
