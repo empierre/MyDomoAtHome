@@ -898,8 +898,6 @@ debug($system_url);
 							push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
 						} else {
 							$v="http://".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
-							$v =~ s/\#USERNAME/$f->{"Username"}/g;
-                                                        $v =~ s/\#PASSWORD/$f->{"Password"}/g;
 							push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
 	
 						}
@@ -911,6 +909,8 @@ debug($system_url);
 						my $feeds2={"id" => $f->{"idx"}."_video", "name" => $name, "type" => "DevCamera", "room" => "Switches", params =>[]};
 						if ($f->{"Username"}) {
 							$v="http://".$f->{"Username"}.":".$f->{"Password"}."@".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"VideoURL"};
+							$v =~ s/\#USERNAME/$f->{"Username"}/g;
+                                                        $v =~ s/\#PASSWORD/$f->{"Password"}/g;
 							push (@{$feeds2->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
 							} else {
 							$v="http://".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"VideoURL"};
