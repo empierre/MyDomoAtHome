@@ -15,15 +15,14 @@ addons:
       - tcsh
       - csh
       - fish
-sudo: false
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
-  - apt-get update -qq
-  - apt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
-  - apt-get install libtime-piece-perl libjson-perl libplack-perl starman libcrypt-ssleay-perl 
-  - apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
+  - sudo apt-get update -qq
+  - vapt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
+  - sudo apt-get install libtime-piece-perl libjson-perl libplack-perl starman libcrypt-ssleay-perl 
+  - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
   - cpanm DateTime # optional dependency
-  - curl -L http://cpanmin.us | perl - Dancer2
+  - curl -L http://cpanmin.us | perl - --sudo Dancer2
   - cpanm Test::Pod # optional dependency
 install:
     - cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
