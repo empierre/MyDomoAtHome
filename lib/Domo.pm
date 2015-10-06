@@ -753,7 +753,10 @@ debug($system_url);
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevElectricity", "room" => "Utility", params =>[]};
 						my $usage;
 						($usage)= ($f->{"Usage"} =~ /^(\d+\.\d+) Watt/);
-						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "kWh", "graphable" => "true"} );
+						push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$usage", "unit" => "W", "graphable" => "true"} );
+						my ($total)= ($f->{"CounterToday"} =~ /([0-9]+(?:\.[0-9]+)?)/);
+                                                $total=ceil($total);
+						push (@{$feeds->{'params'}}, {"key" => "ConsoTotal", "value" =>"$total", "unit" => "kWh", "graphable" => "true"} );
 						push (@{$feed->{'devices'}}, $feeds );
 						} elsif ($f->{"SubType"} eq "Pressure") {
 							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
@@ -890,9 +893,13 @@ debug($system_url);
 					} else {
 						if ($f->{"Username"}) {
 							$v="http://".$f->{"Username"}.":".$f->{"Password"}."@".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
+							$v =~ s/\#USERNAME/$f->{"Username"}/g;
+                                                        $v =~ s/\#PASSWORD/$f->{"Password"}/g;
 							push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
 						} else {
 							$v="http://".$f->{"Address"}.":".$f->{"Port"}."/".$f->{"ImageURL"};
+							$v =~ s/\#USERNAME/$f->{"Username"}/g;
+                                                        $v =~ s/\#PASSWORD/$f->{"Password"}/g;
 							push (@{$feeds->{'params'}}, {"key" => "localjpegurl", "value" => "$v"} );
 	
 						}
