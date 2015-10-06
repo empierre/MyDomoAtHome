@@ -6,7 +6,8 @@ package Domo2;
 use Dancer2 appname => 'Domo';
 use File::Slurp;
 use File::Spec;
-use DateTime;
+#use DateTime;
+use Time::Moment;
 use LWP::UserAgent;
 use Crypt::SSLeay;
 use utf8;
@@ -26,7 +27,8 @@ my %device_tab;
 my %room_tab;
 my %device_list;
 my $last_version;    #last version in github
-my $last_version_dt; # last version text in github
+my $last_version_dt = Time::Moment->new(year => 2012); # last version text in github
+
 
 set serializer => 'JSON'; 
 set 'database'     => File::Spec->catfile( config->{domo_db});
@@ -632,17 +634,17 @@ debug($system_url);
 						my ($l3)= ($L3 =~ /(\d+) Watt/);
 						if ($l1) {	
 							my $feeds={"id" => $f->{"idx"}."_L1", "name" => $name." L1", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l1", "unit" => "W", "graphable" => "true"}} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l1", "unit" => "W", "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 						if ($l2) {	
 							my $feeds={"id" => $f->{"idx"}."_L2", "name" => $name." L2", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l2", "unit" => "W", "graphable" => "true"}} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l2", "unit" => "W", "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 						if ($l3) {	
 							my $feeds={"id" => $f->{"idx"}."_L3", "name" => $name." L3", "type" => "DevElectricity", "room" => "Utility", params =>[]};
-							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l3", "unit" => "W", "graphable" => "true"}} );
+							push (@{$feeds->{'params'}}, {"key" => "Watts", "value" =>"$l3", "unit" => "W", "graphable" => "true"} );
 							push (@{$feed->{'devices'}}, $feeds );
 						}
 					}
@@ -1050,8 +1052,8 @@ debug($url);
 	}
 }
 sub getLastVersion() {
-	my $dt = DateTime->now;
-	if ($last_version_dt < $dt->add( hours => 4 )) {
+	my $dt = Time::Moment->now;
+	if ($last_version_dt < $dt->plus_hours(4)) {
 		my @res;
 		push @res,$last_version;
 		push @res,"";
@@ -1071,7 +1073,7 @@ sub getLastVersion() {
 				my @res;
 				push @res,$decoded->{tag_name};
 				push @res,$decoded->{body};
-				$last_version_dt=DateTime->now;
+				$last_version_dt=Time::Moment->now;
 				$last_version=$decoded->{tag_name};
 				return(@res);
 			}

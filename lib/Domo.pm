@@ -12,7 +12,8 @@ use Crypt::SSLeay;
 use utf8;
 use Encode qw/ encode decode /;
 use Time::Piece;
-use DateTime;
+#use DateTime;
+use Time::Moment;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 #use JSON;
@@ -26,7 +27,7 @@ set warnings => 0;
 my %device_tab;
 my %device_list;
 my $last_version;    #last version in github
-my $last_version_dt; # last version text in github
+my $last_version_dt = Time::Moment->new(year => 2012); # last version text in github
 
 
 hook(
@@ -955,8 +956,10 @@ debug($url);
 	}
 }
 sub getLastVersion() {
-	my $dt = DateTime->now();
-	if ($last_version_dt < $dt->add( hours => 4 )) {
+	#my $dt = DateTime->now();
+	my $dt = Time::Moment->now;
+	#if ($last_version_dt < $dt->add( hours => 4 )) {
+	if ($last_version_dt < $dt->plus_hours(4)) {
 		my @res;
 		push @res,$last_version;
 		push @res,"";
@@ -976,7 +979,8 @@ sub getLastVersion() {
 				my @res;
 				push @res,$decoded->{tag_name};
 				push @res,$decoded->{body};
-				$last_version_dt=DateTime->now;
+				#$last_version_dt=DateTime->now;
+				$last_version_dt=Time::Moment->now;
 				$last_version=$decoded->{tag_name};
 				return(@res);
 			}
