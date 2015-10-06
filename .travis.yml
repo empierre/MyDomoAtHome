@@ -22,9 +22,9 @@ before_install:
   - apt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
   - apt-get install libtime-piece-perl libjson-perl libplack-perl starman libcrypt-ssleay-perl 
   - apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
+  - cpanm DateTime # optional dependency
   - curl -L http://cpanmin.us | perl - Dancer2
   - cpanm Test::Pod # optional dependency
-  - cpanm DateTime # optional dependency
 install:
     - cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
 script: "start2.sh"
