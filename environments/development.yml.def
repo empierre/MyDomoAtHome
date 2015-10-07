@@ -9,7 +9,7 @@ logger: 'file'
 # the log level for this environment
 # core is the lowest, it shows Dancer's core log messages as well as yours
 # (debug, info, warning and error)
-log: 'debug'
+log: 'core'
 # should Dancer show a stacktrace when an error is caught?
 show_errors: 1
 startup_info: 1

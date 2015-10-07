@@ -16,6 +16,7 @@ appname: "MyDomoAtHome"
 # views/layouts/main.tt)
 layout: "main"
 logger: 'file'
+log: 'error'
 
 # when the charset is set to UTF-8 Dancer will handle for you
 # all the magic of encoding and decoding. You should not care

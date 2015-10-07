@@ -1,8 +1,0 @@
-logger: 'file'
-log: 'error'
-startup_info: 0
-show_errors:  0
-domo_path: "http://ip:8080"
-volumio_path: ""
-appname: "MyDomoAtHome REST Gateway"
-charset: "UTF-8"

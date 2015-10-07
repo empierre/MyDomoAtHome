@@ -12,7 +12,6 @@ use Crypt::SSLeay;
 use utf8;
 use Encode qw/ encode decode /;
 use Time::Piece;
-#use DateTime;
 use Time::Moment;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
@@ -29,6 +28,11 @@ my %device_list;
 my $last_version;    #last version in github
 my $last_version_dt = Time::Moment->new(year => 2012); # last version text in github
 
+Dancer::Config::load();
+if (!config->{log}) {config->{log}='error';}
+print "environment:".config->{environment}."\n"; #development
+print "log:".config->{log}."\n"; #has value from production environment
+print "logger:".config->{logger}."\n"; #has value from production environment
 
 hook(
    after_serializer => sub {
