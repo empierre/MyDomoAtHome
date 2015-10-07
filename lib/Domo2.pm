@@ -4,10 +4,9 @@ package Domo2;
 # version 2 as published by the Free Software Foundation.
 # Author: epierre <epierre@e-nef.com>
 
-use Dancer2 appname => 'Domo';
+use Dancer2 appname => 'Domo2';
 use File::Slurp;
 use File::Spec;
-#use DateTime;
 use Time::Moment;
 use LWP::UserAgent;
 use Crypt::SSLeay;
@@ -23,7 +22,6 @@ use warnings;
 use strict;
 
 our $VERSION = '0.13';
-set warnings => 0;
 my %device_tab;
 my %room_tab;
 my %device_list;
@@ -31,12 +29,13 @@ my $last_version;    #last version in github
 my $last_version_dt = Time::Moment->new(year => 2012); # last version text in github
 
 if (!config->{log}) {config->{log}='error';}
+if (!config->{environment}) {config->{environment}='production';}
 print "environment:".config->{environment}."\n"; #development
 print "log:".config->{log}."\n"; #has value from production environment
 print "logger:".config->{logger}."\n"; #has value from production environment
 
 set serializer => 'JSON'; 
-set 'database'     => File::Spec->catfile( config->{domo_db});
+#set 'database'     => File::Spec->catfile( config->{domo_db});
 prefix undef;
 
 my $mpd_host=config->{volumio_path};
@@ -59,7 +58,7 @@ get '/rooms' => sub {
 };
 
 get '/system' => sub {
- return {"id"=> "MyDomoAtHome","apiversion"=> 1};
+ return {"id"=> "MyDomoAtHome Dev","apiversion"=> 1};
 };
 
 get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
@@ -173,7 +172,8 @@ debug($url);
 					#v counter percentage
 					#
 				}
-			return to_json($feed, { utf8 => 1} );
+			#return to_json($feed, { utf8 => 1} );
+			return $feed;
 			return { success => true};
 		} else {
 			status 'error';
@@ -1053,7 +1053,8 @@ debug($system_url);
 	#DevGenericSensor      Generic sensor (any value)
 	#Value  Current value   N/A
 
-	return to_json($feed, { utf8 => 0} );
+	#return to_json($feed, { utf8 => 0} );
+	return $feed;
 	return { success => true};
 };
 
