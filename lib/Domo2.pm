@@ -3,6 +3,7 @@ package Domo2;
 # modify it under the terms of the GNU General Public License
 # version 2 as published by the Free Software Foundation.
 # Author: epierre <epierre@e-nef.com>
+
 use Dancer2 appname => 'Domo';
 use File::Slurp;
 use File::Spec;
@@ -62,6 +63,7 @@ get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
 	my $paramKey = params->{paramKey}||"";
 	my $startdate = params->{startdate}||"";
 	my $enddate = params->{enddate}||"";
+	my $duration  = ($enddate - $startdate) / 1000;
 
 	my $PLine;
 	if ($deviceId =~/L/) {
@@ -79,13 +81,24 @@ debug("TYPE:$type\n");
 	if (($paramKey eq "temp")) {$type="temp";}
         if (($paramKey eq "Watts")) {$type="counter";}
 
+	my $range;
+	if ($duration <= 172800) {
+	    $range = "day";
+	} elsif ($duration < 1209600) {
+	    $range = "week";
+	} elsif ($duration < 5270400) {
+	    $range = "month";
+	} else {
+	    $range = "year";
+	}
 
 	my $feed={ "values" => []};
-	my $url=config->{domo_path}."/json.htm?type=graph&sensor=$type&idx=$deviceId&range=day";
+	my $url=config->{domo_path}."/json.htm?type=graph&sensor=$type&idx=$deviceId&range=$range";
 	my $decoded;
 	my @results=();
 debug($url);
 	my $ua = LWP::UserAgent->new();
+	my $lastEu;
 	$ua->agent("MyDomoREST/$VERSION");
 	my $json = $ua->get( $url );
 	if ($json->is_success) {
@@ -97,7 +110,7 @@ debug($url);
 			foreach $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"d"},"%Y-%m-%d %H:%M:%SS");
 					#print $dt->epoch." \n";
-					if ((($paramKey eq "temp")&&($f->{"te"}))||($type eq "temp")) {
+					if (($paramKey eq "temp")&&($f->{"te"})) {
 							my $value=$f->{"te"};
 							my $date=$dt->epoch*1000;
 							my $feeds={"date" => "$date", "value" => "$value"};
@@ -114,8 +127,21 @@ debug($url);
 							push (@{$feed->{'values'}}, $feeds );
 					} elsif (($type eq "counter")||($type eq "Percentage")) {
 							my $value=$f->{"v$PLine"};
+							if ($f->{"v2"}) {
+	                                                        $value=$value+$f->{"v2"};
+                                                        }
 							my $date=$dt->epoch*1000;
-							my $feeds={"date" => "$date", "value" => "$value"};
+							my $feeds;
+                                                       if ($f->{"eu"}) {
+                                                               if (($value > 0) || (($f->{"eu"} - $lastEu) > 0)) {
+                                                                       $feeds={"date" => "$date", "value" => "$value"};
+                                                                       push (@{$feed->{'values'}}, $feeds );
+                                                               }
+                                                               $lastEu = $f->{"eu"};
+                                                       } else {
+                                                               my $feeds={"date" => "$date", "value" => "$value"};
+                                                               push (@{$feed->{'values'}}, $feeds );
+                                                       }
 							push (@{$feed->{'values'}}, $feeds );
 					} elsif ($f->{"mm"}) {
 							my $value=$f->{"mm"};
@@ -1080,4 +1106,4 @@ sub getLastVersion() {
 		} else {return "err";}
 	}
 }
-start;
+1;
