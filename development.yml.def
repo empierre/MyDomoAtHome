@@ -1,4 +1,5 @@
 # appdir/environments/development.yml
+logger: 'file'
 log: 'debug'
 startup_info: 1
 show_errors:  1
