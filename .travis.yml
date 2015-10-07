@@ -26,6 +26,12 @@ before_install:
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - perlbrew install-cpanm -f
   - cpanm Test::Pod # optional dependency
+  #Safe fails to install due to failing tests since version 2.35 on perl < 5.14
+  - perl -E 'exit($] < 5.014)' || cpanm --no-skip-satisfied Safe || cpanm --no-skip-satisfied --notest Safe || { cat ~/.cpanm/build.log ; false ; }
+  #Moo fails to install without Class::Method::Modifiers since 2012/10/19 
+  - cpanm --no-skip-satisfied Class::Method::Modifiers YAML::XS || { cat ~/.cpanm/build.log ; false ; }
+  - dzil authordeps --missing | cpanm --no-skip-satisfied || { cat ~/.cpanm/build.log ; false ; }
+  - dzil listdeps --author --missing | cpanm --no-skip-satisfied || { cat ~/.cpanm/build.log ; false ; }
 install:
   - cpanm -nq --installdeps --with-recommends --with-suggests .
     #- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
@@ -39,7 +45,8 @@ script:
 notifications:
   recipients:
     - domoticz@e-nef.com
-  email:
+  template:
+      - "%{branch}#%{build_number} by %{author}: %{message} (%{build_url})"
     on_success: change
     on_failure: always
-#env:
+    use_notice: true
