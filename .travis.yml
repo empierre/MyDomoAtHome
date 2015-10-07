@@ -24,9 +24,12 @@ before_install:
   - cpanm Time::Piece
   - sudo apt-get install starman
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
+  - perlbrew install-cpanm -f
   - cpanm Test::Pod # optional dependency
 install:
-    - cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
+  - cpanm -nq --installdeps --with-recommends --with-suggests .
+    #- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
+env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
 script: "start2.sh"
 # branches:
 #   only:
