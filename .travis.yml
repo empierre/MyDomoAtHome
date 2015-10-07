@@ -30,7 +30,9 @@ install:
   - cpanm -nq --installdeps --with-recommends --with-suggests .
     #- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
-script: "start2.sh"
+script: 
+  "./start2.sh"
+  "./MyDomoAtHome/start2.sh"
 # branches:
 #   only:
 #     - master
