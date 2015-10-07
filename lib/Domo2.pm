@@ -733,7 +733,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Rain"  {
-						$room_tab{"Temp"}=1;
+						$room_tab{"Weather"}=1;
 						#DevRain        Rain sensor
 						#Value  Current instant rain value      mm/h
 						#Accumulation   Total rain accumulation mm
@@ -747,7 +747,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "UV"  {
-						$room_tab{"Temp"}=1;
+						$room_tab{"Weather"}=1;
 						#DevUV  UV sensor
 						#Value  Current UV index        index
 						# "Type" : "UV","UVI" : "6.0"
@@ -758,7 +758,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Lux"  {
-						$room_tab{"Utility"}=1;
+						$room_tab{"Weather"}=1;
 						#DevLux  Lux sensor
 						#Value  Current Lux value        index
 						$device_tab{$f->{"idx"}}->{"graph"} = 'v';
@@ -779,7 +779,7 @@ debug($system_url);
 						push (@{$feed->{'devices'}}, $feeds );
 					}
 					case "Wind"  {
-						$room_tab{"Temp"}=1;
+						$room_tab{"Weather"}=1;
 						#DevWind wind
 						$device_tab{$f->{"idx"}}->{"graph"} = 'sp';
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevWind", "room" => "Temp", params =>[]};

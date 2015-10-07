@@ -57,7 +57,8 @@ get '/rooms' => sub {
   return {"rooms" => [ 
 		{ "id"=> "Switches", "name"=> "Switches" },
 		{ "id"=> "Scenes", "name"=> "Scenes" },
-		{ "id"=> "Temp", "name"=> "Weather" },
+		{ "id"=> "Temp", "name"=> "Temperature" },
+		{ "id"=> "Weather", "name"=> "Weather" },
 		{ "id"=> "Utility", "name"=> "Utility" },
 #		{ "id"=> "Volumio", "name"=> "Volumio" },
 			]};
@@ -681,7 +682,7 @@ debug($system_url);
 							my $idx=$f->{"idx"};
 							$device_tab{$f->{"idx"}}->{"graph"} = 'v';
 							if ($f->{"Type"} eq "Temp + Humidity + Baro") {$idx=$idx."_1"};
-							my $feeds={"id" => $idx, "name" => $name, "type" => "DevPressure", "room" => "Temp", params =>[]};
+							my $feeds={"id" => $idx, "name" => $name, "type" => "DevPressure", "room" => "Weather", params =>[]};
 							my $v=$f->{"Barometer"};
 							push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "unit" => "mbar"} );
 								push (@{$feed->{'devices'}}, $feeds );
@@ -692,7 +693,7 @@ debug($system_url);
 						#Accumulation   Total rain accumulation mm
 						#"Rain" : "0.0", "RainRate" : "0.0", "Type" : "Rain"
 						$device_tab{$f->{"idx"}}->{"graph"} = 'mm';
-						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevRain", "room" => "Temp", params =>[]};
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevRain", "room" => "Weather", params =>[]};
 						my $v0=$f->{"RainRate"};
 						my $v1=$f->{"Rain"};
 						push (@{$feeds->{'params'}}, {"key" => "Accumulation", "value" => "$v1", "unit" => "mm", "graphable" => "true"} );
@@ -703,7 +704,7 @@ debug($system_url);
 						#Value  Current UV index        index
 						# "Type" : "UV","UVI" : "6.0"
 						$device_tab{$f->{"idx"}}->{"graph"} = 'uvi';
-						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevUV", "room" => "Temp", params =>[]};
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevUV", "room" => "Weather", params =>[]};
 						my $v=$f->{"UVI"};
 						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "graphable" => "true"} );
 						push (@{$feed->{'devices'}}, $feeds );
@@ -711,7 +712,7 @@ debug($system_url);
 						#DevLux  Lux sensor
 						#Value  Current Lux value        index
 						$device_tab{$f->{"idx"}}->{"graph"} = 'v';
-						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevLuminosity", "room" => "Temp", params =>[]};
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevLuminosity", "room" => "Weather", params =>[]};
 						my ($v)=($f->{"Data"}=~/(\d+) Lux/);
 						$device_tab{$f->{"idx"}}->{"graph"} = 'uvi';
 						push (@{$feeds->{'params'}}, {"key" => "Value", "value" => "$v", "graphable" => "true"} );
@@ -727,7 +728,7 @@ debug($system_url);
 					} elsif ($f->{"Type"} eq "Wind")  {
 						#DevWind wind
 						$device_tab{$f->{"idx"}}->{"graph"} = 'sp';
-						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevWind", "room" => "Temp", params =>[]};
+						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevWind", "room" => "Weather", params =>[]};
 						my ($dir)=($f->{"Direction"}=~/(\d+)/);
 						my ($speed)=($f->{"Speed"}=~/(\d+)/);
 						push (@{$feeds->{'params'}}, {"key" => "Speed", "value" => "$speed", "unit" => "km/h", "graphable" => "true"});
