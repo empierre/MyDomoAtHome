@@ -1,0 +1,20 @@
+# appdir/environments/development.yml
+# configuration file for development environment
+
+# the logger engine to use
+# console: log messages to STDOUT (your console where you started the
+#          application server)
+# file:    log message to a file in log/
+logger: 'file'
+# the log level for this environment
+# core is the lowest, it shows Dancer's core log messages as well as yours
+# (debug, info, warning and error)
+log: 'debug'
+# should Dancer show a stacktrace when an error is caught?
+show_errors: 1
+startup_info: 1
+show_errors:  1
+domo_path: "http://ip:8080"
+volumio_path: ""
+appname: "Domoticz REST Gateway DEV"
+charset: "UTF-8"
