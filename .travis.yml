@@ -11,7 +11,6 @@ before_install:
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
   - cpanm Time::Piece
   - sudo apt-get install starman
-  #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - perlbrew install-cpanm -f
   - cpanm Test::Pod # optional dependency
   #Safe fails to install due to failing tests since version 2.35 on perl < 5.14
@@ -30,8 +29,6 @@ script:
 #   only:
 #     - master
 notifications:
-  recipients:
-    - domoticz@e-nef.com
   template:
       - "%{branch}#%{build_number} by %{author}: %{message} (%{build_url})"
     on_success: change
