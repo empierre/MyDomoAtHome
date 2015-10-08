@@ -30,11 +30,12 @@ before_install:
   - "cpanm Test::More"
   - "cpanm Test::Fatal"
   - "cpanm Test::Requires"
+  - "cpanm Params::Coerce"
+  - "cpanm -nq --installdeps --with-recommends --with-suggests ."
   - "cpanm Time::Piece"
   - "cpanm --verbose Time::Moment"
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - cpanm Test::Pod # optional dependency
-  - cpanm -nq --installdeps --with-recommends --with-suggests .
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
 install:
 #- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
