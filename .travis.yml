@@ -37,7 +37,7 @@ before_install:
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - "cpanm Test::Pod # optional dependency"
   - "git clone https://github.com/chansen/p5-time-moment.git"
-  - "cd p5-time-moment && perl Makefile.PL; make test;make install"
+  - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd.."
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
 install:
 #- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
