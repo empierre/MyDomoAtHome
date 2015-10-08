@@ -27,7 +27,7 @@ before_install:
   - "cpanm Test::More"
   - "cpanm Test::Fatal"
   - "cpanm Test::Requires"
-  - "cpanm Time::Piece"
+  - "cpanm --verbose Time::Piece"
   - "cpanm Time::Moment"
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - cpanm Test::Pod # optional dependency
