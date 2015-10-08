@@ -25,12 +25,12 @@ before_install:
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - perlbrew install-cpanm -f
   - cpanm Test::Pod # optional dependency
-install:
   - cpanm -nq --installdeps --with-recommends --with-suggests .
-    #- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
-script: "ls -la"
-script: "exec ./MydomoAtHome/start2.sh"
+install:
+#- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
+#script: "exec ./MydomoAtHome/start2.sh"
+script: plackup -E production -s Starman --workers=2 -p 5001 -a bin/app2.pl
 # branches:
 #   only:
 #     - master
