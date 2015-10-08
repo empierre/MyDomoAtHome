@@ -2,7 +2,18 @@ language: perl
 perl:
   - "5.20"
   - "5.18"
+  - "5.16"
   - "5.14"
+addons:
+  apt:
+    packages:
+      - bash
+      - dash
+      - ksh
+      - zsh
+      - tcsh
+      - csh
+      - fish
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
   - sudo apt-get update -qq
@@ -11,26 +22,21 @@ before_install:
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
   - cpanm Time::Piece
   - sudo apt-get install starman
+  #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - perlbrew install-cpanm -f
   - cpanm Test::Pod # optional dependency
-  #Safe fails to install due to failing tests since version 2.35 on perl < 5.14
-  - perl -E 'exit($] < 5.014)' || cpanm --no-skip-satisfied Safe || cpanm --no-skip-satisfied --notest Safe || { cat ~/.cpanm/build.log ; false ; }
-  #Moo fails to install without Class::Method::Modifiers since 2012/10/19 
-  - cpanm --no-skip-satisfied Class::Method::Modifiers YAML::XS || { cat ~/.cpanm/build.log ; false ; }
-  - dzil authordeps --missing | cpanm --no-skip-satisfied || { cat ~/.cpanm/build.log ; false ; }
-  - dzil listdeps --author --missing | cpanm --no-skip-satisfied || { cat ~/.cpanm/build.log ; false ; }
 install:
   - cpanm -nq --installdeps --with-recommends --with-suggests .
     #- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
-script: 
-  "./MyDomoAtHome/start2.sh"
+script: "start2.sh"
 # branches:
 #   only:
 #     - master
 notifications:
-  template:
-      - "%{branch}#%{build_number} by %{author}: %{message} (%{build_url})"
+  recipients:
+    - domoticz@e-nef.com
+  email:
     on_success: change
     on_failure: always
-    use_notice: true
+#env:
