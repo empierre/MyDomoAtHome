@@ -2,19 +2,7 @@ language: perl
 perl:
   - "5.20"
   - "5.18"
-  #- "5.16"
   - "5.14"
-
-addons:
-  apt:
-    packages:
-      - bash
-      - dash
-      - ksh
-      - zsh
-      - tcsh
-      - csh
-      - fish
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
   - sudo apt-get update -qq
