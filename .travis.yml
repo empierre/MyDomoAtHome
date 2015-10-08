@@ -22,7 +22,7 @@ before_install:
   - sudo apt-get install starman
   - perlbrew install-cpanm -f
   - cpanm Time::Piece
-  - cpanm Time::Moment
+  - cpanm --force Time::Moment
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - cpanm Test::Pod # optional dependency
   - cpanm -nq --installdeps --with-recommends --with-suggests .
@@ -41,3 +41,4 @@ notifications:
     on_success: change
     on_failure: always
 #env:
+#after_failure: "cat /home/travis/builds/npm-debug.log"
