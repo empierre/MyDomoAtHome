@@ -134,10 +134,10 @@ debug($url);
 	                                                        $value=$value+$f->{"v2"};
                                                         }
 							my $date=$dt->epoch*1000;
-							my $feeds;
+							
                                                        if ($f->{"eu"}) {
                                                                if (($value > 0) || (($f->{"eu"} - $lastEu) > 0)) {
-                                                                       $feeds={"date" => "$date", "value" => "$value"};
+                                                                       my $$feeds={"date" => "$date", "value" => "$value"};
                                                                        push (@{$feed->{'values'}}, $feeds );
                                                                }
                                                                $lastEu = $f->{"eu"};
@@ -145,7 +145,7 @@ debug($url);
                                                                my $feeds={"date" => "$date", "value" => "$value"};
                                                                push (@{$feed->{'values'}}, $feeds );
                                                        }
-							push (@{$feed->{'values'}}, $feeds );
+							
 					} elsif ($f->{"mm"}) {
 							my $value=$f->{"mm"};
 							my $date=$dt->epoch*1000;
