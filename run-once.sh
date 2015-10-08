@@ -18,7 +18,7 @@ sudo apt-get -y install libtime-piece-perl libjson-perl libplack-perl starman  l
 sudo apt-get -y install libdbd-sqlite3-perl libdbi-perl sqlite3 2>&1 
 sudo apt-get -y install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl  2>&1 
 sudo cpanm Time::Moment
-curl -L http://cpanmin.us | perl - --sudo Dancer2
+#curl -L http://cpanmin.us | perl - --sudo Dancer2
 sudo chown www-data.www-data logs
 sudo chown www-data.www-data logs/*
 echo "Now installing the service"
