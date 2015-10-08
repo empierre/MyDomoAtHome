@@ -40,7 +40,10 @@ before_install:
   - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
 install:
-  - "cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org "
+#Safe fails to install due to failing tests since version 2.35 on perl < 5.14
+    - perl -E 'exit($] < 5.014)' || cpanm --no-skip-satisfied Safe || cpanm --no-skip-satisfied --notest Safe || { cat ~/.cpanm/build.log ; false ; }
+#Moo fails to install without Class::Method::Modifiers since 2012/10/19 
+    - cpanm --no-skip-satisfied Class::Method::Modifiers YAML::XS || { cat ~/.cpanm/build.log ; false ; }
 #script: "exec ./MydomoAtHome/start2.sh"
 script: "plackup -E production -s Starman --workers=2 -p 5001 -a bin/app.pl"
 # branches:
