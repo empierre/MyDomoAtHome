@@ -21,6 +21,7 @@ before_install:
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
   - sudo apt-get install starman
   - perlbrew install-cpanm -f
+  - "cpanm -nq --installdeps --with-recommends --with-suggests ."
   - "cpanm Module::Install"
   - "cpanm Module::Install::XSUtil"
   - "cpanm Module::Install::ReadmeFromPod"
@@ -31,11 +32,10 @@ before_install:
   - "cpanm Test::Fatal"
   - "cpanm Test::Requires"
   - "cpanm Params::Coerce"
-  - "cpanm -nq --installdeps --with-recommends --with-suggests ."
   - "cpanm Time::Piece"
   - "cpanm --verbose Time::Moment"
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
-  - cpanm Test::Pod # optional dependency
+  - "cpanm Test::Pod # optional dependency"
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
 install:
 #- cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
