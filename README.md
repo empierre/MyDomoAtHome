@@ -30,7 +30,6 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 - [x] Perl Dancer 1 engine
 - [x] MPD based players support (Volumio...)
 
-
 Next M2 milestone will provide extended support to other platforms wioth Docker and Synology 
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
@@ -42,7 +41,7 @@ Next M2 milestone will provide extended support to other platforms wioth Docker 
 - [ ] Auto updatable
 - [ ] Kodi support
 - [ ] Support every single type of sensors/feature of Domoticz
-  - [x] Dynamic room creation
+  - [x] Dynamic room creation
   - [ ] RGB lamps
   - [ ] Alarm pannel
 
@@ -53,7 +52,7 @@ docker pull epierre/mydomoathome
 ## Install procedure
   - `cd ~/domoticz/`
   - `git clone https://github.com/empierre/MyDomoAtHome MyDomoAtHome`
-  - `cd MyDomoAtHome`
+  - `cd MyDomoAtHome/environments`
   - `cp config.yml.def config.yml`
   - `cp production.yml.def production.yml`
   - `cp development.yml.def development.yml`
