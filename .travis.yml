@@ -24,6 +24,7 @@ before_install:
   - "cpanm Module::Install"
   - "cpanm Module::Install::XSUtil"
   - "cpanm Module::Install::ReadmeFromPod"
+  - "cpanm JSON::XS"
   - "cpanm Test::More"
   - "cpanm Test::Fatal"
   - "cpanm Test::Requires"
