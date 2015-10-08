@@ -40,9 +40,9 @@ before_install:
   - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
 install:
-  -cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org 
+  - "cpanm -v --installdeps --notest --mirror http://cpan.mirrors.travis-ci.org "
 #script: "exec ./MydomoAtHome/start2.sh"
-script: plackup -E production -s Starman --workers=2 -p 5001 -a bin/app.pl
+script: "plackup -E production -s Starman --workers=2 -p 5001 -a bin/app.pl"
 # branches:
 #   only:
 #     - master
