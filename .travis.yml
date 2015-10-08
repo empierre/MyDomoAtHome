@@ -19,12 +19,11 @@ before_install:
   - sudo apt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
   - sudo apt-get install libjson-perl libplack-perl libcrypt-ssleay-perl 
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
+  - sudo apt-get install starman
+  - perlbrew install-cpanm -f
   - cpanm Time::Piece
   - cpanm Time::Moment
-  
-  - sudo apt-get install starman
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
-  - perlbrew install-cpanm -f
   - cpanm Test::Pod # optional dependency
   - cpanm -nq --installdeps --with-recommends --with-suggests .
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
