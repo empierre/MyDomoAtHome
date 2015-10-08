@@ -21,6 +21,12 @@ before_install:
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
   - sudo apt-get install starman
   - perlbrew install-cpanm -f
+  - "cpanm Module::Install"
+  - "cpanm Module::Install::XSUtil"
+  - "cpanm Module::Install::ReadmeFromPod"
+  - "cpanm Test::More"
+  - "cpanm Test::Fatal"
+  - "cpanm Test::Requires"
   - cpanm Time::Piece
   - cpanm --force Time::Moment
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
