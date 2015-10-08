@@ -19,7 +19,7 @@ before_install:
   - sudo apt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
   - sudo apt-get install libjson-perl libplack-perl libcrypt-ssleay-perl 
   - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
-  - sudo apt-get install starman
+  - sudo apt-get install starman cpanp
   - perlbrew install-cpanm -f
   #- "cpanm -nq --installdeps --with-recommends --with-suggests ."
   - "cpanm Module::Install"
@@ -35,6 +35,7 @@ before_install:
   - "cpanm Test::Pod # optional dependency"
   - "cpanm Time::Piece"
   - "cpanm --verbose Time::Moment"
+  - "cpanp i --verbose Time::Moment"
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - "git clone https://github.com/chansen/p5-time-moment.git"
   - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
