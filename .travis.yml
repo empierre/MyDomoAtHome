@@ -37,6 +37,7 @@ before_install:
   - "cpanm Crypt::SSLeay"
   - "cpanm Encode"
   - "cpanm Test::Perl::Critic"
+  - "cpanm HTTP::Request::AsCGI"
   - "cpanm Test::Name::FromLine"
   - "cpanm Time::Piece"
   #- "cpanm Audio::MPD"
