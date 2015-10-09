@@ -40,7 +40,7 @@ before_install:
   #- "cpanm Audio::MPD"
   - "cpanm Time::Piece"
   - "cpanm Test::Time"
-  - "cpanm -v Test::Name::FromLine"
+  - "cpanm --verbose Test::Name::FromLine"
   - "cpanm Plack::Builder"
   - "cpanm Cookie::Baker"
   - "cpanm Dancer"
