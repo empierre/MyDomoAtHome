@@ -45,6 +45,7 @@ before_install:
   - "cpanm Test::Time"
   - "cpanm FCGI"
   - "cpanm FCGI::ProcManager"
+  - "cpanm Authen::Simple::Passwd"
   - "cpanm --verbose Plack::Builder"
   - "cpanm Cookie::Baker"
   - "cpanm Dancer"
