@@ -30,7 +30,7 @@ before_install:
   - "cpanm Test::Requires"
   - "cpanm Params::Coerce"
   - "cpanm Test::Pod # optional dependency"
-  - "cpanm switch"
+  - "cpanm Switch"
   - "cpanm File::Slurp"
   - "cpanm File::Spec;"
   - "cpanm LWP::UserAgent"
