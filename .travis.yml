@@ -39,7 +39,7 @@ before_install:
   - "cpanm Time::Piece"
   #- "cpanm Audio::MPD"
   - "cpanm Time::Piece"
-  - "cpanm Sancer"
+  - "cpanm Dancer"
   - "cpanm Starman"
   - "cpanm --verbose Time::Moment"
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
