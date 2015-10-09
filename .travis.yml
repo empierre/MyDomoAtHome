@@ -43,6 +43,7 @@ before_install:
   #- "cpanm Audio::MPD"
   - "cpanm Time::Piece"
   - "cpanm Test::Time"
+  - "cpanm FCGI"
   - "cpanm --verbose Plack::Builder"
   - "cpanm Cookie::Baker"
   - "cpanm Dancer"
