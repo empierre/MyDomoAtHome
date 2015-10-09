@@ -39,8 +39,8 @@ before_install:
   - "cpanm Time::Piece"
   #- "cpanm Audio::MPD"
   - "cpanm Time::Piece"
-  - "cpanm dancer"
-  - "cpanm starman"
+  - "cpanm Sancer"
+  - "cpanm Starman"
   - "cpanm --verbose Time::Moment"
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - "git clone https://github.com/chansen/p5-time-moment.git"
