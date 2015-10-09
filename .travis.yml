@@ -36,6 +36,7 @@ before_install:
   - "cpanm LWP::UserAgent"
   - "cpanm Crypt::SSLeay"
   - "cpanm Encode"
+  - "cpanm Test::Perl::Critic"
   - "cpanm --verbose Test::Name::FromLine"
   - "cpanm Time::Piece"
   #- "cpanm Audio::MPD"
