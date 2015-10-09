@@ -36,6 +36,9 @@ before_install:
   - "cpanm Time::Piece"
   - "cpanm --verbose Time::Moment"
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
+  - "git clone https://github.com/chansen/p5-time-moment.git"
+  - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
+
   
 env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
 install:
@@ -44,8 +47,6 @@ install:
 #Moo fails to install without Class::Method::Modifiers since 2012/10/19 
     - cpanm --no-skip-satisfied Class::Method::Modifiers YAML::XS || { cat ~/.cpanm/build.log ; false ; }
 #script: "exec ./MydomoAtHome/start2.sh"
-  - "git clone https://github.com/chansen/p5-time-moment.git"
-  - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
 script: "perlbrew exec plackup -E production -s Starman --workers=2 -p 5001 -a bin/app.pl"
 # branches:
 #   only:
