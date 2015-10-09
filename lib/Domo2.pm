@@ -15,7 +15,7 @@ use Encode qw/ encode decode /;
 use Time::Piece;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
-use Audio::MPD;
+#use Audio::MPD;
 use Switch;
 use Plack::Builder;
 use warnings;
@@ -952,13 +952,13 @@ debug($system_url);
 
 	#MPD
 	if ($mpd_host ne '') {
-		$mpd=Audio::MPD->new ( host => $mpd_host);
+		#$mpd=Audio::MPD->new ( host => $mpd_host);
 		$room_tab{"Music"}=1;
 	}
 	#Status
 	if ($mpd_host) {
-		my $status = $mpd->status;
-		my $song = $mpd->current;
+		#my $status = $mpd->status;
+		#my $song = $mpd->current;
 		my $feeds={"id" => "V2", "name" => $song->artist." - ".$song->album, "type" => "DevMultiSwitch", "room" => "Volumio", params =>[]};
 		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>$status->state, "unit"=> "", "graphable" => "false"} );
 		push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "play,stop,pause,next,prev,volumeUP,volumeDOWN"});
