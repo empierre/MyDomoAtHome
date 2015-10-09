@@ -44,6 +44,7 @@ before_install:
   - "cpanm Time::Piece"
   - "cpanm Test::Time"
   - "cpanm FCGI"
+  - "cpanm FCGI::ProcManager"
   - "cpanm --verbose Plack::Builder"
   - "cpanm Cookie::Baker"
   - "cpanm Dancer"
