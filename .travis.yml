@@ -16,10 +16,7 @@ addons:
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
   - sudo apt-get update -qq
-  - sudo apt-get install libdancer-perl libswitch-perl libfile-slurp-perl liblwp-protocol-psgi-perl cpanminus
-  - sudo apt-get install libjson-perl libplack-perl libcrypt-ssleay-perl 
-  - sudo apt-get install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl
-  - sudo apt-get install starman 
+  - sudo apt-get install cpanminus
   - perlbrew install-cpanm -f
   #- "cpanm -nq --installdeps --with-recommends --with-suggests ."
   - "cpanm Module::Install"
@@ -33,7 +30,17 @@ before_install:
   - "cpanm Test::Requires"
   - "cpanm Params::Coerce"
   - "cpanm Test::Pod # optional dependency"
+  - "cpanm switch"
+  - "cpanm File::Slurp"
+  - "cpanm File::Spec;"
+  - "cpanm LWP::UserAgent"
+  - "cpanm Crypt::SSLeay"
+  - "cpanm Encode"
   - "cpanm Time::Piece"
+  - "cpanm Audio::MPD"
+  - "cpanm Time::Piece"
+  - "cpanm dancer"
+  - "cpanm starman"
   - "cpanm --verbose Time::Moment"
   #- curl -L http://cpanmin.us | perl - --sudo Dancer2
   - "git clone https://github.com/chansen/p5-time-moment.git"
