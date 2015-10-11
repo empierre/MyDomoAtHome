@@ -21,6 +21,7 @@ sudo cpanm Time::Moment
 #curl -L http://cpanmin.us | perl - --sudo Dancer2
 sudo chown www-data.www-data logs
 sudo chown www-data.www-data logs/*
+./speedUP.sh
 echo "Now installing the service"
 sudo cp MyDomoAtHome.sh /etc/init.d/MyDomoAtHome.sh
 sudo chmod +x /etc/init.d/MyDomoAtHome.sh
