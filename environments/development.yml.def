@@ -5,7 +5,7 @@
 # console: log messages to STDOUT (your console where you started the
 #          application server)
 # file:    log message to a file in log/
-logger: 'file'
+logger: 'console'
 # the log level for this environment
 # core is the lowest, it shows Dancer's core log messages as well as yours
 # (debug, info, warning and error)
@@ -14,7 +14,5 @@ log: 'core'
 show_errors: 1
 startup_info: 1
 show_errors:  1
-domo_path: "http://ip:8080"
-volumio_path: ""
 appname: "Domoticz REST Gateway DEV"
 charset: "UTF-8"

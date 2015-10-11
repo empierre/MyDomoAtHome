@@ -16,7 +16,5 @@ show_errors: 0
 route_cache: 1
 
 startup_info: 0
-domo_path: "http://ip:8080"
-volumio_path: ""
-appname: "MyDomoAtHome REST Gateway"
+
 charset: "UTF-8"

@@ -5,6 +5,9 @@ package Domo;
 # Author: epierre <epierre@e-nef.com>
 
 use Dancer ':syntax';
+use FindBin;
+use Cwd qw/realpath/;
+use lib "$FindBin::Bin/../lib";
 use File::Slurp;
 use File::Spec;
 use LWP::UserAgent;
@@ -28,11 +31,20 @@ my %device_list;
 my $last_version;    #last version in github
 my $last_version_dt = Time::Moment->new(year => 2012); # last version text in github
 
-Dancer::Config::load();
+BEGIN {
+    Dancer::Config::setting('appdir',realpath("$FindBin::Bin/.."));
+#    Dancer::Config::setting('views',realpath("$FindBin::Bin/../views"));
+    Dancer::Config::setting('environment',realpath("$FindBin::Bin/../environments"));
+    Dancer::Config::setting('environments',realpath("$FindBin::Bin/../environments"));
+    Dancer::Config::load();
+}
+
+
 if (!config->{log}) {config->{log}='error';}
 print "environment:".config->{environment}."\n"; #development
 print "log:".config->{log}."\n"; #has value from production environment
 print "logger:".config->{logger}."\n"; #has value from production environment
+print "domoticz:".config->{domo_path}."\n"; #has value from production environment
 
 hook(
    after_serializer => sub {
@@ -398,11 +410,9 @@ debug($system_url);
 			push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$ver", "unit"=> "", "graphable" => "false"} );
 			push (@{$feed->{'devices'}}, $feeds );
 			#Check for new version
-			my @and=&getLastVersion();
-			my $an1;my $an2;
-			if (($ver ne $and[0])&&($and[0] ne "err")) {
+			my ($an1,$an2)=&getLastVersion();
+			if (($an1)&&($ver ne $an1)&&($an1 ne "err")) {
 				my $feeds={"id" => "S1", "name" => "New version found", "type" => "DevGenericSensor",  params =>[]};
-				$an1=$and[0];
 				push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$an1", "unit"=> "", "graphable" => "false"} );
 				push (@{$feed->{'devices'}}, $feeds );
 			}
@@ -856,7 +866,7 @@ debug($system_url);
 	}
 
 	#MPD
-	if ($mpd_host ne '') {
+	if ($mpd_host) {
 		$mpd=Audio::MPD->new ( host => $mpd_host);
 	}
 	#Status
@@ -987,9 +997,7 @@ debug($url);
 	}
 }
 sub getLastVersion() {
-	#my $dt = DateTime->now();
 	my $dt = Time::Moment->now;
-	#if ($last_version_dt < $dt->add( hours => 4 )) {
 	if ($last_version_dt < $dt->plus_hours(4)) {
 		my @res;
 		push @res,$last_version;
@@ -1014,8 +1022,8 @@ sub getLastVersion() {
 				$last_version_dt=Time::Moment->now;
 				$last_version=$decoded->{tag_name};
 				return(@res);
-			}
-		} else {return "err";}
+			} else {return ("err","");};
+		} else {return ("err","");}
 	}
 }
 1;
