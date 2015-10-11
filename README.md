@@ -52,8 +52,9 @@ docker pull epierre/mydomoathome
 ## Install procedure
   - `cd ~/domoticz/`
   - `git clone https://github.com/empierre/MyDomoAtHome MyDomoAtHome`
-  - `cd MyDomoAtHome/environments`
+  - `cd MyDomoAtHome`
   - `cp config.yml.def config.yml`
+  - `cd environments`
   - `cp production.yml.def production.yml`
   - `cp development.yml.def development.yml`
   - edit config.yml, production.yml, development.yml
