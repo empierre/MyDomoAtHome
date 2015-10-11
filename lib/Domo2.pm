@@ -15,7 +15,7 @@ use Encode qw/ encode decode /;
 use Time::Piece;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
-#use Audio::MPD;
+use Audio::MPD;
 use Switch;
 use Plack::Builder;
 use warnings;
@@ -137,7 +137,7 @@ debug($url);
 							
                                                        if ($f->{"eu"}) {
                                                                if (($value > 0) || (($f->{"eu"} - $lastEu) > 0)) {
-                                                                       my $$feeds={"date" => "$date", "value" => "$value"};
+                                                                       my $feeds={"date" => "$date", "value" => "$value"};
                                                                        push (@{$feed->{'values'}}, $feeds );
                                                                }
                                                                $lastEu = $f->{"eu"};
@@ -407,7 +407,7 @@ debug($system_url);
 			#Check for new version
 			my @and=&getLastVersion();
 			my $an1;my $an2;
-			if (($ver ne $and[0])&&($and[0] ne "err")) {
+			if ((@and[0])&&($ver ne $and[0])&&($and[0] ne "err")) {
 				my $feeds={"id" => "S1", "name" => "New version found", "type" => "DevGenericSensor",  params =>[]};
 				$an1=$and[0];
 				push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>"$an1", "unit"=> "", "graphable" => "false"} );
@@ -951,14 +951,14 @@ debug($system_url);
 	}
 
 	#MPD
-	if ($mpd_host ne '') {
-		#$mpd=Audio::MPD->new ( host => $mpd_host);
+	if ($mpd_host) {
+		$mpd=Audio::MPD->new ( host => $mpd_host);
 		$room_tab{"Music"}=1;
 	}
 	#Status
 	if ($mpd_host) {
-		#my $status = $mpd->status;
-		#my $song = $mpd->current;
+		my $status = $mpd->status;
+		my $song = $mpd->current;
 		my $feeds={"id" => "V2", "name" => $song->artist." - ".$song->album, "type" => "DevMultiSwitch", "room" => "Volumio", params =>[]};
 		push (@{$feeds->{'params'}}, {"key" => "Value", "value" =>$status->state, "unit"=> "", "graphable" => "false"} );
 		push (@{$feeds->{'params'}}, {"key" => "Choices", "value" => "play,stop,pause,next,prev,volumeUP,volumeDOWN"});
