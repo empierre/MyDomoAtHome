@@ -54,10 +54,7 @@ docker pull epierre/mydomoathome
   - `git clone https://github.com/empierre/MyDomoAtHome MyDomoAtHome`
   - `cd MyDomoAtHome`
   - `cp config.yml.def config.yml`
-  - `cd environments`
-  - `cp production.yml.def production.yml`
-  - `cp development.yml.def development.yml`
-  - edit config.yml, production.yml, development.yml
+  - edit config.yml with your values
   - edit  MyDomoAtHome.sh and change the path line 20 to your home installation
   - `sh ./run_once.sh`
   
