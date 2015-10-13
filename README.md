@@ -55,7 +55,7 @@ docker pull epierre/mydomoathome
   - `cd MyDomoAtHome`
   - `cp config.yml.def config.yml`
   - edit config.yml with your values
-  - edit  MyDomoAtHome.sh and change the path line 20 to your home installation
+  - edit  MyDomoAtHome.sh and change the path line 16 to your home installation
   - `sh ./run_once.sh`
   
 ## Usage
