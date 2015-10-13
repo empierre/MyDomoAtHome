@@ -11,16 +11,20 @@
 
 # Start a Plack daemon.
  
-PATH=/bin:/usr/bin:/sbin:/usr/sbin:
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:$HOME/perl5/bin
 DAEMON="/usr/bin/plackup"
+APP_DIR="/home/in/test/testenv/"
 NAME="MyDomoAtHome"
+PIDFILE=/var/run/$NAME.pid
+PORT=3001
+
+USER=www-data
+GROUP=www-data
+
 CWD=`pwd`
 # Defaults
 RUN="no"
-OPTIONS="-E production -s Starman --workers=4 -p 3001 -a /home/pi/domoticz/MyDomoAtHome/bin/app.pl --pid /tmp/mydomoathome.pid" # CHANGE TO YOUR PATH HERE
- 
-# PIDFILE="$NAME.pid"
-PIDFILE="/tmp/mydomoathome.pid"
+OPTIONS="-E production -s Starman --workers=4 --user $USER --group $GROUP --port $PORT -a $APP_DIR/MyDomoAtHome/bin/app.pl" # CHANGE TO YOUR PATH HERE
  
 #
 # These compatibility funcs are here just for sarge backports.
@@ -43,7 +47,7 @@ fi
 start()
 {
 log_daemon_msg "Starting plack server" "$NAME"
-start-stop-daemon -b -m --start --quiet --pidfile "$PIDFILE" --exec $DAEMON -- $OPTIONS
+start-stop-daemon  -m --start --quiet --pidfile "$PIDFILE" --exec $DAEMON -- $OPTIONS
 if [ $? != 0 ]; then
 log_end_msg 1
 exit 1

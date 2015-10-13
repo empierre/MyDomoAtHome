@@ -3,8 +3,8 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME                => 'Domo',
-    AUTHOR              => q{YOUR NAME <youremail@example.com>},
+    NAME                => 'MyDomoAtHome',
+    AUTHOR              => q{Emmanuel PIERRE <domoticz@e-nef.com>},
     VERSION_FROM        => 'lib/Domo.pm',
     ABSTRACT            => 'YOUR APPLICATION ABSTRACT',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002

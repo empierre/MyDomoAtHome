@@ -1,7 +1,7 @@
 ---
 abstract: 'YOUR APPLICATION ABSTRACT'
 author:
-  - 'YOUR NAME <youremail@example.com>'
+  - 'Emmanuel PIERRE <domoticz@e-nef.com>'
 build_requires:
   ExtUtils::MakeMaker: 0
 configure_requires:

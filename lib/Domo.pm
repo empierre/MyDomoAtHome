@@ -46,8 +46,6 @@ my $last_version_dt = Time::Moment->new(year => 2012); # last version text in gi
 
 BEGIN {
     Dancer::Config::setting('appdir',realpath("$FindBin::Bin/.."));
-#    Dancer::Config::setting('views',realpath("$FindBin::Bin/../views"));
-    Dancer::Config::setting('environment',realpath("$FindBin::Bin/../environments"));
     Dancer::Config::setting('environments',realpath("$FindBin::Bin/../environments"));
     Dancer::Config::load();
 }
