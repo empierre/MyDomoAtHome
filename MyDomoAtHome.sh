@@ -47,7 +47,7 @@ fi
 start()
 {
 log_daemon_msg "Starting plack server" "$NAME"
-start-stop-daemon  -m --start --quiet --pidfile "$PIDFILE" --exec $DAEMON -- $OPTIONS
+start-stop-daemon -b -m --start --quiet --pidfile "$PIDFILE" --exec $DAEMON -- $OPTIONS
 if [ $? != 0 ]; then
 log_end_msg 1
 exit 1
