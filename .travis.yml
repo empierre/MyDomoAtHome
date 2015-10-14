@@ -47,6 +47,7 @@ before_install:
   - "cpanm FCGI::ProcManager"
   - "cpanm Authen::Simple::Passwd"
   - "cpanm Cookie::Baker"
+  - "cpanm CGI::Emulate::PSGI"
   - "cpanm --verbose CGI::Compile"
   - "cpanm --verbose Plack::Builder"
   - "cpanm Dancer"
