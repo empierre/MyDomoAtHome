@@ -17,6 +17,7 @@ before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
   - sudo apt-get update -qq
   - sudo apt-get install cpanminus
+  - sudo apt-get install libplack-perl
   - perlbrew install-cpanm -f
   #- "cpanm -nq --installdeps --with-recommends --with-suggests ."
   - "cpanm Module::Install"
