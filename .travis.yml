@@ -2,7 +2,7 @@ language: perl
 perl:
   - "5.20"
   - "5.18"
-  - "5.14"
+  #- "5.14"
 addons:
   apt:
     packages:
@@ -17,8 +17,13 @@ before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
   - sudo apt-get update -qq
   - sudo apt-get install cpanminus
+  - sudo apt-get install libplack-perl
   - perlbrew install-cpanm -f
-  #- "cpanm -nq --installdeps --with-recommends --with-suggests ."
+  - "git clone https://github.com/chansen/p5-time-moment.git"
+  - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
+  - "cpanm --verbose --no-skip-satisfied Class::Method::Modifiers YAML::XS || { cat ~/.cpanm/build.log ; false ; }"
+  - " dzil authordeps --missing | cpanm --no-skip-satisfied || { cat ~/.cpanm/build.log ; false ; }"
+  #- "cpanm --verbose -nq --installdeps --with-recommends --with-suggests ."
   - "cpanm Module::Install"
   - "cpanm Module::Install::XSUtil"
   - "cpanm Module::Install::ReadmeFromPod"
@@ -46,8 +51,12 @@ before_install:
   - "cpanm FCGI"
   - "cpanm FCGI::ProcManager"
   - "cpanm Authen::Simple::Passwd"
-  - "cpanm --verbose Plack::Builder"
   - "cpanm Cookie::Baker"
+  #- "cpanm --verbose CGI::Emulate::PSGI"
+  #- "cpanm --verbose Plack::Test"
+  #- "cpanm --verbose CGI::Compile"
+  #- "cpanm --verbose Plack::Builder"
+  - "cpanm --verbose Plack"
   - "cpanm Dancer"
   - "cpanm Starman"
   - "cpanm --verbose Time::Moment"
