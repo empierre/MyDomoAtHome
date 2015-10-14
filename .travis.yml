@@ -19,7 +19,9 @@ before_install:
   - sudo apt-get install cpanminus
   - sudo apt-get install libplack-perl
   - perlbrew install-cpanm -f
-  #- "cpanm -nq --installdeps --with-recommends --with-suggests ."
+  - "git clone https://github.com/chansen/p5-time-moment.git"
+  - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
+  - "cpanm -nq --installdeps --with-recommends --with-suggests .
   - "cpanm Module::Install"
   - "cpanm Module::Install::XSUtil"
   - "cpanm Module::Install::ReadmeFromPod"
