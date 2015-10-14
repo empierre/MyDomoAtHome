@@ -48,7 +48,7 @@ before_install:
   - "cpanm Authen::Simple::Passwd"
   - "cpanm Cookie::Baker"
   - "cpanm --verbose CGI::Emulate::PSGI"
-    - "cpanm --verbose Plack::Test"
+  - "cpanm --verbose Plack::Test"
   - "cpanm --verbose CGI::Compile"
   - "cpanm --verbose Plack::Builder"
   - "cpanm Dancer"
