@@ -13,7 +13,7 @@
  
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:$HOME/perl5/bin
 DAEMON="/usr/bin/plackup"
-APP_DIR="/home/in/domoticz/MyDomoAtHome/"
+APP_DIR="/home/pi/domoticz/MyDomoAtHome/"
 NAME="MyDomoAtHome"
 PIDFILE=/var/run/$NAME.pid
 PORT=3001
