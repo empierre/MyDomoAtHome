@@ -24,7 +24,7 @@ GROUP=www-data
 CWD=`pwd`
 # Defaults
 RUN="no"
-OPTIONS="-E production -s Starman --workers=4 --user $USER --group $GROUP --port $PORT -a $APP_DIR/MyDomoAtHome/bin/app.pl" # CHANGE TO YOUR PATH HERE
+OPTIONS="-E production -s Starman --workers=4 --user $USER --group $GROUP --port $PORT -a $APP_DIR/bin/app.pl" # CHANGE TO YOUR PATH HERE
  
 #
 # These compatibility funcs are here just for sarge backports.
