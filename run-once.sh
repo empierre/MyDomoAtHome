@@ -44,4 +44,5 @@ sudo cp MyDomoAtHome.sh /etc/init.d/MyDomoAtHome.sh
 sudo chmod +x /etc/init.d/MyDomoAtHome.sh
 sudo update-rc.d MyDomoAtHome.sh defaults
 whiptail  --backtitle "MyDomoAtHome ISS Interface" --msgbox "Everything has been installed ! Please remember default port is 3001." 0 0 
+sudo service MyDomoAtHome.sh start
 
