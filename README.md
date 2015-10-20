@@ -30,7 +30,7 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 - [x] Perl Dancer 1 engine
 - [x] MPD based players support (Volumio...)
 
-Next M2 milestone will provide extended support to other platforms wioth Docker and Synology 
+Next M2 milestone will provide extended support to other platforms with Docker and Synology 
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
@@ -46,8 +46,7 @@ Next M2 milestone will provide extended support to other platforms wioth Docker 
   - [ ] Alarm pannel
 
 
-## Docker container
-docker pull epierre/mydomoathome
+# Standalone installation (PI, cubie, odroid, intel...)
 
 ## Install procedure
   - `cd ~/domoticz/`
@@ -58,7 +57,7 @@ docker pull epierre/mydomoathome
   - edit  MyDomoAtHome.sh and change the path line 16 to your home installation
   - `sh ./run_once.sh`
   
-## Usage
+## Running the service
 
 The default port is now 3001.
 
@@ -74,14 +73,33 @@ The default port is now 3001.
 ### Update:
   - `cd ~/domoticz/MyDomoAtHome`
   - `sh ./update-mdah.sh`
+
+## Docker installation
+
+### Duplicate the image
+    docker pull epierre/mydomoathome
+    
+### Launch the process
+Remember to change the IP below and authorize in Domoticz the docker IP range
+    docker run --name=mydomoathome --env domo_path="http://ip:8080" -it --rm -p 3001:3001 epierre/mydomoathome
+
+### Check running docker processes
+    docker ps
+    
+### Stoping a docker process
+    docker stop DOCKER_ID (found from the docler ps)
   
-## More detailed setup :
-  - Setup: http://domoticz.com/wiki/ImperiHome
-  - Remember to add the gateway in the local networks under setup in domoticz !
- 
-## Support: 
+# Testing the installation
+  - Check the domoticz is accessible from the hosting machine:
+    curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name  
+  - Check the MDAH returns the result from the hosting machine:
+    curl http://gateway_ip:gateway_port/devices
+  
+# Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
   - English : http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713
   - French  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
   - Send domoticz.db for an undetected device: domoticz at e-nef.com
 
+# Q&A
+  - Remember to add the gateway in the local networks under setup in domoticz !
