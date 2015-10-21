@@ -144,7 +144,8 @@ debug($url);
 			foreach $f ( @results ) {
 					my $dt = Time::Piece->strptime($f->{"d"},"%Y-%m-%d %H:%M:%SS");
 					#print $dt->epoch." \n";
-					if (($paramKey eq "temp")&&($f->{"te"})) {
+					if ((($paramKey eq "temp")||($paramKey eq "value"))&&($f->{"te"})) {
+					debug("T:".$paramKey.":".$f->{"te"});
 							my $value=$f->{"te"};
 							my $date=$dt->epoch*1000;
 							my $feeds={"date" => "$date", "value" => "$value"};
@@ -431,6 +432,7 @@ debug($system_url);
 			#Parse the devices tree
 			#
 			foreach my $f ( @results ) {
+debug("DBG:".$f->{"idx"}.":".$f->{"Type"}.":".$f->{"SubType"}."\n");
 					my $dt = Time::Piece->strptime($f->{"LastUpdate"},"%Y-%m-%d %H:%M:%S");
 					my $name=$f->{"Name"};
 					#$name=~s/\s/_/;
@@ -448,6 +450,7 @@ debug($system_url);
 					elsif ($bl eq "Panic") { $rbl=1;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 					elsif ($bl eq "Normal") { $rbl=0;$device_tab{$f->{"idx"}}->{"Action"}=3;}
 					else { $rbl=$bl;}
+
 
 					if (((($f->{"SwitchType"} eq "On/Off")||($f->{"SwitchType"} eq "Lighting Limitless/Applamp"))and($f->{"SubType"} ne "RGBW"))or($f->{"SwitchType"} eq "Contact")or($f->{"SwitchType"} eq "Dusk Sensor")) {
 						my $feeds={"id" => $f->{"idx"}, "name" => $name, "type" => "DevSwitch", "room" => "Switches", params =>[]};
