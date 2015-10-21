@@ -11,12 +11,14 @@
 
 # Start a Plack daemon.
  
+# CHANGE TO YOUR PATH HERE
+APP_DIR="/home/pi/domoticz/"
+PORT=3001
+# DO NOT CHANGE BELOW
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:$HOME/perl5/bin
 DAEMON="/usr/bin/plackup"
-APP_DIR="/home/pi/domoticz/"
 NAME="MyDomoAtHome"
 PIDFILE=/var/run/$NAME.pid
-PORT=3001
 
 USER=www-data
 GROUP=www-data
@@ -24,7 +26,7 @@ GROUP=www-data
 CWD=`pwd`
 # Defaults
 RUN="no"
-OPTIONS="-E production -s Starman --workers=4 --user $USER --group $GROUP --port $PORT -a $APP_DIR/MyDomoAtHome/bin/app.pl" # CHANGE TO YOUR PATH HERE
+OPTIONS="-E production -s Starman --workers=4 --user $USER --group $GROUP --port $PORT -a $APP_DIR/MyDomoAtHome/bin/app.pl" 
  
 #
 # These compatibility funcs are here just for sarge backports.
