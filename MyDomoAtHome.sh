@@ -88,7 +88,7 @@ rm "$PIDFILE"
 log_end_msg 0
 fi
 fi
-if [ "$SIGNAL" = "KILL" ]; then
+if [ "$SIGNAL" = "KILL" ] || [ "$SIGNAL" = "TERM" ]; then
 rm -f "$PIDFILE"
 fi
 else
