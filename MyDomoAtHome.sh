@@ -122,9 +122,11 @@ signal stop 1
 sleep 2
 start
 ;;
- 
+status)
+status_of_proc -p $PIDFILE $DAEMON "$NAME process" && exit 0 || exit $?
+;;
 *)
-echo "Usage: /etc/init.d/$NAME {start|force-start|stop|force-stop|reload|restart|force-reload}"
+echo "Usage: /etc/init.d/$NAME {start|force-start|stop|status|force-stop|reload|restart|force-reload}"
 exit 1
 ;;
 esac
