@@ -39,7 +39,7 @@ echo "Now fixing directories rights..."
 sudo chown www-data.www-data logs
 sudo chown www-data.www-data logs/*
 echo "Now improving graph performance in Domoticz..."
-./speedUP.sh
+./speedUp.sh
 echo "Now installing the service"
 sudo cp MyDomoAtHome.sh /etc/init.d/MyDomoAtHome.sh
 sudo chmod +x /etc/init.d/MyDomoAtHome.sh

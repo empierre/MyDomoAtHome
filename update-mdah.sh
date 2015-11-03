@@ -27,7 +27,7 @@ echo "Setting directories rights..."
 echo "Checking latest libraries dependencies..."
 sudo apt-get -y install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl  whiptail cpanminus
 sudo apt-get -y install libtime-piece-perl libjson-perl libplack-perl starman libcrypt-ssleay-perl libdatetime-perl libswitch-perl  2>&1 
-./speedUP.sh
+./speedUp.sh
 sudo cpanm Time::Moment
 #curl -L http://cpanmin.us | perl - --sudo Dancer2
 echo "Restarting MyDomoAtHome service..."
