@@ -1,3 +1,20 @@
+//##############################################################################
+//  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
+//      Copyright (C) 2014-2015 Emmanuel PIERRE (domoticz@e-nef.com)
+//
+// MyDomoAtHome is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  MyDomoAtHome is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with MyDomoAtHome.  If not, see <http://www.gnu.org/licenses/>.
+//##############################################################################
 
 // dependencies
 var express = require("express");
@@ -35,6 +52,7 @@ nconf.save(function (err) {
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
 
 //get data
 function getLocalWeather(q, onResult) {
@@ -88,20 +106,34 @@ function getLocalWeather(q, onResult) {
 
 
 //routes
-app.get("/", function(req, res){
-    var onResult = function (statusCode, result) {
-        res.send(result);
-    };
-
-    var q = req.param('q');
-    if(q == null || q == undefined || q == "") 
-        if (req.ip == "127.0.0.1" || req.ip.indexOf("192.168.") == 0)
-            res.send(errorView(null));
-        else
-            getLocalWeather(req.ip, onResult);
-    else
-        getLocalWeather(q, onResult);
+app.get('/', function(req, res){
+  res.sendfile(__dirname + '/public/index.html');
 });
+
+app.get("/system", function(req, res){
+    var version=nconf.get('app_name');
+    res.type('json');    
+    res.json(
+	 { "id":version , "apiversion":"1" });
+});
+app.get("/rooms", function(req, res){
+    res.type('json');    
+    res.json(
+	 { "rooms": [
+                { "id": "Switches", "name": "Switches" },
+                { "id": "Scenes", "name": "Scenes" },
+                { "id": "Temp", "name": "Temperature" },
+                { "id": "Weather", "name": "Weather" },
+                { "id": "Utility", "name": "Utility" }
+                     ]
+	});
+});
+
+//get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate'
+//get '/devices/:deviceId/action/:actionName/?:actionParam?' 
+//get '/devices' 
+//
+
 
 //start server
 http.createServer(app).listen(app.get('port'), function(){
