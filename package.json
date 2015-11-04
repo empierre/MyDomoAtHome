@@ -1,10 +1,9 @@
 {
   "name": "MyDomoAtHome",
-  "version": "0.12",
+  "version": "0.1",
   "description": "Rest interface for Domoticz to Imperihome",
   "main": "start.sh",
   "bin": {
-    "ohmysensors": "./bin/app.pl"
   },
   "scripts": {
   },
@@ -16,7 +15,7 @@
     "domoticz",
     "imperihome",
     "rest",
-    "dancer"
+    "nodejs"
     "home",
     "automation",
     "controller"
