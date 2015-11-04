@@ -32,6 +32,7 @@ echo "Now getting getting and installing dependencies..."
 sudo apt-get install nodejs
 sudo npm install supervisor -g
 sudo npm install express --save
+sudo npm install nconf --save
 # curl -L http://cpanmin.us | perl - --sudo Dancer2
 echo "Now fixing directories rights..."
 sudo chown www-data.www-data logs
