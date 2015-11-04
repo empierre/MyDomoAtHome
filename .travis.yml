@@ -1,81 +1,18 @@
-language: perl
-perl:
-  - "5.20"
-  - "5.18"
-  #- "5.14"
-addons:
-  apt:
-    packages:
-      - bash
-      - dash
-      - ksh
-      - zsh
-      - tcsh
-      - csh
-      - fish
-before_install:
-  - eval $(curl https://travis-perl.github.io/init) --auto
-  - sudo apt-get update -qq
-  - sudo apt-get install cpanminus
-  - sudo apt-get install libplack-perl
-  - perlbrew install-cpanm -f
-  - "git clone https://github.com/chansen/p5-time-moment.git"
-  - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
-  - "cpanm --verbose --no-skip-satisfied Class::Method::Modifiers YAML::XS || { cat ~/.cpanm/build.log ; false ; }"
-  - " dzil authordeps --missing | cpanm --no-skip-satisfied || { cat ~/.cpanm/build.log ; false ; }"
-  #- "cpanm --verbose -nq --installdeps --with-recommends --with-suggests ."
-  - "cpanm Module::Install"
-  - "cpanm Module::Install::XSUtil"
-  - "cpanm Module::Install::ReadmeFromPod"
-  - "cpanm JSON::XS"
-  - "cpanm CBOR::XS"
-  - "cpanm Sereal"
-  - "cpanm Test::More"
-  - "cpanm Test::Fatal"
-  - "cpanm Test::Requires"
-  - "cpanm Params::Coerce"
-  - "cpanm Test::Pod # optional dependency"
-  - "cpanm Switch"
-  - "cpanm File::Slurp"
-  - "cpanm File::Spec;"
-  - "cpanm LWP::UserAgent"
-  - "cpanm Crypt::SSLeay"
-  - "cpanm Encode"
-  - "cpanm Test::Perl::Critic"
-  - "cpanm HTTP::Request::AsCGI"
-  - "cpanm Test::Name::FromLine"
-  - "cpanm Time::Piece"
-  #- "cpanm Audio::MPD"
-  - "cpanm Time::Piece"
-  - "cpanm Test::Time"
-  - "cpanm FCGI"
-  - "cpanm FCGI::ProcManager"
-  - "cpanm Authen::Simple::Passwd"
-  - "cpanm Cookie::Baker"
-  #- "cpanm --verbose CGI::Emulate::PSGI"
-  #- "cpanm --verbose Plack::Test"
-  #- "cpanm --verbose CGI::Compile"
-  #- "cpanm --verbose Plack::Builder"
-  - "cpanm --verbose Plack"
-  - "cpanm Dancer"
-  - "cpanm Starman"
-  - "cpanm --verbose Time::Moment"
-  #- curl -L http://cpanmin.us | perl - --sudo Dancer2
-  - "git clone https://github.com/chansen/p5-time-moment.git"
-  - "cd p5-time-moment && perl Makefile.PL; make test;make install;cd .."
+language: node_js
+node_js:
+  - "4.1"
+  - "4.0"
+  - "0.12"
+  - "0.11"
+  - "0.10"
+  - "0.8"
+  - "0.6"
+  - "iojs"
+before_script:
+  - npm install
+  - npm install -g express
+script: gulp
 
-  
-env: RELEASE_TESTING=1 AUTOMATED_TESTING=1
-install:
-#Safe fails to install due to failing tests since version 2.35 on perl < 5.14
-    - perl -E 'exit($] < 5.014)' || cpanm --no-skip-satisfied Safe || cpanm --no-skip-satisfied --notest Safe || { cat ~/.cpanm/build.log ; false ; }
-#Moo fails to install without Class::Method::Modifiers since 2012/10/19 
-    - cpanm --no-skip-satisfied Class::Method::Modifiers YAML::XS || { cat ~/.cpanm/build.log ; false ; }
-#script: "exec ./MydomoAtHome/start2.sh"
-script: "perlbrew exec plackup -E production -s Starman --workers=2 -p 5001 -a bin/app.pl"
-# branches:
-#   only:
-#     - master
 notifications:
   recipients:
     - domoticz@e-nef.com
