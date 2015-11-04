@@ -11,7 +11,6 @@ node_js:
 before_script:
   - npm install
   - npm install -g express
-script: gulp
 
 notifications:
   recipients:
