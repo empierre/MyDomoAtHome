@@ -29,6 +29,7 @@
   "devDependencies": {
   },
   "dependencies": {
+    "express": "4.x"
   },
   "engines": {
   }
