@@ -21,6 +21,8 @@ var express = require("express");
 var _ = require("underscore");
 var http = require("http");
 var path = require('path');
+var cheerio = require('cheerio');
+var request = require("request");
 var querystring = require("querystring");
 var nconf = require('nconf');
 var app = express();
@@ -55,28 +57,20 @@ if ('development' == app.get('env')) {
 
 
 //get data
-function getLocalWeather(q, onResult) {
-  var baseurl = "http://api.worldweatheronline.com/free/v1/weather.ashx";
+function getDevices(onResult) {
+  //var baseurl = nconf.get('domo_path')+"/json.htm";
+  var baseurl = nconf.get('domo_path')+"/json.htm?type=devices&filter=all&used=true&order=Name";
 
-  var options = {
-    q: q,
-    num_of_days: '1',
-    format: 'json',
-    //you need to replace with your own key by registering on WWO website
-    key: 'xkq544hkar4m69qujdgujn7w'
-  };
+//  var options = {
+//    type: 'switch',
+//    idx: '1',
+//    range: 1
+//  };
 
-  var query = querystring.stringify(options);
-  var url = baseurl + "?" + query;
-
-  //inject error message into template
-  function injectError(error) {
-    if(getLocalWeather.previousResult == null)
-        return errorView(error);
-    else
-        return resultView(getLocalWeather.previousResult, error);
-  }
-
+//  var query = querystring.stringify(options);
+//  var url = baseurl + "?" + query;
+  var url = baseurl ;
+  console.log(url);
   //REST API
   http.get(url, function(res) {
     if(res.statusCode == 200) {
@@ -89,18 +83,14 @@ function getLocalWeather(q, onResult) {
       });
 
       res.on('end', function () {
-          var jsonres = JSON.parse(output)
-          if(jsonres.data.hasOwnProperty('error'))
-              onResult(res.statusCode, injectError(jsonres.data.error[0].msg)); 
-          else {
-              getLocalWeather.previousResult = jsonres;
-              onResult(res.statusCode, resultView(jsonres, null));
-            }
+          var jsonres = Object.create(null);
+          jsonres = JSON.parse(output);
+          onResult(res.statusCode, jsonres);
       });
     } else
-      onResult(res.statusCode, injectError("Something wrong with the server. Status Code: " + res.statusCode));
+      onResult(res.statusCode, "Something wrong with the server. Status Code: " + res.statusCode);
   }).on('error', function(e) {
-      onResult(res.statusCode, injectError(e.message));
+      onResult(res.statusCode, e.message);
   });
 }
 
@@ -116,6 +106,7 @@ app.get("/system", function(req, res){
     res.json(
 	 { "id":version , "apiversion":"1" });
 });
+
 app.get("/rooms", function(req, res){
     res.type('json');    
     res.json(
@@ -127,6 +118,44 @@ app.get("/rooms", function(req, res){
                 { "id": "Utility", "name": "Utility" }
                      ]
 	});
+});
+
+app.get("/devices", function(req, res){
+    res.type('json');    
+    var options = {
+    url: nconf.get('domo_path')+"/json.htm?type=devices&filter=all&used=true&order=Name",
+	  headers: {
+	  'User-Agent': 'request'
+          }
+    };
+    request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+	var data=JSON.parse(body); 
+	var result = [];
+	//my ID string
+	var myfeed = {"id": "S0", "name": "MyDomoAtHome", "type": "DevGenericSensor"};
+	myfeed.params={"key": "Value", "value": "1.0", "unit": "", "graphable": "false"};
+	result.push(myfeed);
+	res.json(result);
+
+	for(var i = 0; i < data.result.length; i++) {
+		//console.log(data.result[i].Type);
+		switch(data.result[i].Type) {
+			case (data.result[i].Type.match(/Lighting/)||{}).input:
+				console.log("S "+data.result[i].Name);	
+				break;
+			case 'General':
+				console.log("G "+data.result[i].Name);
+				break;
+			default:
+				console.log("U "+data.result[i].Name);
+				break;
+		}
+	}
+    } else {
+	res.json("error");
+    } 
+})
 });
 
 //get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate'
