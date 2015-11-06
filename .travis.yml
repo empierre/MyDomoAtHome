@@ -26,3 +26,4 @@ notifications:
     on_failure: always
 #env:
 #after_failure: "cat /home/travis/builds/npm-debug.log"
+install: npm i
