@@ -3,7 +3,7 @@ DOMO/REST Gateway between Domoticz and Imperihome ISS
 
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
-[![Coverage Status][coveralls-image]][coveralls-url]
+[![Coverage Status](https://coveralls.io/repos/empierre/MyDomoAtHome/badge.svg?branch=master&service=github)](https://coveralls.io/github/empierre/MyDomoAtHome?branch=master)
 
 ![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
 ![REST](https://img.shields.io/badge/REST API-powered-green.svg)
@@ -109,5 +109,4 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
 [npm-url]: https://npmjs.org/package/MyDomoAtHome
 [travis-image]: https://travis-ci.org/empierre/MyDomoAtHome.svg
 [travis-url]: https://travis-ci.org/empierre/MyDomoAtHome
-[coveralls-image]: https://coveralls.io/repos/empierre/MyDomoAtHome/badge.svg
-[coveralls-url]: https://coveralls.io/r/empierre/MyDomoAtHome
+
