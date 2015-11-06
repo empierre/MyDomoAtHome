@@ -21,11 +21,17 @@ var express = require("express");
 var _ = require("underscore");
 var http = require("http");
 var path = require('path');
-var cheerio = require('cheerio');
 var request = require("request");
 var querystring = require("querystring");
 var nconf = require('nconf');
+var os = require("os");
+var moment = require('moment');
 var app = express();
+
+//working variaboles
+var last_version_dt;
+var last_version =getLastVersion();
+var ver="0.12";
 
 // all environments
 app.set('port', process.env.PORT || 3002);
@@ -42,6 +48,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 nconf.use('file', { file: './config.json' });
 nconf.load();
 console.log(nconf.get('domo_path'));
+console.log(os.hostname());
 nconf.save(function (err) {
   if (err) {
     console.error(err.message);
@@ -55,44 +62,29 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-
-//get data
-function getDevices(onResult) {
-  //var baseurl = nconf.get('domo_path')+"/json.htm";
-  var baseurl = nconf.get('domo_path')+"/json.htm?type=devices&filter=all&used=true&order=Name";
-
-//  var options = {
-//    type: 'switch',
-//    idx: '1',
-//    range: 1
-//  };
-
-//  var query = querystring.stringify(options);
-//  var url = baseurl + "?" + query;
-  var url = baseurl ;
-  console.log(url);
-  //REST API
-  http.get(url, function(res) {
-    if(res.statusCode == 200) {
-      console.log("Got response: " + res.statusCode);
-      res.setEncoding('utf8');
-
-      var output = '';
-      res.on('data', function (chunk) {
-          output += chunk;
-      });
-
-      res.on('end', function () {
-          var jsonres = Object.create(null);
-          jsonres = JSON.parse(output);
-          onResult(res.statusCode, jsonres);
-      });
-    } else
-      onResult(res.statusCode, "Something wrong with the server. Status Code: " + res.statusCode);
-  }).on('error', function(e) {
-      onResult(res.statusCode, e.message);
-  });
-}
+function getLastVersion() {
+    var now = moment();
+    if ((last_version_dt)&&(last_version_dt.isBefore(moment().add(4,'h')))) {
+        return(last_version);
+    } else {
+        var options = {
+            url: "https://api.github.com/repos/empierre/MyDomoAtHome/releases/latest",
+            headers: {
+                'User-Agent': 'request'
+            }
+        };
+        request(options, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var data = JSON.parse(body);
+                last_version_dt=now;
+                last_version=data.tag_name;
+                return (data.tag_name);
+            } else {
+                return ("unknown");
+            }
+        });
+    }
+};
 
 
 //routes
@@ -102,9 +94,10 @@ app.get('/', function(req, res){
 
 app.get("/system", function(req, res){
     var version=nconf.get('app_name');
-    res.type('json');    
+    res.type('json');
+    var latest=getLastVersion();
     res.json(
-	 { "id":version , "apiversion":"1" });
+	 { "id":version , "apiversion": latest });
 });
 
 app.get("/rooms", function(req, res){
@@ -136,24 +129,78 @@ app.get("/devices", function(req, res){
 	var myfeed = {"id": "S0", "name": "MyDomoAtHome", "type": "DevGenericSensor"};
 	myfeed.params={"key": "Value", "value": "1.0", "unit": "", "graphable": "false"};
 	result.push(myfeed);
+    if (ver != getLastVersion()) {
+        var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
+        myfeed.params={"key": "Value", "value": last_version, "unit": "", "graphable": "false"};
+        result.push(myfeed);
+    }
 	res.json(result);
 
 	for(var i = 0; i < data.result.length; i++) {
 		//console.log(data.result[i].Type);
 		switch(data.result[i].Type) {
 			case (data.result[i].Type.match(/Lighting/)||{}).input:
-				console.log("S "+data.result[i].Name);	
+                switch(data.result[i].SwitchType) {
+                    case 'On/Off','Lighting Limitless/Applamp','Contact','Dusk Sensor':
+                        console.log("Switch "+data.result[i].Name);
+                    case 'Push On Button','Push Off Button':
+                        console.log("POB "+data.result[i].Name);
+                    case 'Dimmer','Doorbell':
+                        console.log("DIM "+data.result[i].Name);
+                    case 'Blinds Inverted':
+                        console.log("BLIND "+data.result[i].Name);
+                    case 'Blinds Percentage':
+                    case 'Blinds','Venetian Blinds EU','Venetian Blinds US':
+                    case 'Motion Sensor':
+                    case 'Door Lock':
+                    default:
+                        console.log("S "+data.result[i].Name);
+                }
 				break;
+            case 'Security':
+                console.log("SEC "+data.result[i].Name);
+                break;
+            case 'P1 Smart Meter','YouLess Meter':
+                switch(data.result[i].SubType) {
+                    case 'Energy', 'YouLess counter':
+                    case 'Gas':
+                    default:
+                }
+                break;
+            case 'Energy':
+            case 'Usage':
+            case 'Current/Energy':
+            case 'Temp + Humidity':
+            case 'Temp + Humidity + Baro':
+            case 'Temp':
+            case 'Humidity':
+            case 'Rain':
+            case 'UV':
+            case 'Lux':
+            case 'Air Quality':
+            case 'Wind':
+            case 'RFXMeter':
 			case 'General':
+                switch(data.result[i].SubType) {
+                    case 'Percentage':
+                    case 'Voltage':
+                    case 'kWh':
+                    case 'Pressure':
+                    case 'Visibility':
+                    case 'Solar Radiation':
+                    case 'Text', 'Alert', 'Unknown':
+                    case 'Sound Level':
+                }
 				console.log("G "+data.result[i].Name);
 				break;
+            case 'Thermostat':
 			default:
 				console.log("U "+data.result[i].Name);
 				break;
 		}
 	}
     } else {
-	res.json("error");
+	    res.json("error");
     } 
 })
 });
