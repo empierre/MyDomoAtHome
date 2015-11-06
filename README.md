@@ -109,5 +109,5 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
 [npm-url]: https://npmjs.org/package/MyDomoAtHome
 [travis-image]: https://travis-ci.org/empierre/MyDomoAtHome.svg
 [travis-url]: https://travis-ci.org/empierre/MyDomoAtHome
-[coveralls-image]: https://coveralls.io/repos/epierre/MyDomoAtHome/badge.svg
-[coveralls-url]: https://coveralls.io/r/epierre/MyDomoAtHome
+[coveralls-image]: https://coveralls.io/repos/empierre/MyDomoAtHome/badge.svg
+[coveralls-url]: https://coveralls.io/r/empierre/MyDomoAtHome
