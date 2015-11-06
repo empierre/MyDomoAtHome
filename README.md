@@ -21,8 +21,8 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 M2 milestone will provide extended support to other platforms with Docker and Synology 
 - [x] Free
 - [x] Multi-platform (Linux, Mac OS X, Windows)
-- [x] micro-services (Docker)
-- [ ] Synology
+- [x] Micro-services (Docker)
+- [ ] Synology package
 - [ ] Support major type of sensors/feature of Domoticz
   - [ ] Weather and Environmental sensors  
   - [ ] Energy sensors (Electricity, Gas, Water)
