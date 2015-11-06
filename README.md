@@ -106,8 +106,8 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
   - Remember to add the gateway in the local networks under setup in domoticz !
 
 [npm-image]: https://img.shields.io/npm/v/MyDomoAtHome.svg?style=flat
-[npm-url]: https://npmjs.org/package/mdah
+[npm-url]: https://npmjs.org/package/MyDomoAtHome
 [travis-image]: https://travis-ci.org/empierre/MyDomoAtHome.svg
 [travis-url]: https://travis-ci.org/empierre/MyDomoAtHome
-[coveralls-image]: https://coveralls.io/repos/empierre/MyDomoAtHome/badge.svg
-[coveralls-url]: https://coveralls.io/r/empierre/MyDomoAtHome
+[coveralls-image]: https://coveralls.io/repos/epierre/MyDomoAtHome/badge.svg
+[coveralls-url]: https://coveralls.io/r/epierre/MyDomoAtHome
