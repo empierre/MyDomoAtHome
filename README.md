@@ -1,10 +1,11 @@
 # MyDomoAtHome
 DOMO/REST Gateway between Domoticz and Imperihome ISS
 
-![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
 [![NPM Version][npm-image]][npm-url]
 [![Build Status][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
+
+![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
 ![REST](https://img.shields.io/badge/REST API-powered-green.svg)
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
