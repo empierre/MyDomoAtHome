@@ -49,8 +49,8 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
   - `cd ~/domoticz/`
   - `git clone https://github.com/empierre/MyDomoAtHome MyDomoAtHome`
   - `cd MyDomoAtHome`
-  - `cp config.yml.def config.yml`
-  - edit config.yml with your values
+  - `cp config.json.def config.json`
+  - edit config.json with your values
   - edit  MyDomoAtHome.sh and change the path line 16 to your home installation
   - `sh ./run_once.sh`
   
