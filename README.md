@@ -18,32 +18,29 @@ DOMO/REST Gateway between Domoticz and Imperihome ISS
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached
-
+M2 milestone will provide extended support to other platforms with Docker and Synology 
 - [x] Free
 - [x] Multi-platform (Linux, Mac OS X, Windows)
-- [x] Support major type of sensors/feature of Domoticz
-  - [x] Weather and Environmental sensors  
-  - [x] Energy sensors (Electricity, Gas, Water)
-  - [x] Switches
-  - [x] Thermostat
+- [x] micro-services (Docker)
+- [ ] Synology
+- [ ] Support major type of sensors/feature of Domoticz
+  - [ ] Weather and Environmental sensors  
+  - [ ] Energy sensors (Electricity, Gas, Water)
+  - [ ] Switches
+  - [ ] Thermostat
 - [x] Dependency-less 
-- [x] Perl Dancer 1 engine
-- [x] MPD based players support (Volumio...)
-
-Next M2 milestone will provide extended support to other platforms with Docker and Synology 
+- [ ] Node.js rewrite
+- [ ] Auto updatable
+- [ ] Support every single type of sensors/feature of Domoticz
+  - [ ] Dynamic room creation
+- Optionnal
+  - [ ] RGB lamps (depending on Domoticz)
+  - [ ] Push On buttons (depending on Imperihome)
+  - [ ] Alarm pannel
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
-- [ ] Extended platform (support)
-  - [x] Provide Docker images
-  - [ ] Provide Synology package
-- [x] Perl Dancer2 engine
-- [ ] Auto updatable
-- [ ] Kodi support
-- [ ] Support every single type of sensors/feature of Domoticz
-  - [x] Dynamic room creation
-  - [ ] RGB lamps
-  - [ ] Alarm pannel
+
 
 
 # Standalone installation (PI, cubie, odroid, intel...)
