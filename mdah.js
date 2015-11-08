@@ -32,6 +32,9 @@ var app = express();
 var last_version_dt;
 var last_version =getLastVersion();
 var ver="0.12";
+var device_tab={};
+var device = {MaxDimLevel : null,Action:null,graph:null};
+
 
 // all environments
 app.set('port', process.env.PORT || 3002);
@@ -86,7 +89,128 @@ function getLastVersion() {
     }
 };
 
+function DevSwitch(data) {
+    var status =0;
+    switch(data.Status) {
+        case 'On': status=1;break;
+        case 'Off': status=0;break;
+        case 'Open': status=1;break;
+        case 'Closed': status=0;break;
+        case 'Panic': status=1;break;
+        case 'Normal': status=0;break;
+        default: status=0;break;
+    }
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
+    myfeed.params={"key": "Status", "value": status};
+    return(myfeed);
+};
+function DevPush(data) {
+    var status =0;
+    switch(data.SwitchType) {
+        case 'Push On Button': status=1;break;
+        case 'Push Off Button': status=0;break;
+        default: status=0;break;
+    }
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
+    myfeed.params={"key": "Status", "value": status};
+    return(myfeed);
+};
+function DevRGBLight(data) {
+    var status =0;
+    switch(data.SwitchType) {
+        case 'Push On Button': status=1;break;
+        case 'Push Off Button': status=0;break;
+        default: status=0;break;
+    }
 
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": "Switches"};
+    if (data.Status == 'Set Level') {
+        var mydev={MaxDimLevel : null,Action:null,graph:null};
+        if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
+        mydev.MaxDimLevel=data.MaxDimLevel;
+        device_tab[data.idx]=mydev;
+        myfeed.params={"key": "Status", "value": status, "dimmable":1, "Level": data.Level};
+    } else {
+        myfeed.params={"key": "Status", "value": status};
+    }
+    return(myfeed);
+};
+function DevDimmer(data) {
+    var status =0;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
+    if (data.Status == 'Set Level') {
+        status = 1;
+    }
+    var mydev={MaxDimLevel : null,Action:null,graph:null};
+    if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
+    mydev.MaxDimLevel=data.MaxDimLevel;
+    device_tab[data.idx]=mydev;
+    myfeed.params={"key": "Status", "value": status, "Level": data.Level};
+
+    return(myfeed);
+};
+function DevShutterInverted(data) {
+    var status=0;
+    var lvl=0;
+    var mydev={MaxDimLevel : null,Action:null,graph:null};
+    if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
+    mydev.Action=5;
+    device_tab[data.idx]=mydev;
+    if (data.Status == 'Open') {
+        lvl=100;
+        status=1;
+    } else {
+        lvl=0;
+        status=0;
+    };
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
+    myfeed.params={"key": "Status", "value": status, "Level": lvl,"stoppable":0,"pulsable":0};
+    return(myfeed);
+};
+function DevShutter(data) {
+    var status=0;
+    var lvl=0;
+    var stoppable=0;
+    var mydev={MaxDimLevel : null,Action:null,graph:null};
+    if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
+    mydev.Action=6;
+    device_tab[data.idx]=mydev;
+    if (data.Status == 'Open') {
+        lvl=100;
+        status=1;
+    } else {
+        lvl=0;
+        status=0;
+    };
+    if ((data.SwitchType == 'Venetian Blinds EU')||(data.SwitchType == 'Venetian Blinds US')||(data.SwitchType == 'RollerTrol, Hasta new')) {stoppable=1;}
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
+    myfeed.params={"key": "Status", "value": status, "Level": lvl,"stoppable":stoppable,"pulsable":0};
+    return(myfeed);
+};
+function DevMotion(data) {
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": "Switches"};
+    myfeed.params={"Armable":0,"Ackable":0,"Armed":1,"Tripped":data.Status};
+    return(myfeed);
+};
+function DevDoor(data) {
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
+    myfeed.params={"Armable":0,"Ackable":0,"Armed":1,"Tripped":data.Status};
+    return(myfeed);
+};
+function DevSmoke(data) {
+    var ackable=0;
+    if (data.Type=='Security') {ackable=1;}
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
+    myfeed.params={"Armable":0,"Ackable":ackable,"Armed":1,"Tripped":data.Status};
+    return(myfeed);
+};
+function DevFlood(data) {};
+function DevCO2(data) {};
+function DevGenericSensor(data) {
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
+    myfeed.params={"key":"Value", "Value":data.Status};
+    return(myfeed);
+};
 //routes
 app.get('/', function(req, res){
   res.sendfile(__dirname + '/public/index.html');
@@ -123,82 +247,128 @@ app.get("/devices", function(req, res){
     };
     request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-	var data=JSON.parse(body); 
-	var result = [];
-	//my ID string
-	var myfeed = {"id": "S0", "name": "MyDomoAtHome", "type": "DevGenericSensor"};
-	myfeed.params={"key": "Value", "value": "1.0", "unit": "", "graphable": "false"};
-	result.push(myfeed);
-    if (ver != getLastVersion()) {
-        var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
-        myfeed.params={"key": "Value", "value": last_version, "unit": "", "graphable": "false"};
+        var data=JSON.parse(body);
+        var result = [];
+        //my ID string
+        var myfeed = {"id": "S0", "name": "MyDomoAtHome", "type": "DevGenericSensor"};
+        myfeed.params={"key": "Value", "value": "1.0", "unit": "", "graphable": "false"};
         result.push(myfeed);
-    }
-	res.json(result);
+        if (ver != getLastVersion()) {
+            var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
+            myfeed.params={"key": "Value", "value": last_version, "unit": "", "graphable": "false"};
+            result.push(myfeed);
+        }
 
-	for(var i = 0; i < data.result.length; i++) {
-		//console.log(data.result[i].Type);
-		switch(data.result[i].Type) {
-			case (data.result[i].Type.match(/Lighting/)||{}).input:
-                switch(data.result[i].SwitchType) {
-                    case 'On/Off','Lighting Limitless/Applamp','Contact','Dusk Sensor':
-                        console.log("Switch "+data.result[i].Name);
-                    case 'Push On Button','Push Off Button':
-                        console.log("POB "+data.result[i].Name);
-                    case 'Dimmer','Doorbell':
-                        console.log("DIM "+data.result[i].Name);
-                    case 'Blinds Inverted':
-                        console.log("BLIND "+data.result[i].Name);
-                    case 'Blinds Percentage':
-                    case 'Blinds','Venetian Blinds EU','Venetian Blinds US':
-                    case 'Motion Sensor':
-                    case 'Door Lock':
-                    default:
-                        console.log("S "+data.result[i].Name);
-                }
-				break;
-            case 'Security':
-                console.log("SEC "+data.result[i].Name);
-                break;
-            case 'P1 Smart Meter','YouLess Meter':
-                switch(data.result[i].SubType) {
-                    case 'Energy', 'YouLess counter':
-                    case 'Gas':
-                    default:
-                }
-                break;
-            case 'Energy':
-            case 'Usage':
-            case 'Current/Energy':
-            case 'Temp + Humidity':
-            case 'Temp + Humidity + Baro':
-            case 'Temp':
-            case 'Humidity':
-            case 'Rain':
-            case 'UV':
-            case 'Lux':
-            case 'Air Quality':
-            case 'Wind':
-            case 'RFXMeter':
-			case 'General':
-                switch(data.result[i].SubType) {
-                    case 'Percentage':
-                    case 'Voltage':
-                    case 'kWh':
-                    case 'Pressure':
-                    case 'Visibility':
-                    case 'Solar Radiation':
-                    case 'Text', 'Alert', 'Unknown':
-                    case 'Sound Level':
-                }
-				console.log("G "+data.result[i].Name);
-				break;
-            case 'Thermostat':
-			default:
-				console.log("U "+data.result[i].Name);
-				break;
-		}
-	}
+        for(var i = 0; i < data.result.length; i++) {
+            //console.log(data.result[i].Type);
+            switch(data.result[i].Type) {
+                case (data.result[i].Type.match(/Lighting/)||{}).input:
+                    switch(data.result[i].SwitchType) {
+                        case 'On/Off':
+                        case 'Contact':
+                        case 'Dusk Sensor':
+                        case 'Lighting Limitless/Applamp':
+                            if (data.result[i].SubType =='RGB') {
+                                result.push(DevRGBLight(data.result[i]));
+                            } else {
+                                result.push(DevSwitch(data.result[i]));
+                            }
+                            break;
+                        case 'Push On Button':
+                        case 'Push Off Button':
+                            result.push(DevPush(data.result[i]));
+                            break;
+                        case 'RGB':
+                            result.push(DevRGBLight(data.result[i]));
+                            break;
+                        case 'Dimmer':
+                        case 'Doorbell':
+                            result.push(DevDimmer(data.result[i]));
+                            break;
+                        case 'Blinds Inverted':
+                            result.push(DevShutterInverted(data.result[i]));
+                            break;
+                        case 'Blinds Percentage':
+                        case 'Blinds':
+                        case 'Venetian Blinds EU':
+                        case 'Venetian Blinds US':
+                            result.push(DevShutter(data.result[i]));
+                            break;
+                        case 'Motion Sensor':
+                            result.push(DevMotion(data.result[i]));
+                            break;
+                        case 'Door Lock':
+                            result.push(DevDoor(data.result[i]));
+                            break;
+                        case 'Smoke Detector':
+                            result.push(DevSmoke(data.result[i]));
+                            break;
+                        case (data.result[i].SwitchType.match(/Siren/)||{}).input:
+                            result.push(DevGenericSensor(data.result[i]));
+                            break;
+                        default:
+                            console.log("UNK Sw "+data.result[i].Name);
+                            break;
+                    }
+                    break;
+                case 'Security':
+                    switch(data.result[i].SwitchType) {
+                        case 'Smoke Detector':
+                            result.push(DevSmoke(data.result[i]));
+                            break;
+                        case 'Security':
+                            result.push(DevGenericSensor(data.result[i]));
+                            break;
+                        default:
+                            console.log("UNK Sec "+data.result[i].Name);
+                            break;
+                    }
+                case 'P1 Smart Meter':
+                case 'YouLess Meter':
+                    switch(data.result[i].SubType) {
+                        case 'Energy', 'YouLess counter':
+                        case 'Gas':
+                        default:
+                    }
+                    break;
+                case 'Energy':
+                case 'Usage':
+                case 'Current/Energy':
+                case 'Temp + Humidity':
+                case 'Temp + Humidity + Baro':
+                case 'Temp':
+                case 'Humidity':
+                case 'Rain':
+                case 'UV':
+                case 'Lux':
+                case 'Air Quality':
+                case 'Wind':
+                case 'RFXMeter':
+                case 'General':
+                    switch(data.result[i].SubType) {
+                        case 'Percentage':
+                        case 'Voltage':
+                        case 'kWh':
+                        case 'Pressure':
+                        case 'Visibility':
+                        case 'Solar Radiation':
+
+                        case 'Text':
+                        case 'Alert':
+                        case 'Unknown':
+                              break;
+
+                        case 'Sound Level':
+                    }
+                    //console.log("G "+data.result[i].Name);
+                    break;
+                case 'Thermostat':
+                default:
+                    //console.log("U "+data.result[i].Name);
+                    break;
+            }
+        }
+        res.json(result);
     } else {
 	    res.json("error");
     } 
