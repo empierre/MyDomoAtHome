@@ -211,6 +211,34 @@ function DevGenericSensor(data) {
     myfeed.params={"key":"Value", "Value":data.Status};
     return(myfeed);
 };
+function DevElectricity(data) {
+    var ptrn1= /(\d+) Watt/;
+    var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
+    var ptrn3= /[\s,]+/;
+
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+    var params=[];
+    if (data.Usage>0) {
+        var res= ptrn1.exec(data.Usage);
+        var usage=0;
+        if (res != null) {usage=res[1]}
+
+        if (!usage) {
+            usage = 0;
+        }
+        params.push({"key": "Watts", "value": usage, "unit": "W"});
+    }
+    if (data.Data) {
+        var res=ptrn2.exec(data.Data);
+        var total=0;
+        if (res != null) {total = Math.ceil(res[1]);}
+        params.push({"key": "ConsoTotal", "value": total, "unit": "kWh", "graphable": "true"});
+    }
+    myfeed.params=params;
+    return(myfeed);
+}
+
+
 //routes
 app.get('/', function(req, res){
   res.sendfile(__dirname + '/public/index.html');
@@ -325,6 +353,7 @@ app.get("/devices", function(req, res){
                     }
                 case 'P1 Smart Meter':
                 case 'YouLess Meter':
+                    result.push(DevElectricity(data.result[i]));break;
                     switch(data.result[i].SubType) {
                         case 'Energy', 'YouLess counter':
                         case 'Gas':
