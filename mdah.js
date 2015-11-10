@@ -237,6 +237,65 @@ function DevElectricity(data) {
     myfeed.params=params;
     return(myfeed);
 }
+function DevElectricityMultiple(data) {
+    var ptrn1= /(\d+) Watt/;
+    var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
+    var ptrn3= /[\s,]+/;
+    var combo=[];
+
+    var res=data.Data.split(ptrn3);
+    var usage=0;
+    if (res != null) {
+        //L1
+        usage=res[0];
+        var myfeed = {"id": data.idx+"_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var params=[];
+        params.push({"key": "Watts", "value": usage, "unit": "W"});
+        myfeed.params=params;
+        combo.push(myfeed);
+        //L2
+        usage=res[2];
+        var myfeed = {"id": data.idx+"_L2", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var params=[];
+        params.push({"key": "Watts", "value": usage, "unit": "W"});
+        myfeed.params=params;
+        combo.push(myfeed);
+        //L3
+        usage=res[4];
+        var myfeed = {"id": data.idx+"_L3", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var params=[];
+        params.push({"key": "Watts", "value": usage, "unit": "W"});
+        myfeed.params=params;
+        combo.push(myfeed);
+    }
+    return(combo);
+}
+function DevGas(data) {
+    var ptrn1= /(\d+) m3/;
+    var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
+    var ptrn3= /[\s,]+/;
+
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+    var params=[];
+    if (data.Usage>0) {
+        var res= ptrn1.exec(data.CounterToday);
+        var usage=0;
+        if (res != null) {usage=res[1]}
+
+        if (!usage) {
+            usage = 0;
+        }
+        params.push({"key": "Watts", "value": usage, "unit": "m3"});
+    }
+    if (data.Data) {
+        var res=ptrn2.exec(data.Counter);
+        var total=0;
+        if (res != null) {total = Math.ceil(res[1]);}
+        params.push({"key": "ConsoTotal", "value": total, "unit": "m3", "graphable": "true"});
+    }
+    myfeed.params=params;
+    return(myfeed);
+}
 
 
 //routes
@@ -352,17 +411,36 @@ app.get("/devices", function(req, res){
                             break;
                     }
                 case 'P1 Smart Meter':
-                case 'YouLess Meter':
-                    result.push(DevElectricity(data.result[i]));break;
+
                     switch(data.result[i].SubType) {
-                        case 'Energy', 'YouLess counter':
+                        case 'Energy':
+                            result.push(DevElectricity(data.result[i]));
+                            break;
                         case 'Gas':
+                            result.push(DevGas(data.result[i]));
+                            break;
                         default:
                     }
                     break;
+                case 'YouLess Meter':
+                    switch(data.result[i].SubType) {
+                        case 'YouLess counter':
+                            result.push(DevElectricity(data.result[i]));
+                            break;
+                        default:
+                            console.log("UNK Sec "+data.result[i].Name);
+                            break;
+                    }
+                    break;
                 case 'Energy':
+                    result.push(DevElectricity(data.result[i]));
+                    break;
                 case 'Usage':
+                    result.push(DevElectricity(data.result[i]));
+                    break;
                 case 'Current/Energy':
+                    result.push(DevElectricityMultiple(data.result[i]));
+                    break;
                 case 'Temp + Humidity':
                 case 'Temp + Humidity + Baro':
                 case 'Temp':
