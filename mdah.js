@@ -296,8 +296,63 @@ function DevGas(data) {
     myfeed.params=params;
     return(myfeed);
 }
-
-
+function DevTH(data) {
+    var status =0;
+    switch(data.Type) {
+        case 'Temp':
+            var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
+            myfeed.params={"key": "Value", "value": data.Temp, "unit": "°C", "graphable": "true"};
+            return(myfeed);
+        case 'Humidity':
+            var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
+            myfeed.params={"key": "Value", "value": data.Humidity, "unit": "%", "graphable": "true"};
+            return(myfeed);
+        case 'Temp + Humidity':
+            var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
+            var params=[];
+            params.push({"key": "Value", "value": data.Humidity, "unit": "%", "graphable": "true"});
+            params.push({"key": "Value", "value": data.Temp, "unit": "°C", "graphable": "true"});
+            myfeed.params=params;
+            return(myfeed);
+        case 'Temp + Humidity + Baro':
+            var combo=[];
+            var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
+            var params=[];
+            params.push({"key": "Value", "value": data.Humidity, "unit": "%", "graphable": "true"});
+            params.push({"key": "Value", "value": data.Temp, "unit": "°C", "graphable": "true"});
+            myfeed.params=params;
+            combo.push(myfeed);
+            var myfeed = {"id": data.idx+"_1", "name": data.Name, "type": "DevPressure", "room": "Weather"};
+            myfeed.params={"key": "Value", "value": data.Barometer, "unit": "mbar", "graphable": "true"};
+            combo.push(myfeed);
+            return(combo);
+        default: console.log("should not happen");break;
+    }
+};
+function DevRain(data) {
+    var status = 0;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": "Weather"};
+    var params=[];
+    params.push({"key": "Accumulation", "value": data.Rain, "unit": "mm", "graphable": "true"});
+    params.push({"key": "Value", "value": data.RainRate, "unit": "mm", "graphable": "true"});
+    myfeed.params=params;
+    return (myfeed);
+};
+function DevUV(data) {
+    var status = 0;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevUV", "room": "Weather"};
+    myfeed.params={"key": "Value", "value": data.UVI, "unit": "", "graphable": "true"};
+    return (myfeed);
+};
+function DevLux(data) {
+    var ptrn1= /(\d+) Lux/;
+    var res= ptrn1.exec(data.Data);
+    var usage=0;
+    if (res != null) {usage=res[1]}
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevLuminosity", "room": "Weather"};
+    myfeed.params={"key": "Value", "value": usage, "unit": "", "graphable": "true"};
+    return (myfeed);
+};
 //routes
 app.get('/', function(req, res){
   res.sendfile(__dirname + '/public/index.html');
@@ -445,9 +500,17 @@ app.get("/devices", function(req, res){
                 case 'Temp + Humidity + Baro':
                 case 'Temp':
                 case 'Humidity':
+                    result.push(DevTH(data.result[i]));
+                    break;
                 case 'Rain':
+                    result.push(DevRain(data.result[i]));
+                    break;
                 case 'UV':
+                    result.push(DevUV(data.result[i]));
+                    break;
                 case 'Lux':
+                    result.push(DevLux(data.result[i]));
+                    break;
                 case 'Air Quality':
                 case 'Wind':
                 case 'RFXMeter':
