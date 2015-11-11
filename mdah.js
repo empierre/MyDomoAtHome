@@ -208,8 +208,21 @@ function DevFlood(data) {};
 function DevCO2(data) {};
 function DevGenericSensor(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
-    myfeed.params={"key":"Value", "Value":data.Status};
+    if (data.Status) {
+        myfeed.params = {"key": "Value", "Value": data.Status};
+    } else {
+        myfeed.params = {"key": "Value", "Value": data.Data};
+    }
     return(myfeed);
+};
+function DevGenericSensorT(data) {
+    var ptrn=/([0-9]+(?:\.[0-9]+)?) ?(.+)/;
+    var res=data.Data.match(ptrn).slice(1);
+    var value=res[0];
+    var suffix=res[1];
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
+    myfeed.params = {"key": "Value", "value": value, "unit": suffix, "graphable": "true"};
+    return (myfeed);
 };
 function DevElectricity(data) {
     var ptrn1= /(\d+) Watt/;
@@ -277,7 +290,7 @@ function DevGas(data) {
 
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
     var params=[];
-    if (data.Usage>0) {
+    if (data.CounterToday>0) {
         var res= ptrn1.exec(data.CounterToday);
         var usage=0;
         if (res != null) {usage=res[1]}
@@ -295,6 +308,38 @@ function DevGas(data) {
     }
     myfeed.params=params;
     return(myfeed);
+}
+function DevWater(data) {
+    var ptrn1= /(\d+) m3/;
+    var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
+    var ptrn3= /[\s,]+/;
+    var combo=[];
+    var usage_l=0;
+
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+    var params=[];
+    if (data.CounterToday>0) {
+        var res= ptrn1.exec(data.CounterToday);
+        var usage=0;
+        if (res != null) {usage=Math.ceil(res[1]/1000);usage_l=res[1];}
+
+        if (!usage) {
+            usage = 0;
+        }
+        params.push({"key": "Watts", "value": usage, "unit": "m3"});
+    }
+    if (data.Data) {
+        var res=ptrn2.exec(data.Counter);
+        var total=0;
+        if (res != null) {total = Math.ceil(res[1]);}
+        params.push({"key": "ConsoTotal", "value": total, "unit": "m3", "graphable": "true"});
+    }
+    myfeed.params=params;
+    combo.push(myfeed);
+    var myfeed = {"id": data.idx+"_1", "name": data.Name, "type": "DevGeneric", "room": "Utility"};
+    myfeed.params={"key": "Value", "value": usage_l, "unit": "L", "graphable": "true"};
+    combo.push(myfeed);
+    return(combo);
 }
 function DevTH(data) {
     var status =0;
@@ -329,6 +374,10 @@ function DevTH(data) {
         default: console.log("should not happen");break;
     }
 };
+function DevPressure(data) {
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": "Weather"};
+    myfeed.params={"key": "Value", "value": data.Pressure, "unit": "mbar", "graphable": "true"};
+}
 function DevRain(data) {
     var status = 0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": "Weather"};
@@ -344,6 +393,15 @@ function DevUV(data) {
     myfeed.params={"key": "Value", "value": data.UVI, "unit": "", "graphable": "true"};
     return (myfeed);
 };
+function DevNoise(data) {
+    var ptrn=/([0-9]+(?:\.[0-9]+)?) ?(.+)/;
+    var res=data.Data.match(ptrn).slice(1);
+    var value=res[0];
+    var suffix=res[1];
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": "Utility"};
+    myfeed.params={"key": "Value", "value": value, "unit": suffix, "graphable": "true"};
+    return (myfeed);
+};
 function DevLux(data) {
     var ptrn1= /(\d+) Lux/;
     var res= ptrn1.exec(data.Data);
@@ -353,6 +411,36 @@ function DevLux(data) {
     myfeed.params={"key": "Value", "value": usage, "unit": "", "graphable": "true"};
     return (myfeed);
 };
+function DevGases(data) {
+    var ptrn1= /(\d+) ppm/;
+    var res= ptrn1.exec(data.Data);
+    var usage=0;
+    if (res != null) {usage=res[1]}
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Temp"};
+    myfeed.params={"key": "Value", "value": usage, "unit": "ppm", "graphable": "true"};
+    return (myfeed);
+};
+function DevWind(data) {
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": "Weather"};
+    var params=[];
+    params.push({"key": "Speed", "value": data.Speed, "unit": "km/h", "graphable": "true"});
+    params.push({"key": "Direction", "value": data.Direction, "unit": "°", "graphable": "true"});
+    myfeed.params=params;
+    return (myfeed);
+};
+function DevThermostat(data) {
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Utilities"};
+    var params=[];
+    params.push({"key":"cursetpoint","value":data.SetPoint});
+    params.push({"key":"curtemp","value":data.SetPoint});
+    params.push({"key":"step","value": 0.5});
+    params.push({"key":"curmode","value":"default"});
+    params.push({"key":"availablemodes","value":"default"});
+    myfeed.params=params;
+    return(myfeed);
+
+};
+
 //routes
 app.get('/', function(req, res){
   res.sendfile(__dirname + '/public/index.html');
@@ -465,6 +553,7 @@ app.get("/devices", function(req, res){
                             console.log("UNK Sec "+data.result[i].Name);
                             break;
                     }
+                    break;
                 case 'P1 Smart Meter':
 
                     switch(data.result[i].SubType) {
@@ -512,27 +601,63 @@ app.get("/devices", function(req, res){
                     result.push(DevLux(data.result[i]));
                     break;
                 case 'Air Quality':
+                    result.push(DevGases(data.result[i]));
+                    break;
                 case 'Wind':
+                    result.push(DevWind(data.result[i]));
+                    break;
                 case 'RFXMeter':
+                    switch(data.result[i].SwitchTypeVal) {
+                        case 1:
+                            result.push(DevGas(data.result[i]));
+                            break;
+                        case 2:
+                            result.push(DevWater(data.result[i]));
+                            break;
+                        case 3:
+                            result.push(DevElectricity(data.result[i]));
+                            break;
+                        default:
+                            console.log("RFX Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                    }
+                    break;
                 case 'General':
                     switch(data.result[i].SubType) {
                         case 'Percentage':
+                            result.push(DevGenericSensorT(data.result[i]));
+                            break;
                         case 'Voltage':
+                        case 'Current':
+                            result.push(DevGenericSensorT(data.result[i]));
+                            break;
                         case 'kWh':
+                            result.push(DevElectricity(data.result[i]));
+                            break;
                         case 'Pressure':
+                            result.push(DevPressure(data.result[i]));
+                            break;
                         case 'Visibility':
                         case 'Solar Radiation':
-
+                            result.push(DevGenericSensorT(data.result[i]));
+                            break;
                         case 'Text':
                         case 'Alert':
+                            result.push(DevGenericSensor(data.result[i]));
+                            break;
                         case 'Unknown':
-                              break;
-
+                            console.log("Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            break;
                         case 'Sound Level':
+                            result.push(DevNoise(data.result[i]));
+                            break;
+                        default:
+                            console.log("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            break;
                     }
-                    //console.log("G "+data.result[i].Name);
                     break;
                 case 'Thermostat':
+                    result.push(DevThermostat(data.result[i]));
+                    break;
                 default:
                     //console.log("U "+data.result[i].Name);
                     break;
@@ -540,7 +665,9 @@ app.get("/devices", function(req, res){
         }
         res.json(result);
     } else {
-	    res.json("error");
+        result.push(DevGenericSensor({idx:S00,Name:"Unable to connect to Domoticz","Data":nconf.get('domo_path')}))
+        result.push(DevGenericSensor({idx:S01,Name:"Please add this gateway in Setup/settings/Local Networks","Data":""}))
+	    res.json(result);
     } 
 })
 });
