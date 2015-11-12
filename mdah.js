@@ -31,8 +31,9 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.12";
+var ver="0.0.7";
 var device_tab={};
+var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null};
 
 
@@ -90,6 +91,7 @@ function getLastVersion() {
 };
 
 function DevSwitch(data) {
+    room_tab.Switches=1;
     var status =0;
     switch(data.Status) {
         case 'On': status=1;break;
@@ -105,6 +107,7 @@ function DevSwitch(data) {
     return(myfeed);
 };
 function DevPush(data) {
+    room_tab.Switches=1;
     var status =0;
     switch(data.SwitchType) {
         case 'Push On Button': status=1;break;
@@ -117,6 +120,7 @@ function DevPush(data) {
 };
 function DevRGBLight(data) {
     var status =0;
+    room_tab.Switches=1;
     switch(data.SwitchType) {
         case 'Push On Button': status=1;break;
         case 'Push Off Button': status=0;break;
@@ -137,6 +141,7 @@ function DevRGBLight(data) {
 };
 function DevDimmer(data) {
     var status =0;
+    room_tab.Switches=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
     if (data.Status == 'Set Level') {
         status = 1;
@@ -151,6 +156,7 @@ function DevDimmer(data) {
 };
 function DevShutterInverted(data) {
     var status=0;
+    room_tab.Switches=1;
     var lvl=0;
     var mydev={MaxDimLevel : null,Action:null,graph:null};
     if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
@@ -169,6 +175,7 @@ function DevShutterInverted(data) {
 };
 function DevShutter(data) {
     var status=0;
+    room_tab.Switches=1;
     var lvl=0;
     var stoppable=0;
     var mydev={MaxDimLevel : null,Action:null,graph:null};
@@ -188,16 +195,19 @@ function DevShutter(data) {
     return(myfeed);
 };
 function DevMotion(data) {
+    room_tab.Switches=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": "Switches"};
     myfeed.params={"Armable":0,"Ackable":0,"Armed":1,"Tripped":data.Status};
     return(myfeed);
 };
 function DevDoor(data) {
+    room_tab.Switches=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
     myfeed.params={"Armable":0,"Ackable":0,"Armed":1,"Tripped":data.Status};
     return(myfeed);
 };
 function DevSmoke(data) {
+    room_tab.Switches=1;
     var ackable=0;
     if (data.Type=='Security') {ackable=1;}
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
@@ -207,6 +217,7 @@ function DevSmoke(data) {
 function DevFlood(data) {};
 function DevCO2(data) {};
 function DevGenericSensor(data) {
+    room_tab.Utility=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
     if (data.Status) {
         myfeed.params = {"key": "Value", "Value": data.Status};
@@ -216,6 +227,7 @@ function DevGenericSensor(data) {
     return(myfeed);
 };
 function DevGenericSensorT(data) {
+    room_tab.Utility=1;
     var ptrn=/([0-9]+(?:\.[0-9]+)?) ?(.+)/;
     var res=data.Data.match(ptrn).slice(1);
     var value=res[0];
@@ -225,6 +237,7 @@ function DevGenericSensorT(data) {
     return (myfeed);
 };
 function DevElectricity(data) {
+    room_tab.Utility=1;
     var ptrn1= /(\d+) Watt/;
     var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
     var ptrn3= /[\s,]+/;
@@ -251,6 +264,7 @@ function DevElectricity(data) {
     return(myfeed);
 }
 function DevElectricityMultiple(data) {
+    room_tab.Utility=1;
     var ptrn1= /(\d+) Watt/;
     var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
     var ptrn3= /[\s,]+/;
@@ -284,6 +298,7 @@ function DevElectricityMultiple(data) {
     return(combo);
 }
 function DevGas(data) {
+    room_tab.Utility=1;
     var ptrn1= /(\d+) m3/;
     var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
     var ptrn3= /[\s,]+/;
@@ -310,6 +325,7 @@ function DevGas(data) {
     return(myfeed);
 }
 function DevWater(data) {
+    room_tab.Utility=1;
     var ptrn1= /(\d+) m3/;
     var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
     var ptrn3= /[\s,]+/;
@@ -342,6 +358,7 @@ function DevWater(data) {
     return(combo);
 }
 function DevTH(data) {
+    room_tab.Temp=1;
     var status =0;
     switch(data.Type) {
         case 'Temp':
@@ -375,11 +392,13 @@ function DevTH(data) {
     }
 };
 function DevPressure(data) {
+    room_tab.Weather=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": "Weather"};
     myfeed.params={"key": "Value", "value": data.Pressure, "unit": "mbar", "graphable": "true"};
 }
 function DevRain(data) {
     var status = 0;
+    room_tab.Weather=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": "Weather"};
     var params=[];
     params.push({"key": "Accumulation", "value": data.Rain, "unit": "mm", "graphable": "true"});
@@ -389,11 +408,13 @@ function DevRain(data) {
 };
 function DevUV(data) {
     var status = 0;
+    room_tab.Weather=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevUV", "room": "Weather"};
     myfeed.params={"key": "Value", "value": data.UVI, "unit": "", "graphable": "true"};
     return (myfeed);
 };
 function DevNoise(data) {
+    room_tab.Utility=1;
     var ptrn=/([0-9]+(?:\.[0-9]+)?) ?(.+)/;
     var res=data.Data.match(ptrn).slice(1);
     var value=res[0];
@@ -403,6 +424,7 @@ function DevNoise(data) {
     return (myfeed);
 };
 function DevLux(data) {
+    room_tab.Weather=1;
     var ptrn1= /(\d+) Lux/;
     var res= ptrn1.exec(data.Data);
     var usage=0;
@@ -412,6 +434,7 @@ function DevLux(data) {
     return (myfeed);
 };
 function DevGases(data) {
+    room_tab.Temp=1;
     var ptrn1= /(\d+) ppm/;
     var res= ptrn1.exec(data.Data);
     var usage=0;
@@ -421,6 +444,7 @@ function DevGases(data) {
     return (myfeed);
 };
 function DevWind(data) {
+    room_tab.Weather=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": "Weather"};
     var params=[];
     params.push({"key": "Speed", "value": data.Speed, "unit": "km/h", "graphable": "true"});
@@ -429,7 +453,8 @@ function DevWind(data) {
     return (myfeed);
 };
 function DevThermostat(data) {
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Utilities"};
+    room_tab.Utility=1;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Utility"};
     var params=[];
     params.push({"key":"cursetpoint","value":data.SetPoint});
     params.push({"key":"curtemp","value":data.SetPoint});
@@ -439,6 +464,22 @@ function DevThermostat(data) {
     myfeed.params=params;
     return(myfeed);
 
+};
+function DevScene(data) {
+    room_tab.Scene=1;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevScene", "room": "Scenes"};
+    myfeed.params={"key": "LastRun", "value": data.LastUpdate};
+    return(myfeed);
+};
+function DevSceneGroup(data) {
+    room_tab.Scene=1;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Scenes"};
+    var params=[];
+    params.push({"key": "LastRun", "value": data.LastUpdate});
+    params.push({"key": "Value", "value": data.Status});
+    params.push({"key": "Choice", "value": "Mixed,On,Off"});
+    myfeed.params=params;
+    return(myfeed);
 };
 
 //routes
@@ -455,16 +496,69 @@ app.get("/system", function(req, res){
 });
 
 app.get("/rooms", function(req, res){
-    res.type('json');    
-    res.json(
-	 { "rooms": [
-                { "id": "Switches", "name": "Switches" },
-                { "id": "Scenes", "name": "Scenes" },
-                { "id": "Temp", "name": "Temperature" },
-                { "id": "Weather", "name": "Weather" },
-                { "id": "Utility", "name": "Utility" }
-                     ]
-	});
+    res.type('json');
+    var room=[];
+    for(property in room_tab) {
+        room.push({id:property, name:property});
+    }
+    var rooms={};
+    rooms.rooms=room;
+        res.json(rooms);
+
+});
+
+//get '/devices/:deviceId/action/:actionName/?:actionParam?'
+app.get("/devices/:deviceId/action/:actionName/?:actionParam?", function(req, res) {
+    res.type('json');
+    var deviceId = req.params.deviceId;
+    var actionName = req.params.actionName;
+    var actionParam = req.params.actionParam;
+    switch (actionName) {
+        case 'setStatus':
+            var action;
+            if (actionParam) {
+                action="On";
+            } else {
+                action="Off";
+            };
+            res.type('json');
+            var options = {
+                url: nconf.get('domo_path')+"/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd="+action+"&level=0&passcode=",
+                headers: {
+                    'User-Agent': 'request'
+                }
+            };
+            console.log(options.url);
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data=JSON.parse(body);
+                    if (data.status == 'OK') {
+                        res.status(200).send({success: true});} else {
+                        res.status(500).send({success: false, errormsg: data.message});
+                    }
+                } else {
+                    res.status(500).send({success: false, errormsg: 'error'});
+                }
+            });
+            break;
+        case 'setArmed':
+        case 'setAck':
+        case 'setLevel':
+        case 'stopShutter':
+        case 'pulseShutter':
+        case 'setSetPoint':
+        case 'launchScene':
+        case 'setColor':
+        case 'setChoice':
+        case 'setMode':
+            res.status(403).send({success:false,errormsg:'not implemented'});
+            break;
+        default:
+            console.log("unknown action: " + deviceId + " " + actionName + " " + actionParam);
+            res.status(403).send({success:false,errormsg:'not implemented'});
+            break;
+    }
+
 });
 
 app.get("/devices", function(req, res){
@@ -658,8 +752,14 @@ app.get("/devices", function(req, res){
                 case 'Thermostat':
                     result.push(DevThermostat(data.result[i]));
                     break;
+                case 'Scene':
+                    result.push(DevScene(data.result[i]));
+                    break;
+                case 'Group':
+                    result.push(DevSceneGroup(data.result[i]));
+                    break;
                 default:
-                    //console.log("U "+data.result[i].Name);
+                    console.log("Unknown type "+data.result[i].Type);
                     break;
             }
         }
@@ -673,9 +773,9 @@ app.get("/devices", function(req, res){
 });
 
 //get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate'
-//get '/devices/:deviceId/action/:actionName/?:actionParam?' 
-//get '/devices' 
-//
+
+
+
 
 
 //start server
