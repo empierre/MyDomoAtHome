@@ -17,15 +17,21 @@
 //##############################################################################
 
 // dependencies
+var http = require("http");
 var express = require("express");
 var _ = require("underscore");
-var http = require("http");
 var path = require('path');
 var request = require("request");
 var querystring = require("querystring");
 var nconf = require('nconf');
 var os = require("os");
 var moment = require('moment');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var methodOverride = require('method-override');
+var bodyParser = require('body-parser');
+var multer = require('multer');
+var errorHandler = require('errorhandler');
 var app = express();
 
 //working variaboles
@@ -41,12 +47,11 @@ var device = {MaxDimLevel : null,Action:null,graph:null};
 app.set('port', process.env.PORT || 3002);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(methodOverride());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // load conf file
 nconf.use('file', { file: './config.json' });
@@ -60,11 +65,6 @@ nconf.save(function (err) {
   }
   //console.log('Configuration saved successfully.');
 });
-
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-}
 
 function getLastVersion() {
     var now = moment();
@@ -781,9 +781,14 @@ app.get("/devices", function(req, res){
 
 //get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate'
 
+// error handling middleware should be loaded after the loading the routes
+if ('development' == app.get('env')) {
+    app.use(errorHandler());
+}
+
 
 //start server
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+var server = http.createServer(app);
+server.listen(app.get('port'), function(){
+    console.log('Express server listening on port ' + app.get('port'));
 });
-
