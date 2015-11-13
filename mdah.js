@@ -105,19 +105,21 @@ function DevSwitch(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
     myfeed.params={"key": "Status", "value": status};
     return(myfeed);
-};
+}
 function DevPush(data) {
-    room_tab.Switches=1;
+    room_tab.Switches = 1;
     var status =0;
     switch(data.SwitchType) {
-        case 'Push On Button': status=1;break;
-        case 'Push Off Button': status=0;break;
-        default: status=0;break;
+     case 'Push On Button': status=1;break;
+     case 'Push Off Button': status=0;break;
+     default: status=0;break;
     }
+    /*var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
+    myfeed.params={"key": "Status", "value": status};*/
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
-    myfeed.params={"key": "Status", "value": status};
-    return(myfeed);
-};
+    myfeed.params = {"key": "Status", "value": status, "pulseable": 1};
+    return (myfeed);
+}
 function DevRGBLight(data) {
     var status =0;
     room_tab.Switches=1;
@@ -778,9 +780,6 @@ app.get("/devices", function(req, res){
 });
 
 //get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate'
-
-
-
 
 
 //start server
