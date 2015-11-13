@@ -196,26 +196,29 @@ function DevShutter(data) {
 };
 function DevMotion(data) {
     room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": "Switches"};
-    myfeed.params={"Armable":0,"Ackable":0,"Armed":1,"Tripped":data.Status};
+    myfeed.params={"Armable":0,"Ackable":0,"Armed":1,"Tripped":data.Status,"lasttrip":dt};
     return(myfeed);
 };
 function DevDoor(data) {
     room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
-    myfeed.params={"Armable":0,"Ackable":0,"Armed":1,"Tripped":data.Status};
+    myfeed.params={"Armable":0,"Ackable":0,"Armed":1,"Tripped":data.Status,"lasttrip":dt};
     return(myfeed);
 };
 function DevSmoke(data) {
     room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable=0;
     if (data.Type=='Security') {ackable=1;}
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
-    myfeed.params={"Armable":0,"Ackable":ackable,"Armed":1,"Tripped":data.Status};
+    myfeed.params={"Armable":0,"Ackable":ackable,"Armed":1,"Tripped":data.Status,"lasttrip":dt};
     return(myfeed);
 };
-function DevFlood(data) {};
-function DevCO2(data) {};
+function DevFlood(data) {var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();};
+function DevCO2(data) {var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();};
 function DevGenericSensor(data) {
     room_tab.Utility=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
@@ -467,15 +470,17 @@ function DevThermostat(data) {
 };
 function DevScene(data) {
     room_tab.Scene=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevScene", "room": "Scenes"};
-    myfeed.params={"key": "LastRun", "value": data.LastUpdate};
+    myfeed.params={"key": "LastRun", "value": dt};
     return(myfeed);
 };
 function DevSceneGroup(data) {
     room_tab.Scene=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Scenes"};
     var params=[];
-    params.push({"key": "LastRun", "value": data.LastUpdate});
+    params.push({"key": "LastRun", "value": dt});
     params.push({"key": "Value", "value": data.Status});
     params.push({"key": "Choice", "value": "Mixed,On,Off"});
     myfeed.params=params;
