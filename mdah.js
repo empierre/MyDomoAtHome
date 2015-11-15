@@ -30,6 +30,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
+var basicAuth = require('basic-auth');
 var multer = require('multer');
 var errorHandler = require('errorhandler');
 var app = express();
@@ -42,29 +43,6 @@ var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null};
 
-
-// all environments
-app.set('port', process.env.PORT || 3002);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(methodOverride());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// load conf file
-nconf.use('file', { file: './config.json' });
-nconf.load();
-console.log(nconf.get('domo_path'));
-console.log(os.hostname());
-nconf.save(function (err) {
-  if (err) {
-    console.error(err.message);
-    return;
-  }
-  //console.log('Configuration saved successfully.');
-});
 
 function getLastVersion() {
     var now = moment();
@@ -551,7 +529,32 @@ function DevSceneGroup(data) {
     return(myfeed);
 };
 
+var auth = function (req, res, next) {
+    function unauthorized(res) {
+        res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+        return res.sendStatus(401);
+    };
+
+    var user = basicAuth(req);
+
+    if (!user || !user.name || !user.pass) {
+        return unauthorized(res);
+    };
+
+    if (user.name === 'foo' && user.pass === 'bar') {
+        return next();
+    } else {
+        return unauthorized(res);
+    };
+};
+
 //routes
+app.get('/a', auth, function (req, res) {
+
+        res.sendStatus(200,'Authenticated ');
+
+});
+
 app.get('/', function(req, res){
   res.sendfile(__dirname + '/public/index.html');
 });
@@ -654,7 +657,6 @@ app.get("/devices", function(req, res){
             myfeed.params=params;
             result.push(myfeed);
         }
-
         for(var i = 0; i < data.result.length; i++) {
             //console.log(data.result[i].Type);
             switch(data.result[i].Type) {
@@ -843,26 +845,52 @@ app.get("/devices", function(req, res){
                 default:
                     console.log("Unknown type "+data.result[i].Type);
                     break;
+                }
             }
+            var rest={};
+            rest.devices=result;
+            res.json(rest);
+        } else {
+            var result=[];
+            result.push(DevGenericSensor({idx:'S00',Name:"Unable to connect to Domoticz","Data":nconf.get('domo_path')}))
+            result.push(DevGenericSensor({idx:'S01',Name:"Please add this gateway in Setup/settings/Local Networks","Data":""}))
+            var rest={};
+            rest.devices=result;
+            res.json(rest);
+
         }
-        var rest={};
-        rest.devices=result;
-        res.json(rest);
-    } else {
-        result.push(DevGenericSensor({idx:S00,Name:"Unable to connect to Domoticz","Data":nconf.get('domo_path')}))
-        result.push(DevGenericSensor({idx:S01,Name:"Please add this gateway in Setup/settings/Local Networks","Data":""}))
-	    res.json(result);
-    } 
-})
+    })
 });
 
 //get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate'
 
 // error handling middleware should be loaded after the loading the routes
-if ('development' == app.get('env')) {
-    app.use(errorHandler());
-}
+// all environments
+//configuration
+app.set('port', process.env.PORT || 3002);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+app.use(methodOverride());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('app_name',"MyDomoAtHome");
+app.set('domo_path',"http://192.168.0.28:8080");
 
+// load conf file
+nconf.use('file', { file: '/home/pi/.mdah.json' });
+nconf.load();
+console.log(nconf.get('domo_path'));
+console.log(os.hostname());
+/*nconf.save(function (err) {
+    if (err) {
+        console.error(err.message);
+        return;
+    }
+    //console.log('Configuration saved successfully.');
+}
+);*/
 
 //start server
 var server = http.createServer(app);

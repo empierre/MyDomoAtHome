@@ -33,7 +33,10 @@ sudo apt-get install nodejs
 sudo npm install supervisor -g
 sudo npm install express --save
 sudo npm install nconf --save
+sudo npm i nsp -g
 sudo npm install moment --save
+sudo npm -g install forever
+sudo npm install basic-auth --save
 sudo npm install syno-upstarter --save
 # curl -L http://cpanmin.us | perl - --sudo Dancer2
 echo "Now fixing directories rights..."
