@@ -38,15 +38,15 @@ sudo npm install moment --save
 sudo npm -g install forever
 sudo npm install basic-auth --save
 sudo npm install syno-upstarter --save
-# curl -L http://cpanmin.us | perl - --sudo Dancer2
+
 echo "Now fixing directories rights..."
 sudo chown www-data.www-data logs
 sudo chown www-data.www-data logs/*
 echo "Now improving graph performance in Domoticz..."
 ./speedUp.sh
 echo "Now installing the service"
-sudo cp MyDomoAtHome.sh /etc/init.d/MyDomoAtHome.sh
-sudo chmod +x /etc/init.d/MyDomoAtHome.sh
-sudo update-rc.d MyDomoAtHome.sh defaults
+sudo cp mdah.sh /etc/init.d/mdah.sh
+sudo chmod +x /etc/init.d/mdah.sh
+sudo update-rc.d mdah.sh defaults
 whiptail  --backtitle "MyDomoAtHome ISS Interface" --msgbox "Everything has been installed ! Please remember default port is 3001." 0 0 
 
