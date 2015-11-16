@@ -26,7 +26,7 @@ var querystring = require("querystring");
 var nconf = require('nconf');
 var os = require("os");
 var moment = require('moment');
-var favicon = require('serve-favicon');
+//var favicon = require('serve-favicon');
 var logger = require('morgan');
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
@@ -867,10 +867,10 @@ app.get("/devices", function(req, res){
 // error handling middleware should be loaded after the loading the routes
 // all environments
 //configuration
-app.set('port', process.env.PORT || 3002);
+app.set('port', process.env.PORT || 3001);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(favicon(__dirname + '/public/favicon.ico'));
+//app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(methodOverride());
 app.use(bodyParser.json());

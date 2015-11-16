@@ -15,9 +15,10 @@ mkdir -p ${DIST}/
 
 rm -rf ${SRC}
 rsync -a deb-src/ ${SRC}/
-mkdir -p ${SYSROOT}/opt/
 
-rsync -a ../../MyDomoAtHome-nodejs/ ${SYSROOT}/opt/MyDomoAtHome/ --delete
+#rsync -a ../../MyDomoAtHome-nodejs/ ${SYSROOT}/opt/MyDomoAtHome/ --delete
+cp ../../MyDomoAtHome-nodejs/mdah.js ${SYSROOT}/usr/share/mydomoathome/app/
+rsync -a ../../MyDomoAtHome-nodejs/public/ ${SYSROOT}/usr/share/mydomoathome/public/ --delete
 
 find ${SRC}/ -type d -exec chmod 0755 {} \;
 find ${SRC}/ -type f -exec chmod go-w {} \;

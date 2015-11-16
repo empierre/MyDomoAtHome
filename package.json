@@ -9,15 +9,16 @@
     "errorhandler": "^1.1.1",
     "express": "^4.8.0",
     "express-session": "^1.7.2",
+    "forever": "0.15.1",
     "jade": "^1.5.0",
     "method-override": "^2.1.2",
     "moment": "^2.10.6",
-    "morgan": "^1.2.2",
+    "morgan": "^1.6.1",
     "multer": "^0.1.3",
     "nconf": "^0.8.2",
-    "serve-favicon": "^2.0.1",
-    "underscore": "1.4.4",
-    "forever": "0.15.1"
+    "serv-favicon": "2.3.0",
+    "serve-favicon": "^2.3.0",
+    "underscore": "1.4.4"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node mdah.js"
+  },
+  "node_deb": {
+    "start_command": "/usr/bin/node mdah.js"
   },
   "keywords": [
     "Imperihome",
