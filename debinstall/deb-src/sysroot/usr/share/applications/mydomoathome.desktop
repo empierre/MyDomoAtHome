@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=MyDomoAtHome Browser
-Comment=Open MyDomoAtHome in Chrome
-Exec=google-chrome --app="http://localhost:3001#%U"
-Terminal=false
-Type=Application
-Icon=hello-node
-Categories=Network;WebBrowser
-StartupNotify=true

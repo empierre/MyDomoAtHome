@@ -2,9 +2,9 @@ Package: MyDomoAtHome
 Version: 1.0-1
 Section: base
 Priority: optional
-Architecture: i386
+Architecture: all
 Installed-Size: SIZE
-Depends:
+Depends: nodejs
 Maintainer: Emmanuel PIERRE <epierre@e-nef.com>
 Description: MyDomoAtHome! The installable NodeJS System Service
  Let's you install a nodejs app as a service, just to see how it feels.

@@ -18,7 +18,6 @@ rsync -a deb-src/ ${SRC}/
 mkdir -p ${SYSROOT}/opt/
 
 rsync -a ../../MyDomoAtHome-nodejs/ ${SYSROOT}/opt/MyDomoAtHome/ --delete
-rsync -a ./install-chrome.sh ${SYSROOT}/opt/MyDomoAtHome/bin/
 
 find ${SRC}/ -type d -exec chmod 0755 {} \;
 find ${SRC}/ -type f -exec chmod go-w {} \;
