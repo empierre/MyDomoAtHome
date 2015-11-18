@@ -6,5 +6,5 @@ Architecture: all
 Installed-Size: SIZE
 Depends: nodejs, npm
 Maintainer: Emmanuel PIERRE <epierre@e-nef.com>
-Description: MyDomoAtHome! The installable NodeJS System Service
+Description: Node MyDomoAtHome! The installable NodeJS System Service for Imperihome ISS to Domoticz gateway
  Let's you install a nodejs app as a service, just to see how it feels.
