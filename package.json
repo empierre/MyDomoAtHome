@@ -1,5 +1,5 @@
 {
-  "name": "mydomoathome",
+  "name": "node-mydomoathome",
   "description": "Rest interface for Domoticz to Imperihome",
   "version": "0.0.11",
   "private": false,
