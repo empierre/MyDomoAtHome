@@ -47,13 +47,13 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 
 ## Install procedure
 
-### Check the nodeJS version installed
- - `node —version` // should print version 0.10.38 or similar
+### Check the nodeJS version installed - mandatory for PI !
+ - `node —version` // should print version 0.10.36 or similar
  - `sudo node —version` should work as well
 
 If not please do:
 
-- `curl -sL https://deb.nodesource.com/setup | sudo bash -`
+- `wget http://node-arm.herokuapp.com/node_0.10.36_armhf.deb`
 - `sudo apt-get install nodejs`
 
 And check again 
