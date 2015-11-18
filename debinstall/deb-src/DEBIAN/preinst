@@ -3,9 +3,8 @@
 set -e
 
 npm install supervisor --save
-npm install node-express --save
-npm install node-util --save
-npm install node-forever-agent --save
+npm install express --save
+npm install forever --save
 npm install nconf --save
 npm install nsp --save
 npm install moment --save

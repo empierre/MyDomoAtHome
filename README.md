@@ -62,7 +62,7 @@ And check again
  - `sudo node —version` should work as well
 
 ### Installing the software Debian package .deb
-- `wget https://github.com/empierre/MyDomoAtHome/tree/nodejs/binary/node-mydomoathome-latest.deb`
+- `wget https://github.com/empierre/MyDomoAtHome/blob/nodejs/binary/node-mydomoathome-latest.deb?raw=true`
 - `sudo dpkg -i node-mydomoathome-latest.deb`
 - edit ~/pi/.mdah.json with your values
 

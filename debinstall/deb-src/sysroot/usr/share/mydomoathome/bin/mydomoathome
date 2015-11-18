@@ -4,4 +4,4 @@ set -e
 
 cd /usr/share/mydomoathome/app
 
-/usr/bin/node mdah.js
+/usr/bin/nodejs mdah.js
