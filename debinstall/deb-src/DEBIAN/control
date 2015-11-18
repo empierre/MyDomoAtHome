@@ -4,7 +4,7 @@ Section: base
 Priority: optional
 Architecture: all
 Installed-Size: SIZE
-Depends: nodejs, supervisor, node-express, node-util, node-forever-agent
+Depends: nodejs, npm
 Maintainer: Emmanuel PIERRE <epierre@e-nef.com>
 Description: MyDomoAtHome! The installable NodeJS System Service
  Let's you install a nodejs app as a service, just to see how it feels.
