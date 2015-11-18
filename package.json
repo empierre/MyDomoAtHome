@@ -35,7 +35,7 @@
     "start": "node mdah.js"
   },
   "node_deb": {
-    "start_command": "/usr/bin/node mdah.js"
+    "start_command": "/usr/bin/nodejs mdah.js"
   },
   "keywords": [
     "Imperihome",
