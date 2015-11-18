@@ -46,30 +46,38 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 # Standalone installation (PI, cubie, odroid, intel...)
 
 ## Install procedure
-  - `cd ~/domoticz/`
-  - `git clone https://github.com/empierre/MyDomoAtHome MyDomoAtHome`
-  - `cd MyDomoAtHome`
-  - `cp config.json.def config.json`
-  - edit config.json with your values
-  - edit  MyDomoAtHome.sh and change the path line 16 to your home installation
-  - `sh ./run_once.sh`
-  
+
+### Check the nodeJS version installed
+ - `node —version` // should print version 0.10.38 or similar
+ - `sudo node —version` should work as well
+
+If not please do:
+
+- `curl -sL https://deb.nodesource.com/setup | sudo bash -`
+- `sudo apt-get install nodejs`
+
+And check again 
+
+ - `node —version` // should print version 0.10.38 or similar
+ - `sudo node —version` should work as well
+
+### Installing the software Debian package .deb
+- `wget https://github.com/empierre/MyDomoAtHome/tree/nodejs/binary/node-mydomoathome-latest.deb`
+- `sudo dpkg -i node-mydomoathome-latest.deb`
+- edit ~/pi/.mdah.json with your values
+
 ## Running the service
 
 The default port is now 3001.
 
 ### Start the service:
-   `sudo service MyDomoAtHome.sh start`
+   `sudo service mydomoathome start`
 
 ### Stop the service :
-   `sudo service MyDomoAtHome.sh stop`
+   `sudo service mydomoathome stop`
 
 ### Restart the service :
-   `sudo service MyDomoAtHome.sh reload`
-
-### Update:
-  - `cd ~/domoticz/MyDomoAtHome`
-  - `sh ./update-mdah.sh`
+   `sudo service mydomoathome reload`
 
 ## Docker installation
 
