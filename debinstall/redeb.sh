@@ -19,6 +19,7 @@ rsync -a deb-src/ ${SRC}/
 #rsync -a ../../MyDomoAtHome-nodejs/ ${SYSROOT}/opt/MyDomoAtHome/ --delete
 cp ../../MyDomoAtHome-nodejs/mdah.js ${SYSROOT}/usr/share/mydomoathome/app/
 cp ../../MyDomoAtHome-nodejs/package.json ${SYSROOT}/usr/share/mydomoathome/app/
+cp ../../MyDomoAtHome-nodejs/README.md ${SYSROOT}/usr/share/mydomoathome/app/
 rsync -a ../../MyDomoAtHome-nodejs/public/ ${SYSROOT}/usr/share/mydomoathome/public/ --delete
 
 find ${SRC}/ -type d -exec chmod 0755 {} \;

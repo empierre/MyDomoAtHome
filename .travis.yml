@@ -1,5 +1,7 @@
 language: node_js
 node_js:
+  - "4.2.2"
+  - "4.2"
   - "4.1"
   - "4.0"
   - "0.12"
@@ -17,7 +19,6 @@ before_script:
   - npm install syno-upstarter --save
   - npm install -g gulp 
   - npm install gulp-jshint gulp-sass gulp-concat gulp-uglify gulp-rename --save-dev 
-
 notifications:
   recipients:
     - domoticz@e-nef.com

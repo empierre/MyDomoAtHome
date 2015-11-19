@@ -1,6 +1,6 @@
 # DOCKER-VERSION 0.3.4
 #FROM ubuntu:13.10
-FROM node:4-onbuild
+FROM node:4-slim
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
 RUN apt-get update
