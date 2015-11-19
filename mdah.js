@@ -892,6 +892,16 @@ console.log(os.hostname());
 }
 );*/
 
+server.on('error', function (e) {
+  if (e.code == 'EADDRINUSE') {
+    console.log('Address in use, retrying...');
+    setTimeout(function () {
+      server.close();
+      server.listen(PORT, HOST);
+    }, 1000);
+  }
+});
+
 //start server
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){
