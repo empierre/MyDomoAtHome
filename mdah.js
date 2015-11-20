@@ -27,7 +27,7 @@ var nconf = require('nconf');
 var os = require("os");
 var moment = require('moment');
 //var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan')
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var basicAuth = require('basic-auth');
@@ -871,7 +871,7 @@ app.set('port', process.env.PORT || 3001);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+app.use(morgan('combined'))
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
