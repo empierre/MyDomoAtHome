@@ -1,7 +1,7 @@
 package="MyDomoAtHome"
 version="0.0.11"
 description="Node MyDomoAtHome! The installable NodeJS System Service for Imperihome ISS to Domoticz gateway"
-arch="armada375"
+arch="noarch"
 distributor="epierre"
 distributor_url="https://github.com/empierre/MyDomoAtHome/tree/nodejs/binary"
 maintainer="epierre"

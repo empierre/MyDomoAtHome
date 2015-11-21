@@ -26,8 +26,8 @@ var querystring = require("querystring");
 var nconf = require('nconf');
 var os = require("os");
 var moment = require('moment');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
+//var favicon = require('serve-favicon');
+var morgan = require('morgan')
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var basicAuth = require('basic-auth');
@@ -867,11 +867,11 @@ app.get("/devices", function(req, res){
 // error handling middleware should be loaded after the loading the routes
 // all environments
 //configuration
-app.set('port', process.env.PORT || 3002);
+app.set('port', process.env.PORT || 3001);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(morgan('combined'))
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -879,7 +879,7 @@ app.set('app_name',"MyDomoAtHome");
 app.set('domo_path',"http://192.168.0.28:8080");
 
 // load conf file
-nconf.use('file', { file: '/home/pi/.mdah.json' });
+nconf.use('file', { file: '/etc/mydomoathome/config.json' });
 nconf.load();
 console.log(nconf.get('domo_path'));
 console.log(os.hostname());
@@ -892,8 +892,19 @@ console.log(os.hostname());
 }
 );*/
 
+
 //start server
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
+});
+
+server.on('error', function (e) {
+  if (e.code == 'EADDRINUSE') {
+    console.log('Address in use, retrying...');
+    setTimeout(function () {
+      server.close();
+      server.listen(PORT, HOST);
+    }, 2000);
+  }
 });

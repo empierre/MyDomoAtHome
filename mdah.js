@@ -879,7 +879,7 @@ app.set('app_name',"MyDomoAtHome");
 app.set('domo_path',"http://192.168.0.28:8080");
 
 // load conf file
-nconf.use('file', { file: '/home/pi/.mdah.json' });
+nconf.use('file', { file: '/etc/mydomoathome/config.json' });
 nconf.load();
 console.log(nconf.get('domo_path'));
 console.log(os.hostname());

@@ -77,6 +77,8 @@ fi
 
 chown 'www-data:www-data' '/var/log/mydomoathome'
 
+update-rc.d mydomoathome defaults
+
 if [[ "$init_type" == 'auto' ]]; then
   start_service 'mydomoathome'
 fi
