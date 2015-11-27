@@ -23,20 +23,24 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 - [x] Multi-platform (Linux, Mac OS X, Windows)
 - [x] Micro-services (Docker)
 - [ ] Synology package
+  - [ ] Synology hosted package
+- [-] Debian package (partial)
+  - [ ] debian hosted package
+  - [ ] raspbian hosted package
 - [ ] Support major type of sensors/feature of Domoticz
-  - [ ] Weather and Environmental sensors  
-  - [ ] Energy sensors (Electricity, Gas, Water)
-  - [ ] Switches
-  - [ ] Thermostat
+  - [X] Weather and Environmental sensors  
+  - [X] Energy sensors (Electricity, Gas, Water)
+  - [-] Switches (partial)
+  - [X] Thermostat
 - [x] Dependency-less 
-- [ ] Node.js rewrite
+- [X] Node.js rewrite
 - [ ] Auto updatable
 - [ ] Support every single type of sensors/feature of Domoticz
-  - [ ] Dynamic room creation
+  - [X] Dynamic room creation
 - Optionnal
   - [ ] RGB lamps (depending on Domoticz)
-  - [ ] Push On buttons (depending on Imperihome)
-  - [ ] Alarm pannel
+  - [X] Push On buttons (depending on Imperihome)
+  - [-] Alarm pannel (partial)
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
