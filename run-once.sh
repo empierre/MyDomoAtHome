@@ -30,6 +30,7 @@ sudo apt-get -y install whiptail  2>&1 > /dev/null
 
 
 echo "Now getting getting and installing dependencies..."
+sudo apt-get install cmake make gcc g++
 sudo apt-get -y install cpanminus 2>&1 
 sudo cpanm Task::Plack
 sudo apt-get -y install libdancer-perl libswitch-perl libfile-slurp-perl  liblwp-protocol-psgi-perl  2>&1 
