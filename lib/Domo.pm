@@ -1,6 +1,6 @@
 package Domo;
 ################################################################################
-#      This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
+#   This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
 #      Copyright (C) 2014-2015 Emmanuel PIERRE (domoticz@e-nef.com)
 #
 #  MyDomoAtHome is free software: you can redistribute it and/or modify
@@ -29,6 +29,7 @@ use utf8;
 use Encode qw/ encode decode /;
 use Time::Piece;
 use Time::Moment;
+use DateTime::Format::Strptime;
 use feature     qw< unicode_strings >;
 use POSIX qw(ceil);
 #use JSON;
@@ -36,8 +37,12 @@ use warnings;
 use strict;
 use Audio::MPD;
 
+my $strp = DateTime::Format::Strptime->new(
+   pattern => '%Y-%m-%d %T',
+   time_zone => 'local',
+);
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 set warnings => 0;
 my %device_tab;
 my %device_list;
@@ -88,7 +93,7 @@ get '/rooms' => sub {
 };
 
 get '/system' => sub {
- return {"id"=> "MyDomoAtHome","apiversion"=> 1};
+ return {"id"=> "MyDomoAtHome Dev","apiversion"=> 1};
 };
 
 get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate' => sub {
@@ -555,6 +560,8 @@ debug("DBG:".$f->{"idx"}.":".$f->{"Type"}.":".$f->{"SubType"}."\n");
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
 						push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
+						my $dt = $strp->parse_datetime($f->{"LastUpdate"});
+						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => $dt->epoch });
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Door Lock") {
 						#DevLock	Door / window lock
@@ -564,7 +571,10 @@ debug("DBG:".$f->{"idx"}.":".$f->{"Type"}.":".$f->{"SubType"}."\n");
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
 						push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
+						my $dt = $strp->parse_datetime($f->{"LastUpdate"});
+						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => $dt->epoch });
 						push (@{$feed->{'devices'}}, $feeds );
+
 					}elsif ($f->{"SwitchType"} eq "Smoke Detector") {
 						#DevSmoke	Smoke security sensor
 						#Armable	Ability to arm the device : 1 = Yes / 0 = No	N/A
@@ -580,6 +590,8 @@ debug("DBG:".$f->{"idx"}.":".$f->{"Type"}.":".$f->{"SubType"}."\n");
 						}
 						push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
 						push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
+						my $dt = $strp->parse_datetime($f->{"LastUpdate"});
+						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => $dt->epoch });
 						#"GET http://192.168.0.24:8080/json.htm?type=command&param=resetsecuritystatus&idx=202&switchcmd=Normal"
 						push (@{$feed->{'devices'}}, $feeds );				
 					}
