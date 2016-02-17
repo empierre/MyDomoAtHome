@@ -560,8 +560,8 @@ debug("DBG:".$f->{"idx"}.":".$f->{"Type"}.":".$f->{"SubType"}."\n");
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
 						push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
-						my $dt = $strp->parse_datetime($f->{"LastUpdate"});
-						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => $dt->epoch });
+						my $dt = $strp->parse_datetime($f->{"LastUpdate"});my $dti=$dt->epoch*1000;
+						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => "$dti" });
 						push (@{$feed->{'devices'}}, $feeds );
 					} elsif ($f->{"SwitchType"} eq "Door Lock") {
 						#DevLock	Door / window lock
@@ -571,8 +571,8 @@ debug("DBG:".$f->{"idx"}.":".$f->{"Type"}.":".$f->{"SubType"}."\n");
 						push (@{$feeds->{'params'}}, { "key" => "Ackable", "value" => "0" } );
 						push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
 						push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
-						my $dt = $strp->parse_datetime($f->{"LastUpdate"});
-						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => $dt->epoch });
+						my $dt = $strp->parse_datetime($f->{"LastUpdate"});my $dti=$dt->epoch*1000;
+						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => $dti });
 						push (@{$feed->{'devices'}}, $feeds );
 
 					}elsif ($f->{"SwitchType"} eq "Smoke Detector") {
@@ -590,8 +590,8 @@ debug("DBG:".$f->{"idx"}.":".$f->{"Type"}.":".$f->{"SubType"}."\n");
 						}
 						push (@{$feeds->{'params'}}, { "key" => "Armed", "value" => "1" } );
 						push (@{$feeds->{'params'}}, { "key" => "Tripped", "value" => $rbl });
-						my $dt = $strp->parse_datetime($f->{"LastUpdate"});
-						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => $dt->epoch });
+						my $dt = $strp->parse_datetime($f->{"LastUpdate"});my $dti=$dt->epoch*1000;
+						push (@{$feeds->{'params'}}, { "key" => "lasttrip", "value" => $dti });
 						#"GET http://192.168.0.24:8080/json.htm?type=command&param=resetsecuritystatus&idx=202&switchcmd=Normal"
 						push (@{$feed->{'devices'}}, $feeds );				
 					}
