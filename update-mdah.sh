@@ -10,3 +10,5 @@ sudo apt-get -y install libtime-piece-perl libjson-perl libplack-perl starman li
 echo "Restarting MyDomoAtHome service..."
 sudo service MyDomoAtHome.sh start
 echo "Update path finished"
+sudo service MyDomoAtHome.sh status
+
