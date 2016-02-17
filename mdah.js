@@ -50,7 +50,7 @@ function getLastVersion() {
         return(last_version);
     } else {
         var options = {
-            url: "https://api.github.com/repos/empierre/MyDomoAtHome/releases/latest",
+            url: "http://192.168.0.10:8080/",
             headers: {
                 'User-Agent': 'request'
             }
