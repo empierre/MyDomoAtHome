@@ -50,7 +50,7 @@ function getLastVersion() {
         return(last_version);
     } else {
         var options = {
-            url: "http://192.168.0.10:8080/",
+            url: "https://api.github.com/repos/empierre/MyDomoAtHome/releases/latest",
             headers: {
                 'User-Agent': 'request'
             }
@@ -549,11 +549,11 @@ var auth = function (req, res, next) {
 };
 
 //routes
-app.get('/a', auth, function (req, res) {
+/*app.get('/a', auth, function (req, res) {
 
         res.sendStatus(200,'Authenticated ');
 
-});
+});*/
 
 app.get('/', function(req, res){
   res.sendfile(__dirname + '/public/index.html');
@@ -587,7 +587,7 @@ app.get("/devices/:deviceId/action/:actionName/?:actionParam?", function(req, re
     switch (actionName) {
         case 'setStatus':
             var action;
-            if (actionParam) {
+            if (actionParam==1) {
                 action="On";
             } else {
                 action="Off";
@@ -599,7 +599,7 @@ app.get("/devices/:deviceId/action/:actionName/?:actionParam?", function(req, re
                     'User-Agent': 'request'
                 }
             };
-            console.log(options.url);
+            //console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data=JSON.parse(body);
@@ -613,7 +613,29 @@ app.get("/devices/:deviceId/action/:actionName/?:actionParam?", function(req, re
             });
             break;
         case 'setArmed':
+            res.status(500).send({success: false, errormsg: 'not implemented'});
+            break;
         case 'setAck':
+            res.type('json');
+            var options = {
+                url: nconf.get('domo_path')+"/json.htm?type=command&param=resetsecuritystatus&idx="+deviceId+"&switchcmd=Normal",
+                headers: {
+                    'User-Agent': 'request'
+                }
+            };
+            //console.log(options.url);
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data=JSON.parse(body);
+                    if (data.status == 'OK') {
+                        res.status(200).send({success: true});} else {
+                        res.status(500).send({success: false, errormsg: data.message});
+                    }
+                } else {
+                    res.status(500).send({success: false, errormsg: 'error'});
+                }
+            });
+            break;
         case 'setLevel':
         case 'stopShutter':
         case 'pulseShutter':
@@ -640,6 +662,7 @@ app.get("/devices", function(req, res){
 	  'User-Agent': 'request'
           }
     };
+    console.log(options.url);
     request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
         var data=JSON.parse(body);
@@ -876,13 +899,22 @@ app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('app_name',"MyDomoAtHome");
-app.set('domo_path',"http://192.168.0.28:8080");
+app.set('domo_path',"http://127.0.0.1:8080");
 
 // load conf file
-nconf.use('file', { file: '/etc/mydomoathome/config.json' });
+nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
+    if (err) {
+        console.error("No conf:"+err.message);
+        return;
+    }});
 nconf.load();
-console.log(nconf.get('domo_path'));
-console.log(os.hostname());
+if (! nconf.get('domo_path')) {
+    nconf.set('app_name',"MyDomoAtHome Dev");
+    nconf.set('domo_path',"http://127.0.0.1:8080");
+    console.log('WARNING: No /etc/mydomoathome/config.json found, defaulting')
+}
+console.log("Domoticz server: "+nconf.get('domo_path'));
+console.log("Hostname: "+os.hostname());
 /*nconf.save(function (err) {
     if (err) {
         console.error(err.message);
@@ -896,7 +928,7 @@ console.log(os.hostname());
 //start server
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){
-    console.log('Express server listening on port ' + app.get('port'));
+    console.log('MDAH port: ' + app.get('port'));
 });
 
 server.on('error', function (e) {
