@@ -555,8 +555,10 @@ var auth = function (req, res, next) {
 
 });*/
 
-app.get('/', function(req, res){
-  res.sendfile(__dirname + '/public/index.html');
+app.get('/', function(req, res) {
+
+	// ejs render automatically looks in the views folder
+	res.render('index');
 });
 
 app.get("/system", function(req, res){
@@ -891,15 +893,14 @@ app.get("/devices", function(req, res){
 // all environments
 //configuration
 app.set('port', process.env.PORT || 3001);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.set('view engine', 'ejs');
+app.set('app_name',"MyDomoAtHome");
+app.set('domo_path',"http://127.0.0.1:8080");
+app.use(express.static(__dirname + '/public'));
 app.use(morgan('combined'))
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.set('app_name',"MyDomoAtHome");
-app.set('domo_path',"http://127.0.0.1:8080");
 
 // load conf file
 nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
