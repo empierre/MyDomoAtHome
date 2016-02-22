@@ -42,6 +42,18 @@ var ver="0.0.7";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null};
+var app_name="MyDomoAtHome";
+var domo_path="http://127.0.0.1:8080";
+//configuration
+app.set('port', process.env.PORT || 3001);
+app.set('view engine', 'ejs');
+app.set('app_name',app_name);
+app.set('domo_path',domo_path);
+app.use(express.static(__dirname + '/public'));
+app.use(morgan('combined'))
+app.use(methodOverride());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 function getLastVersion() {
@@ -137,6 +149,7 @@ function DevDimmer(data) {
     var mydev={MaxDimLevel : null,Action:null,graph:null};
     if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
     mydev.MaxDimLevel=data.MaxDimLevel;
+    //console.log(mydev);
     device_tab[data.idx]=mydev;
     params=[];
     params.push({"key": "Status", "value": status, "Level": data.Level});
@@ -558,7 +571,13 @@ var auth = function (req, res, next) {
 app.get('/', function(req, res) {
 
 	// ejs render automatically looks in the views folder
-	res.render('index');
+	res.render('index', {
+        node_version: process.version,
+        app_name: app_name,
+        domo_path: domo_path,
+        my_ip: my_ip,
+        my_port:app.get('port')
+    });
 });
 
 app.get("/system", function(req, res){
@@ -581,7 +600,7 @@ app.get("/rooms", function(req, res){
 });
 
 //get '/devices/:deviceId/action/:actionName/?:actionParam?'
-app.get("/devices/:deviceId/action/:actionName/?:actionParam?", function(req, res) {
+app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res) {
     res.type('json');
     var deviceId = req.params.deviceId;
     var actionName = req.params.actionName;
@@ -639,12 +658,182 @@ app.get("/devices/:deviceId/action/:actionName/?:actionParam?", function(req, re
             });
             break;
         case 'setLevel':
+            var my_url;var lsetLevel;
+            switch (device_tab[deviceId].Action) {
+                case 1:
+                    if (actionParam==1) {
+                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+actionParam+"&passcode=";
+                    } else if (actionParam==0) {
+                            my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=On&level="+actionParam+"&passcode=";
+                    }
+                    break;
+                case 2:
+                case 3:
+                    if (actionParam==100) {
+                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=On&level="+actionParam+"&passcode=";
+                    } else {
+                        lsetLevel=Math.ceil(actionParam*(device_tab[deviceId].MaxDimLevel)/100);
+                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+lsetLevel+"&passcode=";
+                    }
+                    break;
+                case 5:
+                //Blinds inverted
+                    if (actionParam==100) {
+                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=On&level=0&passcode=";
+                    } else {
+                        lsetLevel=Math.ceil(actionParam*(device_tab[deviceId].MaxDimLevel)/100);
+                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+lsetLevel+"&passcode=";
+                    }
+                    break;
+                case 6:
+                //Blinds -> On for Closed, Off for Open
+                    if (actionParam==100) {
+                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+actionParam+"&passcode=";
+                    } else {
+                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+actionParam+"&passcode=";
+                    }
+                    break;
+                default:
+                    lsetLevel=Math.ceil(actionParam*(device_tab[deviceId].MaxDimLevel)/100);
+                    my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Set%20Level&level="+lsetLevel+"&passcode=";
+                    break;
+            }
+            res.type('json');
+            var options = {
+                url: nconf.get('domo_path')+my_url,
+                headers: {
+                    'User-Agent': 'request'
+                }
+            };
+            //console.log(options.url);
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data=JSON.parse(body);
+                    if (data.status == 'OK') {
+                        res.status(200).send({success: true});} else {
+                        res.status(500).send({success: false, errormsg: data.message});
+                    }
+                } else {
+                    res.status(500).send({success: false, errormsg: 'error'});
+                }
+            });
+            break;
         case 'stopShutter':
+            res.type('json');
+            var options = {
+                url: nconf.get('domo_path')+"/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Stop&level=0&passcode=",
+                headers: {
+                    'User-Agent': 'request'
+                }
+            };
+            //console.log(options.url);
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data=JSON.parse(body);
+                    if (data.status == 'OK') {
+                        res.status(200).send({success: true});} else {
+                        res.status(500).send({success: false, errormsg: data.message});
+                    }
+                } else {
+                    res.status(500).send({success: false, errormsg: 'error'});
+                }
+            });
+            break;
         case 'pulseShutter':
+            res.status(500).send({success: false, errormsg: 'not implemented'});
+            break;
         case 'setSetPoint':
+            res.type('json');
+            var options = {
+                url: nconf.get('domo_path')+"/json.htm?type=command&param=setsetpoint&idx="+deviceId+"used=true&setpoint="+actionParam,
+                headers: {
+                    'User-Agent': 'request'
+                }
+            };
+            //console.log(options.url);
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data=JSON.parse(body);
+                    if (data.status == 'OK') {
+                        res.status(200).send({success: true});} else {
+                        res.status(500).send({success: false, errormsg: data.message});
+                    }
+                } else {
+                    res.status(500).send({success: false, errormsg: 'error'});
+                }
+            });
+            break;
         case 'launchScene':
+            res.type('json');
+            var sc=deviceId.match(/^SC(\d+)/);
+            //console.log(sc[1]);
+            var options = {
+                url: nconf.get('domo_path')+"/json.htm?type=command&param=switchscene&idx="+sc[1]+"&switchcmd=On&passcode=",
+                headers: {
+                    'User-Agent': 'request'
+                }
+            };
+            //console.log(options.url);
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data=JSON.parse(body);
+                    if (data.status == 'OK') {
+                        res.status(200).send({success: true});} else {
+                        res.status(500).send({success: false, errormsg: data.message});
+                    }
+                } else {
+                    res.status(500).send({success: false, errormsg: 'error'});
+                }
+            });
+            break;
         case 'setColor':
+            res.type('json');
+            var options = {
+                url: nconf.get('domo_path')+"/json.htm?type=command&param=setcolorbrightnessvalue&idx="+deviceId+"&passcode=",
+                headers: {
+                    'User-Agent': 'request'
+                }
+            };
+            //console.log(options.url);
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data=JSON.parse(body);
+                    if (data.status == 'OK') {
+                        res.status(200).send({success: true});} else {
+                        res.status(500).send({success: false, errormsg: data.message});
+                    }
+                } else {
+                    res.status(500).send({success: false, errormsg: 'error'});
+                }
+            });
+            break;
         case 'setChoice':
+            if (deviceId.match(/^S/)) {
+                var sc=deviceId.match(/^SC(\d+)/);
+                res.type('json');
+                var options = {
+                    url: nconf.get('domo_path')+"/json.htm?type=command&param=switchscene&idx="+sc[1]+"&switchcmd="+actionParam+"&passcode=",
+                    headers: {
+                        'User-Agent': 'request'
+                    }
+                };
+                console.log(options.url);
+                request(options, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        var data=JSON.parse(body);
+                        if (data.status == 'OK') {
+                            res.status(200).send({success: true});} else {
+                            res.status(500).send({success: false, errormsg: data.message});
+                        }
+                    } else {
+                        res.status(500).send({success: false, errormsg: 'error'});
+                    }
+                });
+                break;
+            } else {
+                res.status(403).send({success:false,errormsg:'not implemented'});
+            }
+
         case 'setMode':
             res.status(403).send({success:false,errormsg:'not implemented'});
             break;
@@ -673,7 +862,7 @@ app.get("/devices", function(req, res){
         var myfeed = {"id": "S0", "name": "MyDomoAtHome", "type": "DevGenericSensor"};
         var params=[];
         params.push({"key": "Value", "value": "1.0", "unit": "", "graphable": "false"});
-        myfeed.params=params;;
+        myfeed.params=params;
         result.push(myfeed);
         if (ver != getLastVersion()) {
             var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
@@ -891,16 +1080,6 @@ app.get("/devices", function(req, res){
 
 // error handling middleware should be loaded after the loading the routes
 // all environments
-//configuration
-app.set('port', process.env.PORT || 3001);
-app.set('view engine', 'ejs');
-app.set('app_name',"MyDomoAtHome");
-app.set('domo_path',"http://127.0.0.1:8080");
-app.use(express.static(__dirname + '/public'));
-app.use(morgan('combined'))
-app.use(methodOverride());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // load conf file
 nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
@@ -915,7 +1094,20 @@ if (! nconf.get('domo_path')) {
     console.log('WARNING: No /etc/mydomoathome/config.json found, defaulting')
 }
 console.log("Domoticz server: "+nconf.get('domo_path'));
-console.log("Hostname: "+os.hostname());
+console.log("OS: "+os.type()+" "+os.platform()+" "+os.release());
+var interfaces = os.networkInterfaces();
+var addresses = [];
+var my_ip;
+for (var k in interfaces) {
+    for (var k2 in interfaces[k]) {
+        var address = interfaces[k][k2];
+        if (address.family === 'IPv4' && !address.internal) {
+            addresses.push(address.address);
+            my_ip=address.address;
+        }
+    }
+}
+console.log("Hostname: "+os.hostname()+" "+my_ip+" in "+os.homedir());
 /*nconf.save(function (err) {
     if (err) {
         console.error(err.message);
