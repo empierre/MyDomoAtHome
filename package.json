@@ -1,6 +1,6 @@
 {
   "name": "MyDomoAtHome",
-  "version": "0.12",
+  "version": "0.13",
   "description": "Rest interface for Domoticz to Imperihome",
   "main": "start.sh",
   "bin": {
@@ -30,6 +30,8 @@
   "devDependencies": {
   },
   "dependencies": {
+    "ejs": "^1.0.0",
+    "express": "^4.6.1"
   },
   "engines": {
   }
