@@ -13,6 +13,8 @@ font-size: 13px;
 color: #333;
 }
 
+.container .jumbotron   	{ border-radius:40px; }
+
 h1 {
 font-size: 28px;
 color: #000;
