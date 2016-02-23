@@ -1116,7 +1116,11 @@ console.log("Hostname: "+os.hostname()+" "+my_ip+" in "+os.homedir());
     //console.log('Configuration saved successfully.');
 }
 );*/
-
+process.once('SIGUSR2', function () {
+  gracefulShutdown(function () {
+    process.kill(process.pid, 'SIGUSR2');
+  });
+});
 
 //start server
 var server = http.createServer(app);
