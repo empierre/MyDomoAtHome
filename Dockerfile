@@ -20,5 +20,5 @@ EXPOSE 3002
 WORKDIR MyDomoAtHome
 ADD     app MyDomoAtHome
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
-  npm install -g nodemon mocha supervisor
-CMD ["nodemon", "/src/mdah.js"]
+  npm install -g forever nodemon mocha supervisor
+CMD ["forever", "/src/mdah.js"]

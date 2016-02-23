@@ -42,7 +42,7 @@ var ver="0.0.14";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null};
-var app_name="MyDomoAtHome";
+var app_name="MyDomoAtHome Dev";
 var domo_path="http://127.0.0.1:8080";
 var port         = process.env.PORT || '3001';
 //configuration
@@ -536,7 +536,7 @@ function DevSceneGroup(data) {
     var params=[];
     params.push({"key": "LastRun", "value": dt});
     params.push({"key": "Value", "value": data.Status});
-    params.push({"key": "Choice", "value": "Mixed,On,Off"});
+    params.push({"key": "Choices", "value": "Mixed,On,Off"});
     myfeed.params=params;
     return(myfeed);
 };
@@ -580,7 +580,7 @@ app.get('/', function(req, res) {
 });
 
 app.get("/system", function(req, res){
-    var version=nconf.get('app_name');
+    var version=app_name;
     res.type('json');
     var latest=getLastVersion();
     res.json(
@@ -588,6 +588,7 @@ app.get("/system", function(req, res){
 });
 
 app.get("/rooms", function(req, res){
+    //TODO: add hidden rooms
     res.type('json');
     var room=[];
     for(property in room_tab) {
@@ -614,7 +615,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             };
             res.type('json');
             var options = {
-                url: nconf.get('domo_path')+"/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd="+action+"&level=0&passcode=",
+                url: domo_path+"/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd="+action+"&level=0&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -638,7 +639,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setAck':
             res.type('json');
             var options = {
-                url: nconf.get('domo_path')+"/json.htm?type=command&param=resetsecuritystatus&idx="+deviceId+"&switchcmd=Normal",
+                url: domo_path+"/json.htm?type=command&param=resetsecuritystatus&idx="+deviceId+"&switchcmd=Normal",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -699,7 +700,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             }
             res.type('json');
             var options = {
-                url: nconf.get('domo_path')+my_url,
+                url: domo_path+my_url,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -720,7 +721,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'stopShutter':
             res.type('json');
             var options = {
-                url: nconf.get('domo_path')+"/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Stop&level=0&passcode=",
+                url: domo_path+"/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Stop&level=0&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -744,7 +745,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setSetPoint':
             res.type('json');
             var options = {
-                url: nconf.get('domo_path')+"/json.htm?type=command&param=setsetpoint&idx="+deviceId+"used=true&setpoint="+actionParam,
+                url: domo_path+"/json.htm?type=command&param=setsetpoint&idx="+deviceId+"used=true&setpoint="+actionParam,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -767,7 +768,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             var sc=deviceId.match(/^SC(\d+)/);
             //console.log(sc[1]);
             var options = {
-                url: nconf.get('domo_path')+"/json.htm?type=command&param=switchscene&idx="+sc[1]+"&switchcmd=On&passcode=",
+                url: domo_path+"/json.htm?type=command&param=switchscene&idx="+sc[1]+"&switchcmd=On&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -788,7 +789,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setColor':
             res.type('json');
             var options = {
-                url: nconf.get('domo_path')+"/json.htm?type=command&param=setcolorbrightnessvalue&idx="+deviceId+"&passcode=",
+                url: domo_path+"/json.htm?type=command&param=setcolorbrightnessvalue&idx="+deviceId+"&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -811,7 +812,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                 var sc=deviceId.match(/^SC(\d+)/);
                 res.type('json');
                 var options = {
-                    url: nconf.get('domo_path')+"/json.htm?type=command&param=switchscene&idx="+sc[1]+"&switchcmd="+actionParam+"&passcode=",
+                    url: domo_path+"/json.htm?type=command&param=switchscene&idx="+sc[1]+"&switchcmd="+actionParam+"&passcode=",
                     headers: {
                         'User-Agent': 'request'
                     }
@@ -847,7 +848,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
 app.get("/devices", function(req, res){
     res.type('json');    
     var options = {
-    url: nconf.get('domo_path')+"/json.htm?type=devices&filter=all&used=true&order=Name",
+    url: domo_path+"/json.htm?type=devices&filter=all&used=true&order=Name",
 	  headers: {
 	  'User-Agent': 'request'
           }
@@ -1136,7 +1137,6 @@ var gracefulShutdown = function() {
         process.exit()
     }, 10*1000);
 }
-
 //start server
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){
