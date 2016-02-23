@@ -3,7 +3,11 @@
 FROM node:4-slim
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
-RUN apt-get update
+
+RUN apt-get update --fix-missing
+RUN apt-get install -yq curl
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
 RUN apt-get -y install npm nodejs git git-core
 #RUN cachebuster=b953b35 git clone http://github.com/empierre/MyDomoAtHome.git
 #RUN cd MyDomoAtHome && bash run-once.sh
@@ -14,4 +18,7 @@ RUN npm install mydomoathome
 EXPOSE 3002
 
 WORKDIR MyDomoAtHome
-CMD ["node", "/src/mdah.js"]
+ADD     app MyDomoAtHome
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
+  npm install -g nodemon mocha supervisor
+CMD ["nodemon", "/src/mdah.js"]
