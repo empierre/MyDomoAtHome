@@ -38,17 +38,16 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.7";
+var ver="0.0.14";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null};
 var app_name="MyDomoAtHome";
 var domo_path="http://127.0.0.1:8080";
+var port         = process.env.PORT || '3001';
 //configuration
-app.set('port', process.env.PORT || 3001);
+app.set('port', port);
 app.set('view engine', 'ejs');
-app.set('app_name',app_name);
-app.set('domo_path',domo_path);
 app.use(express.static(__dirname + '/public'));
 app.use(morgan('combined'))
 app.use(methodOverride());
@@ -1089,11 +1088,12 @@ nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
     }});
 nconf.load();
 if (! nconf.get('domo_path')) {
-    nconf.set('app_name',"MyDomoAtHome Dev");
-    nconf.set('domo_path',"http://127.0.0.1:8080");
     console.log('WARNING: No /etc/mydomoathome/config.json found, defaulting')
+} else {
+    domo_path=nconf.get('domo_path');
+    app.set('port')=nconf.get('port');
 }
-console.log("Domoticz server: "+nconf.get('domo_path'));
+console.log("Domoticz server: "+domo_path);
 console.log("OS: "+os.type()+" "+os.platform()+" "+os.release());
 var interfaces = os.networkInterfaces();
 var addresses = [];
@@ -1121,6 +1121,21 @@ process.once('SIGUSR2', function () {
     process.kill(process.pid, 'SIGUSR2');
   });
 });
+
+// this function is called when you want the server to die gracefully
+// i.e. wait for existing connections
+var gracefulShutdown = function() {
+    console.log("Received kill signal, shutting down gracefully.");
+    server.close(function() {
+        console.log("Closed out remaining connections.");
+        process.exit()
+    });
+    // if after
+    setTimeout(function() {
+        console.error("Could not close connections in time, forcefully shutting down");
+        process.exit()
+    }, 10*1000);
+}
 
 //start server
 var server = http.createServer(app);

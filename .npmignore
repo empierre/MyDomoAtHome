@@ -7,3 +7,5 @@ src
 Gruntfile.coffee
 libs
 api
+packaging
+binary
