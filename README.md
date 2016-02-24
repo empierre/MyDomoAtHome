@@ -30,8 +30,9 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 - [ ] Support major type of sensors/feature of Domoticz
   - [X] Weather and Environmental sensors  
   - [X] Energy sensors (Electricity, Gas, Water)
-  - [-] Switches (partial)
+  - [X] Switches
   - [X] Thermostat
+  - [ ] Graphs
 - [x] Dependency-less 
 - [X] Node.js rewrite
 - [ ] Auto updatable
