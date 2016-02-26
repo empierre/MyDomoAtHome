@@ -17,6 +17,7 @@ sudo apt-get -y install libdancer-perl libdancer2-perl libfile-slurp-perl  liblw
 sudo apt-get -y install libtime-piece-perl libjson-perl libplack-perl starman  libcrypt-ssleay-perl libdatetime-perl libdatetime-format-strptime-perl  2>&1 
 sudo apt-get -y install libdbd-sqlite3-perl libdbi-perl sqlite3 2>&1 
 sudo apt-get -y install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl  2>&1 
+sudo curl -L https://cpanmin.us | perl - --sudo App::cpanminus
 sudo cpanm Time::Moment
 echo "Now installing the service"
 sudo cp MyDomoAtHome.sh /etc/init.d/MyDomoAtHome.sh
