@@ -18,6 +18,7 @@ sudo apt-get -y install libtime-piece-perl libjson-perl libplack-perl starman  l
 sudo apt-get -y install libdbd-sqlite3-perl libdbi-perl sqlite3 2>&1 
 sudo apt-get -y install libaudio-mpd-perl libnet-upnp-perl libpoe-component-client-mpd-perl  2>&1 
 sudo curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+sudo cpanm Task::Plack
 sudo cpanm Time::Moment
 echo "Now installing the service"
 sudo cp MyDomoAtHome.sh /etc/init.d/MyDomoAtHome.sh
