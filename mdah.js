@@ -1,6 +1,6 @@
 //##############################################################################
 //  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
-//      Copyright (C) 2014-2015 Emmanuel PIERRE (domoticz@e-nef.com)
+//      Copyright (C) 2014-2016 Emmanuel PIERRE (domoticz@e-nef.com)
 //
 // MyDomoAtHome is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -26,33 +26,49 @@ var querystring = require("querystring");
 var nconf = require('nconf');
 var os = require("os");
 var moment = require('moment');
-//var favicon = require('serve-favicon');
 var morgan = require('morgan')
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var basicAuth = require('basic-auth');
 var multer = require('multer');
 var errorHandler = require('errorhandler');
+var requester = require('sync-request');
 var app = express();
 
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.14";
+var ver="0.0.16";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null};
 var app_name="MyDomoAtHome Dev";
-var domo_path="http://127.0.0.1:8080";
-var port         = process.env.PORT || '3001';
+var domo_path    = process.env.DOMO || "http://127.0.0.1:8080";
+var port         = process.env.PORT || '3002';
+
 //configuration
 app.set('port', port);
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname + '/../public')));
+app.set('views', __dirname + '/../views');
 app.use(morgan('combined'))
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// load conf file
+nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
+    if (err) {
+        console.error("No conf:"+err.message);
+        return;
+    }});
+nconf.load();
+if (! nconf.get('domo_path')) {
+    console.log('WARNING: /etc/mydomoathome/config.json not found, defaulting')
+} else {
+    domo_path=nconf.get('domo_path');
+    app.set('port', nconf.get('port') || port);
+}
 
 
 function getLastVersion() {
@@ -439,7 +455,12 @@ function DevPressure(data) {
     room_tab.Weather=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": "Weather"};
     params=[];
-    params.push({"key": "Value", "value": data.Pressure, "unit": "mbar", "graphable": "true"});
+    if (data.SubType==="Pressure") {
+        params.push({"key": "Value", "value": data.Pressure, "unit": "mbar", "graphable": "true"});
+    } else {
+        params.push({"key": "Value", "value": data.Barometer, "unit": "mbar", "graphable": "true"});
+    }
+
     myfeed.params=params;
     return (myfeed);
 }
@@ -539,6 +560,13 @@ function DevSceneGroup(data) {
     params.push({"key": "Choices", "value": "Mixed,On,Off"});
     myfeed.params=params;
     return(myfeed);
+};
+
+function getDeviceType(deviceId) {
+    var url=domo_path +"/json.htm?type=devices&rid=" + deviceId;
+    var res = requester('GET',url);
+    var js=JSON.parse(res.body.toString('utf-8'));
+    return(js.result[0].Type);
 };
 
 var auth = function (req, res, next) {
@@ -845,6 +873,82 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
 
 });
 
+app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, res) {
+    res.type('json');
+    var deviceId = req.params.deviceId;
+    var paramKey = req.params.paramKey;
+    var startdate = req.params.startdate;
+    var enddate = req.params.enddate;
+    var duration = (enddate - startdate) / 1000;
+
+    var PLine;
+    if (deviceId.match(/L/)) {
+        var pid;
+        pid = deviceId.match(/(\d+)_L(.)/);
+        deviceId = pid[0];
+        PLine = pid[1];
+    }
+    var type = getDeviceType(deviceId).toLowerCase();
+    var ptype = type;
+
+    if ((type === "lux") || (type === "energy")) {
+        type = "counter";
+    }
+    if (type === "air quality") {
+        type = "counter";
+    }
+    if ((ptype === "general")) {
+        type = "Percentage";
+    }
+    if ((paramKey === "hygro")) {
+        type = "temp";
+    }
+    if ((paramKey === "temp")) {
+        type = "temp";
+    }
+    if ((paramKey === "Watts")) {
+        type = "counter";
+    }
+    console.log(deviceId + PLine + type);
+    var range;
+    if (duration <= 172800) {
+        range = "day";
+    } else if (duration < 1209600) {
+        range = "week";
+    } else if (duration < 5270400) {
+        range = "month";
+    } else {
+        range = "year";
+    }
+    res.type('json');
+    var options = {
+        url: domo_path + "/json.htm?type=graph&sensor="+type+"&idx="+deviceId+"&range="+range,
+        headers: {
+            'User-Agent': 'request'
+        }
+    };
+    console.log(options.url);
+    request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            var data = JSON.parse(body);
+            var result = [];
+            for (var i = 0; i < data.result.length; i++) {
+                //console.log(data.result[i].Type);
+                /*switch (data.result[i].Type) {
+                    case (data.result[i].Type.match(/Lighting/) || {}).input:
+                    default:
+                }*/
+            }
+            var rest = {};
+            rest.devices = result;
+            res.json(rest);
+        } else {
+            //TODO
+            res.status(403).send({success: false, errormsg: 'not implemented'});
+        }
+    });
+});
+
 app.get("/devices", function(req, res){
     res.type('json');    
     var options = {
@@ -874,7 +978,7 @@ app.get("/devices", function(req, res){
         for(var i = 0; i < data.result.length; i++) {
             //console.log(data.result[i].Type);
             switch(data.result[i].Type) {
-                case (data.result[i].Type.match(/Lighting/)||{}).input:
+                case (data.result[i].Type.match(/Light/)||{}).input:
                     switch(data.result[i].SwitchType) {
                         case 'On/Off':
                         case 'Contact':
@@ -1026,6 +1130,7 @@ app.get("/devices", function(req, res){
                             result.push(DevElectricity(data.result[i]));
                             break;
                         case 'Pressure':
+                        case 'Barometer':
                             result.push(DevPressure(data.result[i]));
                             break;
                         case 'Visibility':
@@ -1081,19 +1186,7 @@ app.get("/devices", function(req, res){
 // error handling middleware should be loaded after the loading the routes
 // all environments
 
-// load conf file
-nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
-    if (err) {
-        console.error("No conf:"+err.message);
-        return;
-    }});
-nconf.load();
-if (! nconf.get('domo_path')) {
-    console.log('WARNING: No /etc/mydomoathome/config.json found, defaulting')
-} else {
-    domo_path=nconf.get('domo_path');
-    app.set('port')=nconf.get('port');
-}
+
 console.log("Domoticz server: "+domo_path);
 console.log("OS: "+os.type()+" "+os.platform()+" "+os.release());
 var interfaces = os.networkInterfaces();

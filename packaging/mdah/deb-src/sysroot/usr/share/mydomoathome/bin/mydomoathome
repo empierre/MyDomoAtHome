@@ -4,4 +4,4 @@ set -e
 
 cd /usr/share/mydomoathome/app
 
-/usr/bin/nodejs mdah.js
+forever  --minUptime 1000 --spinSleepTime 1000  mdah.js

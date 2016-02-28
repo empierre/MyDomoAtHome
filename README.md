@@ -19,21 +19,22 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached
 M2 milestone will provide extended support to other platforms with Docker and Synology 
-- [x] Free
-- [x] Multi-platform (Linux, Mac OS X, Windows)
-- [x] Micro-services (Docker)
+- [X] Free
+- [X] Multi-platform (Linux, Mac OS X, Windows)
+- [-] Micro-services (Docker)
 - [ ] Synology package
   - [ ] Synology hosted package
-- [-] Debian package (partial)
+- [-] Debian package 
+  - [X] personal hosting
   - [ ] debian hosted package
   - [ ] raspbian hosted package
-- [ ] Support major type of sensors/feature of Domoticz
+- [-] Support major type of sensors/feature of Domoticz
   - [X] Weather and Environmental sensors  
   - [X] Energy sensors (Electricity, Gas, Water)
   - [X] Switches
   - [X] Thermostat
   - [ ] Graphs
-- [x] Dependency-less 
+- [X] Dependency-less 
 - [X] Node.js rewrite
 - [ ] Auto updatable
 - [ ] Support every single type of sensors/feature of Domoticz
@@ -58,22 +59,28 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 
 If not please do:
 
-- `wget http://node-arm.herokuapp.com/node_0.10.36_armhf.deb`
-- `sudo apt-get install nodejs`
+On Raspbian, please install first to have a stable nodeJS :
+  http://www.e-nef.com/domoticz/mdah/npm_2.14.7_armhf.deb 
+  http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
+
+on all other, version 4 is required (testing/unstable are fine):
+  curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+  sudo apt-get install -y nodejs
+
 
 And check again 
 
- - `node —version` // should print version 0.10.38 or similar
+ - `node —version` // should print version 4.4.x or similar
  - `sudo node —version` should work as well
 
 ### Installing the software Debian package .deb
-- `wget https://github.com/empierre/MyDomoAtHome/blob/nodejs/binary/node-mydomoathome-latest.deb?raw=true`
+- `wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb`
 - `sudo dpkg -i node-mydomoathome-latest.deb`
-- edit ~/pi/.mdah.json with your values
+- edit /etc/mydomoathome/config.json with your values
 
 ## Running the service
 
-The default port is now 3001.
+The default port is now 3002.
 
 ### Start the service:
    `sudo service mydomoathome start`
@@ -91,7 +98,7 @@ The default port is now 3001.
     
 ### Launch the process
 Remember to change the IP below and authorize in Domoticz the docker IP range
-    docker run --name=mydomoathome --env domo_path="http://ip:8080" -it --rm -p 3001:3001 epierre/mydomoathome
+    docker run --name=mydomoathome --env DOMO="http://your_ip:8080" -it --rm -p 3001:3001 epierre/mydomoathome
 
 ### Check running docker processes
     docker ps

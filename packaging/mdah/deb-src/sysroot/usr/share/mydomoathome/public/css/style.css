@@ -13,8 +13,10 @@ font-size: 13px;
 color: #333;
 }
 
+.container .jumbotron   	{ border-radius:40px; }
+
 h1 {
-font-size: 28px;
+font-size: 26px;
 color: #000;
 }
 
@@ -27,7 +29,7 @@ text-decoration: none;
 
 #page {
 background-color: #ddd;
-width: 750px;
+width: 800px;
 margin: auto;
 margin-left: auto;
 padding-left: 0px;
@@ -39,7 +41,7 @@ background-color: white;
 border: 3px solid #aaa;
 border-top: none;
 padding: 25px;
-width: 500px;
+width: 600px;
 }
 
 #sidebar {

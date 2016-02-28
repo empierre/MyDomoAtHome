@@ -45,7 +45,7 @@ NODE_BIN_DIR="/usr/bin"
 # Set the NODE_PATH to the Node.js main node_modules directory.
 # NODE_PATH="/usr/local/lib/node_modules"
 # The application startup Javascript file path.
-APPLICATION_PATH="/home/pi/domoticz/MyDomoAtHome/mdah.js"
+APPLICATION_PATH="/usr/share/mydomoathome/app/mdah.js"
 # Process ID file path.
 PIDFILE="/tmp/mdah.pid"
 # Log file path.
