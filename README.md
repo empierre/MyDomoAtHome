@@ -2,6 +2,8 @@
 DOMO/REST Gateway between Domoticz and Imperihome ISS
 
 [![NPM Version][npm-image]][npm-url]
+<span class="badge-npmversion"><a href="https://www.npmjs.com/package/mydomoathome" title="View this project on NPM"><img src="https://img.shields.io/npm/v/mydomoathome.svg" alt="NPM version" /></a></span>
+<span class="badge-npmdownloads"><a href="https://npmjs.org/package/mydomoathome" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/mydomoathome.svg" alt="NPM downloads" /></a></span>
 [![Build Status][travis-image]][travis-url]
 [![Coverage Status](https://coveralls.io/repos/empierre/MyDomoAtHome/badge.svg?branch=master&service=github)](https://coveralls.io/github/empierre/MyDomoAtHome?branch=master)
 
