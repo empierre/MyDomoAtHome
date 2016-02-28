@@ -2,14 +2,13 @@
 DOMO/REST Gateway between Domoticz and Imperihome ISS
 
 [![NPM Version][npm-image]][npm-url]
-<span class="badge-npmversion"><a href="https://www.npmjs.com/package/mydomoathome" title="View this project on NPM"><img src="https://img.shields.io/npm/v/mydomoathome.svg" alt="NPM version" /></a></span>
-<span class="badge-npmdownloads"><a href="https://npmjs.org/package/mydomoathome" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/mydomoathome.svg" alt="NPM downloads" /></a></span>
+<span class="badge-npmdownloads"><a href="https://npmjs.org/package/node-mydomoathome" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/node-mydomoathome.svg" alt="NPM downloads" /></a></span>
 [![Build Status][travis-image]][travis-url]
 [![Coverage Status](https://coveralls.io/repos/empierre/MyDomoAtHome/badge.svg?branch=master&service=github)](https://coveralls.io/github/empierre/MyDomoAtHome?branch=master)
+[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 ![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
 ![REST](https://img.shields.io/badge/REST_API-powered-green.svg)
-[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 ![REST](https://img.shields.io/badge/RPI-tested_ok-green.svg)
 ![REST](https://img.shields.io/badge/Odroid-tested_ok-green.svg)
 ![REST](https://img.shields.io/badge/Intel-tested_ok-green.svg)
@@ -123,8 +122,7 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
 # Q&A
   - Remember to add the gateway in the local networks under setup in domoticz !
 
-[npm-image]: https://img.shields.io/npm/v/mydomoathome.svg?style=flat
-[npm-url]: https://npmjs.org/package/mydomoathome
+[npm-image]: https://img.shields.io/npm/v/node-mydomoathome.svg?style=flat
+[npm-url]: https://npmjs.org/package/node-mydomoathome
 [travis-image]: https://travis-ci.org/empierre/MyDomoAtHome.svg
 [travis-url]: https://travis-ci.org/empierre/MyDomoAtHome
-
