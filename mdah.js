@@ -95,6 +95,20 @@ function getLastVersion() {
     }
 };
 
+function normalize_status(Status,deviceId) {
+	var rbl;
+	switch (data.Status) {
+		"On": rbl=1;device_tab[deviceId].Action=1;break;
+		"Off":  rbl=0;device_tab[deviceId].Action=1;break;
+		"Open": rbl=1;device_tab[deviceId].Action=2;break;
+		"Closed": rbl=0;device_tab[deviceId].Action=2;break;
+		"Panic":  rbl=1;device_tab[deviceId].Action=3;break;
+		"Normal": rbl=0;device_tab[deviceId].Action=3;break;
+		default: rbl=data.Status;break;
+	}
+	return rbl;
+}
+
 function DevSwitch(data) {
     room_tab.Switches=1;
     var status =0;
