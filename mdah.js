@@ -153,7 +153,27 @@ function DevMultiSwitch(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
     var params=[];
     params.push({"key": "LastRun", "value": dt});
-    params.push({"key": "Value", "value": devSt(data.idx,data.Status)});
+    var status;
+    console.log("L:"+data.Level);
+    switch(data.Level) {
+        case 0:
+            status = 'Off';
+            break;
+        case 10:
+            status = 'Level1';
+            break;
+        case 20:
+            status = 'Level2';
+            break;
+        case 30:
+            status = 'Level3';
+            break;
+        default:
+            status = 'Off';
+            break;
+    }
+    console.log("S:"+status);
+    params.push({"key": "Value", "value": status});
     var res=data.LevelNames.split('|').join(',');
     params.push({"key": "Choices", "value": res});
     myfeed.params=params;
@@ -1068,6 +1088,9 @@ app.get("/devices", function(req, res){
                             break;
                         case (data.result[i].SwitchType.match(/Siren/)||{}).input:
                             result.push(DevGenericSensor(data.result[i]));
+                            break;
+                        case 'Selector':
+                            result.push(DevMultiSwitch(data.result[i]));
                             break;
                         default:
                             console.log("UNK Sw "+data.result[i].Name);
