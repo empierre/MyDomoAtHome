@@ -113,6 +113,21 @@ function DevSwitch(data) {
     myfeed.params=params;
     return(myfeed);
 }
+
+function DevMultiSwitch(data) {
+    var ptrn4= /[\s]+|/;
+    room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
+    var params=[];
+    params.push({"key": "LastRun", "value": dt});
+    params.push({"key": "Value", "value": data.Status});
+    var res=data.LevelNames.split('|').join(',');
+    params.push({"key": "Choices", "value": res});
+    myfeed.params=params;
+    return(myfeed);
+};
+
 function DevPush(data) {
     room_tab.Switches = 1;
     var status =0;
