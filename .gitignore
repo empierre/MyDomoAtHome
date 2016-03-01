@@ -3,3 +3,15 @@
 node_modules
 *.secret.*
 gen
+.dist
+.jshintignore
+.npm
+.project
+.sessions.json
+.settings
+.tern-project
+*.backup
+*_cred*
+coverage
+credentials.json
+locales/zz-ZZ

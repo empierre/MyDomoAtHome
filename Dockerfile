@@ -13,7 +13,7 @@ RUN apt-get -y install npm nodejs git git-core
 #RUN cd MyDomoAtHome && bash run-once.sh
 COPY . /src
 RUN cd /src; npm install
-RUN npm install mydomoathome
+RUN npm install node-mydomoathome
 
 EXPOSE 3002
 

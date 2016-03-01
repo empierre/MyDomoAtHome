@@ -22,7 +22,7 @@ var express = require("express");
 var _ = require("underscore");
 var path = require('path');
 var request = require("request");
-var querystring = require("querystring");
+//var querystring = require("querystring");
 var nconf = require('nconf');
 var os = require("os");
 var moment = require('moment');
@@ -30,7 +30,7 @@ var morgan = require('morgan')
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var basicAuth = require('basic-auth');
-var multer = require('multer');
+//var multer = require('multer');
 var errorHandler = require('errorhandler');
 var requester = require('sync-request');
 var app = express();
@@ -38,7 +38,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.16";
+var ver="0.0.17";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null};
@@ -49,8 +49,11 @@ var port         = process.env.PORT || '3002';
 //configuration
 app.set('port', port);
 app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname + '/../public')));
-app.set('views', __dirname + '/../views');
+var home = process.env.MDAH_HOME || path.resolve(__dirname+"/..");
+console.log(__dirname);
+console.log(home);
+app.use(express.static(path.join(__dirname + '/public')));
+app.set('views', path.resolve(__dirname + '/views'));
 app.use(morgan('combined'))
 app.use(methodOverride());
 app.use(bodyParser.json());
@@ -94,7 +97,6 @@ function getLastVersion() {
         });
     }
 };
-
 function devSt(deviceId,Status) {
 	var rbl;
 	switch (Status) {
@@ -669,6 +671,7 @@ app.get('/', function(req, res) {
         node_version: process.version,
         app_name: app_name,
         domo_path: domo_path,
+        mdah_ver: ver,
         my_ip: my_ip,
         my_port:app.get('port')
     });
@@ -1258,7 +1261,9 @@ app.get("/devices", function(req, res){
 
 
 console.log("Domoticz server: "+domo_path);
-console.log("OS: "+os.type()+" "+os.platform()+" "+os.release());
+console.log("Node version: "+process.versions.node);
+console.log("MDAH version: "+ver);
+console.log("OS version: "+os.type()+" "+os.platform()+" "+os.release());
 var interfaces = os.networkInterfaces();
 var addresses = [];
 var my_ip;
@@ -1285,6 +1290,11 @@ process.once('SIGUSR2', function () {
     process.kill(process.pid, 'SIGUSR2');
   });
 });
+process.once('SIGINT', function () {
+    gracefulShutdown(function () {
+        process.kill(process.pid, 'SIGINT');
+    });
+});
 
 // this function is called when you want the server to die gracefully
 // i.e. wait for existing connections
@@ -1298,7 +1308,7 @@ var gracefulShutdown = function() {
     setTimeout(function() {
         console.error("Could not close connections in time, forcefully shutting down");
         process.exit()
-    }, 10*1000);
+    }, 2*1000);
 }
 //start server
 var server = http.createServer(app);
