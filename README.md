@@ -3,8 +3,6 @@ DOMO/REST Gateway between Domoticz and Imperihome ISS
 
 [![NPM Version][npm-image]][npm-url]
 <span class="badge-npmdownloads"><a href="https://npmjs.org/package/node-mydomoathome" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/node-mydomoathome.svg" alt="NPM downloads" /></a></span>
-[![Build Status][travis-image]][travis-url]
-[![Coverage Status](https://coveralls.io/repos/empierre/MyDomoAtHome/badge.svg?branch=master&service=github)](https://coveralls.io/github/empierre/MyDomoAtHome?branch=master)
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 ![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
@@ -55,62 +53,83 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 ## Install procedure
 
 ### Check the nodeJS version installed - mandatory for PI !
- - `node —version` // should print version 0.10.36 or similar
- - `sudo node —version` should work as well
+
+   sudo node —version // should print version 3.x or above
 
 If not please do:
 
-On Raspbian, please install first to have a stable nodeJS :
-  http://www.e-nef.com/domoticz/mdah/npm_2.14.7_armhf.deb 
-  http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
+On RASPBIAN (Raspberry PI/PI2), please install first to have a stable nodeJS :
 
-on all other, version 4 is required (testing/unstable are fine):
-  curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
-  sudo apt-get install -y nodejs
+    wget http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
+    wget http://www.e-nef.com/domoticz/mdah/npm_2.14.7_armhf.deb
+    sudo dpkg -i nodejs_4.4.2_armhf.deb
+    sudo dpkg -i npm_2.14.7_armhf.deb
 
+On all other (debian, ubuntu...), version 4 is required (testing/unstable are fine):
+
+    curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+  
+  The following commands install npm and then upgrade it to the latest 2.x version.
+  
+    sudo apt-get install npm
+    sudo npm install -g npm@2.x
+  
+  Note: npm version 3 is the latest version, but is currently not recommended for use.
 
 And check again 
 
- - `node —version` // should print version 4.4.x or similar
- - `sudo node —version` should work as well
+    sudo node —version // should print version 4.4.x or similar
+    sudo npm —version // should print version 2.2.x or similar
 
 ### Installing the software Debian package .deb
-- `wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb`
-- `sudo dpkg -i node-mydomoathome-latest.deb`
-- edit /etc/mydomoathome/config.json with your values
+
+    wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb
+    sudo dpkg -i node-mydomoathome-latest.deb
+  edit /etc/mydomoathome/config.json with your values
 
 ## Running the service
 
 The default port is now 3002.
 
 ### Start the service:
-   `sudo service mydomoathome start`
+
+    sudo service mydomoathome start
 
 ### Stop the service :
-   `sudo service mydomoathome stop`
+
+    sudo service mydomoathome stop
 
 ### Restart the service :
-   `sudo service mydomoathome reload`
+
+    sudo service mydomoathome reload
 
 ## Docker installation
 
 ### Duplicate the image
-    docker pull epierre/mydomoathome
+
+    docker pull epierre/mdah
     
 ### Launch the process
 Remember to change the IP below and authorize in Domoticz the docker IP range
-    docker run --name=mydomoathome --env DOMO="http://your_ip:8080" -it --rm -p 3001:3001 epierre/mydomoathome
+
+    docker run --name=mdah --env DOMO="http://your_ip:8080" -it --rm -p 3001:3001 epierre/mdah
 
 ### Check running docker processes
+
     docker ps
     
 ### Stoping a docker process
-    docker stop DOCKER_ID (found from the docler ps)
+
+    docker stop DOCKER_ID //(found from the docker ps)
   
 # Testing the installation
   - Check the domoticz is accessible from the hosting machine:
-    curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name  
+
+    curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
+
   - Check the MDAH returns the result from the hosting machine:
+
     curl http://gateway_ip:gateway_port/devices
   
 # Support: 
