@@ -83,21 +83,25 @@ And check again
     `sudo npm —version` // should print version 2.2.x or similar
 
 ### Installing the software Debian package .deb
-- `wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb`
-- `sudo dpkg -i node-mydomoathome-latest.deb`
-- edit /etc/mydomoathome/config.json with your values
+
+    `wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb`
+    `sudo dpkg -i node-mydomoathome-latest.deb`
+  edit /etc/mydomoathome/config.json with your values
 
 ## Running the service
 
 The default port is now 3002.
 
 ### Start the service:
+
    `sudo service mydomoathome start`
 
 ### Stop the service :
+
    `sudo service mydomoathome stop`
 
 ### Restart the service :
+
    `sudo service mydomoathome reload`
 
 ## Docker installation
@@ -107,18 +111,24 @@ The default port is now 3002.
     
 ### Launch the process
 Remember to change the IP below and authorize in Domoticz the docker IP range
+
     docker run --name=mydomoathome --env DOMO="http://your_ip:8080" -it --rm -p 3001:3001 epierre/mydomoathome
 
 ### Check running docker processes
+
     docker ps
     
 ### Stoping a docker process
+
     docker stop DOCKER_ID (found from the docler ps)
   
 # Testing the installation
   - Check the domoticz is accessible from the hosting machine:
-    curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name  
+ 
+    curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
+
   - Check the MDAH returns the result from the hosting machine:
+
     curl http://gateway_ip:gateway_port/devices
   
 # Support: 
