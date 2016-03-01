@@ -108,12 +108,12 @@ The default port is now 3002.
 
 ### Duplicate the image
 
-    docker pull epierre/mydomoathome
+    docker pull epierre/mdah
     
 ### Launch the process
 Remember to change the IP below and authorize in Domoticz the docker IP range
 
-    docker run --name=mydomoathome --env DOMO="http://your_ip:8080" -it --rm -p 3001:3001 epierre/mydomoathome
+    docker run --name=mdah --env DOMO="http://your_ip:8080" -it --rm -p 3001:3001 epierre/mdah
 
 ### Check running docker processes
 
