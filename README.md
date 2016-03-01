@@ -121,16 +121,16 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
     
 ### Stoping a docker process
 
-    docker stop DOCKER_ID (found from the docler ps)
+    docker stop DOCKER_ID //(found from the docker ps)
   
 # Testing the installation
   - Check the domoticz is accessible from the hosting machine:
- 
-      curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
+
+    curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
 
   - Check the MDAH returns the result from the hosting machine:
 
-      curl http://gateway_ip:gateway_port/devices
+    curl http://gateway_ip:gateway_port/devices
   
 # Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
