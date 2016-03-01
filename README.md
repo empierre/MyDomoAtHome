@@ -94,6 +94,15 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
     curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name  
   - Check the MDAH returns the result from the hosting machine:
     curl http://gateway_ip:gateway_port/devices
+
+# Troubleshooting
+
+  Some of the following may help those fast breaking dependencies we now have:
+
+    sudo cpnam i DateTime::Format::Strptime
+    sudo curl -L http://cpanmin.us | perl - --sudo App::cpanminus
+    sudo cpanm install Time::Moment
+    sudo cpanm install Task::Plack
   
 # Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
