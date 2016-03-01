@@ -53,29 +53,29 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 ## Install procedure
 
 ### Check the nodeJS version installed - mandatory for PI !
- - `sudo node —version` // should print version 3.x or above
+   `sudo node —version` // should print version 3.x or above
 
 If not please do:
 
 On Raspbian, please install first to have a stable nodeJS :
-  - 'wget http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb'
-  - 'wget http://www.e-nef.com/domoticz/mdah/npm_2.14.7_armhf.deb'
-  - 'sudo dpkg -i nodejs_4.4.2_armhf.deb'
-  - 'sudo dpkg -i npm_2.14.7_armhf.deb'
+    'wget http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb'
+    'wget http://www.e-nef.com/domoticz/mdah/npm_2.14.7_armhf.deb'
+    'sudo dpkg -i nodejs_4.4.2_armhf.deb'
+    'sudo dpkg -i npm_2.14.7_armhf.deb'
 
 on all other, version 4 is required (testing/unstable are fine):
-  - 'curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -'
-  - 'sudo apt-get install -y nodejs'
+    'curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -'
+    'sudo apt-get install -y nodejs'
   
   The following commands install npm and then upgrade it to the latest 2.x version.
-    - 'sudo apt-get install npm'
-    - 'sudo npm install -g npm@2.x'
+    'sudo apt-get install npm'
+    'sudo npm install -g npm@2.x'
   Note: npm version 3 is the latest version, but is currently not recommended for use.
 
 And check again 
 
-  - `sudo node —version` // should print version 4.4.x or similar
-  - `sudo npm —version` // should print version 2.2.x or similar
+    `sudo node —version` // should print version 4.4.x or similar
+    `sudo npm —version` // should print version 2.2.x or similar
 
 ### Installing the software Debian package .deb
 - `wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb`
