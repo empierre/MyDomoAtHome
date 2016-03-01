@@ -1321,7 +1321,7 @@ server.on('error', function (e) {
     console.log('Address in use, retrying...');
     setTimeout(function () {
       server.close();
-      server.listen(PORT, HOST);
+      server.listen(port);
     }, 2000);
   }
 });
