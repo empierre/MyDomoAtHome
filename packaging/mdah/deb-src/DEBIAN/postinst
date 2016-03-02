@@ -3,9 +3,9 @@
 set -e
 
 chown www-data.www-data /etc/mydomoathome/config.json
-cd /usr/share/mydomoathome/app
-/usr/bin/npm i
-npm-install-missing
+#cd /usr/share/mydomoathome/app
+#/usr/bin/npm i
+#npm-install-missing
 
 init_type='auto'
 
