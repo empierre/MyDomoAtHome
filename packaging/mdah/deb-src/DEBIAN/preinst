@@ -5,11 +5,11 @@ case "$1" in
     install)
         npm install -g forever
         npm install sync-request
-        npm install -g npm-install-missing
+        cd /usr/share/mydomoathoem/app/ && npm install -g npm-install-missing
         ;;
 
     upgrade|abort-upgrade)
-        npm install -g npm-install-missing
+        cd /usr/share/mydomoathoem/app/ && npm install -g npm-install-missing
         ;;
         
     configure)
