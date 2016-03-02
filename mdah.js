@@ -142,6 +142,7 @@ function DevSwitch(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
     params=[];
     params.push({"key": "Status", "value": status.toString()});
+    //TODO key Energy
     myfeed.params=params;
     return(myfeed);
 }
@@ -154,7 +155,7 @@ function DevMultiSwitch(data) {
     var params=[];
     params.push({"key": "LastRun", "value": dt});
     var status;
-    console.log("L:"+data.Level);
+    //console.log("L:"+data.Level);
     switch(data.Level) {
         case 0:
             status = 'Off';
@@ -172,8 +173,8 @@ function DevMultiSwitch(data) {
             status = 'Off';
             break;
     }
-    console.log("S:"+status);
-    params.push({"key": "Value", "value": status});
+    //console.log("S:"+status);
+    params.push({"key": "Value", "value": status.toString()});
     var res=data.LevelNames.split('|').join(',');
     params.push({"key": "Choices", "value": res});
     myfeed.params=params;
@@ -192,7 +193,7 @@ function DevPush(data) {
     myfeed.params={"key": "Status", "value": status};*/
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
     params=[];
-    params.push({"key": "Status", "value": status});
+    params.push({"key": "Status", "value": status.toString()});
     params.push({"key": "pulseable", "value": "1"});
     myfeed.params=params;
     return (myfeed);
@@ -205,7 +206,6 @@ function DevRGBLight(data) {
         case 'Push Off Button': status=0;break;
         default: status=0;break;
     }
-
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": "Switches"};
     if (data.Status == 'Set Level') {
         var mydev={MaxDimLevel : null,Action:null,graph:null};
@@ -216,6 +216,9 @@ function DevRGBLight(data) {
         params.push({"key": "Status", "value": status});
         params.push({"key": "dimmable", "value": "1"});
         params.push({"key": "Level", "value": data.Level.toString()});
+        //TODO whitechannel
+        //TODO color
+        //TODO Energy value unit
         myfeed.params=params;
     } else {
         params=[];
@@ -239,6 +242,7 @@ function DevDimmer(data) {
     params=[];
     params.push({"key": "Status", "value": status});
     params.push({"key": "Level", "value": data.Level.toString()});
+    //TODO key Energyt value unit
     myfeed.params=params;
     return(myfeed);
 };
@@ -260,8 +264,8 @@ function DevShutterInverted(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
     params=[];
     params.push({"key": "Status", "value": status});
-    params.push({"key": "Level", "value": lvl.toSting()});
-    params.push({"key": "stoppable", "value": "0"});
+    params.push({"key": "Level", "value": lvl.toString()});
+    params.push({"key": "stoppable", "value": "1"});
     params.push({"key": "pulsable", "value": "0"});
     myfeed.params=params;
     return(myfeed);
@@ -286,7 +290,7 @@ function DevShutter(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
     params=[];
     params.push({"key": "Status", "value": status});
-    params.push({"key": "Level", "value": lvl.toSting()});
+    params.push({"key": "Level", "value": lvl.toString()});
     params.push({"key": "stoppable", "value": "1"});
     params.push({"key": "pulsable", "value": "0"});
 
@@ -300,6 +304,19 @@ function DevMotion(data) {
     params=[];var value=devSt(data.idx,data.Status);
     //console.log(data.Status+" "+value);
     params.push({"key":"Armable", "value":"0"});
+    params.push({"key":"ackable", "value":"0"});
+    params.push({"key":"Armed", "value":"1"});
+    params.push({"key":"Tripped", "value":value.toString()});
+    params.push({"key":"lasttrip", "value":dt.toString()});
+    myfeed.params=params;
+    return(myfeed);
+};
+function DevDoor(data) {//TODO
+    room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
+    params=[];var value=devSt(data.idx,data.Status);
+    params.push({"key":"armable", "value":"0"});
     params.push({"key":"Ackable", "value":"0"});
     params.push({"key":"Armed", "value":"1"});
     params.push({"key":"Tripped", "value":value.toString()});
@@ -307,12 +324,12 @@ function DevMotion(data) {
     myfeed.params=params;
     return(myfeed);
 };
-function DevDoor(data) {
+function DevLock(data) {
     room_tab.Switches=1;
     var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
     params=[];var value=devSt(data.idx,data.Status);
-    params.push({"key":"Armable", "value":"0"});
+    params.push({"key":"armable", "value":"0"});
     params.push({"key":"Ackable", "value":"0"});
     params.push({"key":"Armed", "value":"1"});
     params.push({"key":"Tripped", "value":value.toString()});
@@ -328,15 +345,56 @@ function DevSmoke(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
     params=[];var value=devSt(data.idx,data.Status);
     params.push({"key":"Armable", "value":"0"});
-    params.push({"key":"Ackable", "value":ackable.toString()});
+    params.push({"key":"ackable", "value":ackable.toString()});
     params.push({"key":"Armed", "value":"1"});
     params.push({"key":"Tripped", "value":value.toString()});
     params.push({"key":"lasttrip", "value":dt.toString()});
     myfeed.params=params;
     return(myfeed);
 };
-function DevFlood(data) {var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();};//TODO
-function DevCO2(data) {var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();};// TODO
+function DevFlood(data) {
+    room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
+    var ackable=0;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevFlood", "room": "Switches"};
+    params=[];var value=devSt(data.idx,data.Status);
+    params.push({"key":"armable", "value":"0"});
+    params.push({"key":"Ackable", "value":ackable.toString()});
+    params.push({"key":"Armed", "value":"1"});
+    params.push({"key":"Tripped", "value":value.toString()});
+    params.push({"key":"lasttrip", "value":dt.toString()});
+    myfeed.params=params;
+    return(myfeed);
+}
+function DevCO2(data) {
+    room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
+    var ackable=0;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Switches"};
+    params=[];var value=devSt(data.idx,data.Status);
+    params.push({"key":"armable", "value":"0"});
+    params.push({"key":"Ackable", "value":ackable.toString()});
+    params.push({"key":"Armed", "value":"1"});
+    params.push({"key":"Tripped", "value":value.toString()});
+    params.push({"key":"lasttrip", "value":dt.toString()});
+    myfeed.params=params;
+    return(myfeed);
+}
+function DevCO2Alert(data) {
+    room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
+    var ackable=0;
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2Alert", "room": "Switches"};
+    params=[];var value=devSt(data.idx,data.Status);
+    params.push({"key":"armable", "value":"0"});
+    params.push({"key":"ackable", "value":ackable.toString()});
+    params.push({"key":"Armed", "value":"1"});
+    params.push({"key":"Tripped", "value":value.toString()});
+    params.push({"key":"lasttrip", "value":dt.toString()});
+    myfeed.params=params;
+    return(myfeed);
+}
+
 function DevGenericSensor(data) {
     room_tab.Utility=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
@@ -495,25 +553,42 @@ function DevWater(data) {
         if (!usage) {
             usage = 0;
         }
-        params.push({"key": "Watts", "value": usage.toString()});
-        params.push({"key": "unit", "value": "l"});
+        params.push({"key": "Watts", "value": usage.toString(), "unit": "l", "graphable": "false"});
     }
     if (data.Data) {
         var res=ptrn2b.exec(data.Counter);
         var total=0;
         if (res != null) {total = Number(res[1]);}
-        prams.push({"key": "ConsoTotal", "value": total.toString()});
-        params.push({"key": "unit", "value": "m3"});
-        params.push({"key": "graphable", "value": "true"});
+        params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "m3", "graphable": true});
     }
     myfeed.params=params;
-    combo.push(myfeed);
+    //combo.push(myfeed);
     /*var myfeed = {"id": data.idx+"_1", "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
     params=[];
     params.push({"key": "Value", "value": usage_l, "unit": "L", "graphable": "true"});
     myfeed.params=params;
     combo.push(myfeed);*/
-    return(combo);
+    return(myfeed);
+}
+function DevFlow(data) {
+    room_tab.Utility=1;
+    var ptrn1= /(\d+) Liter/;
+    var ptrn2= /([0-9]+(?:\.[0-9]+)?) Liter/;
+    var ptrn2b= /([0-9]+(?:\.[0-9]+)?) m3/;
+    var ptrn3= /[\s,]+/;
+    var ptrn4= /(\d+) l\/min/;
+    var combo=[];
+    var usage_l=0;
+
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+    var params=[];
+
+    var res=ptrn4.exec(data.Data);
+    var total=0;
+    if (res != null) {total = Number(res[1]);}
+    params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "l/s", "graphable":true});
+    myfeed.params=params;
+    return(myfeed);
 }
 function DevTH(data) {
     room_tab.Temp=1;
@@ -530,9 +605,7 @@ function DevTH(data) {
         case 'Humidity':
             var myfeed = {"id": data.idx, "name": data.Name, "type": "DevHygrometry", "room": "Temp"};
             params=[];
-            params.push({"key": "Value", "value": data.Humidity});
-            params.push({"key": "unit", "value": "%"});
-            params.push({"key": "graphable", "value": "true"});
+            params.push({"key": "Value", "value": data.Humidity, "unit": "%", "graphable": "true"});
             myfeed.params=params;
             return(myfeed);
         case 'Temp + Humidity':
@@ -580,7 +653,7 @@ function DevRain(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": "Weather"};
     var params=[];
     params.push({"key": "Accumulation", "value": data.Rain, "unit": "mm", "graphable": "true"});
-    params.push({"key": "Value", "value": data.RainRate, "unit": "mm", "graphable": "true"});
+    params.push({"key": "Value", "value": data.RainRate, "unit": "mm/h", "graphable": "true"});
     myfeed.params=params;
     return (myfeed);
 };
@@ -601,7 +674,7 @@ function DevNoise(data) {
     var suffix=res[1];
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": "Utility"};
     params=[];
-    params.push({"key": "Value", "value": value, "unit": suffix, "graphable": "true"});
+    params.push({"key": "Value", "value": value, "unit": suffix.toString(), "graphable": "true"});
     myfeed.params=params;
     return (myfeed);
 };
@@ -625,7 +698,7 @@ function DevGases(data) {
     if (res != null) {usage=Number(res[1]);}
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Temp", params:[] };
     params=[];
-    params.push({"key": "Value", value: usage, "unit": "ppm", "graphable": "true"});
+    params.push({"key": "Value", value: usage.toString(), "unit": "ppm", "graphable": "true"});
     myfeed.params=params;
     return (myfeed);
 };
@@ -634,7 +707,7 @@ function DevWind(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": "Weather"};
     var params=[];
     params.push({"key": "Speed", "value": data.Speed, "unit": "km/h", "graphable": "true"});
-    params.push({"key": "Direction", "value": data.Direction, "unit": "°", "graphable": "true"});
+    params.push({"key": "Direction", "value": data.Direction.toString(), "unit": "°", "graphable": "true"});
     myfeed.params=params;
     return (myfeed);
 };
@@ -1181,6 +1254,10 @@ app.get("/devices", function(req, res){
                 case 'Usage':
                     result.push(DevElectricity(data.result[i]));
                     break;
+                case 'Current':
+                    //TODO
+                    result.push(DevElectricity(data.result[i]));
+                    break;
                 case 'Current/Energy':
                     var rt=DevElectricityMultiple(data.result[i]);
                     for(var ii = 0; ii < rt.length; ii++) {
@@ -1257,6 +1334,9 @@ app.get("/devices", function(req, res){
                             break;
                         case 'Unknown':
                             console.log("Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            break;
+                        case 'Waterflow':
+                            result.push(DevFlow(data.result[i]));
                             break;
                         case 'Sound Level':
                             result.push(DevNoise(data.result[i]));
