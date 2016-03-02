@@ -1,10 +1,11 @@
 Package: MyDomoAtHome
 Version: 0.0.17
 Section: base
-Priority: optional
+Priority: extra
 Architecture: all
+Homepage: https://github.com/empierre/MyDomoAtHome/tree/nodejs
 Installed-Size: SIZE
 Depends: nodejs (>= 3.3.0)
 Maintainer: Emmanuel PIERRE <epierre@e-nef.com>
-Description: Node MyDomoAtHome! The installable NodeJS System Service for Imperihome ISS to Domoticz gateway
+Description: Node MyDomoAtHome! Gateway between Imperihome ISS and Domoticz
  Let's you install a nodejs app as a service, just to see how it feels.
