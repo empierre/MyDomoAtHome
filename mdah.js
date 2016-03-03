@@ -199,7 +199,7 @@ function DevPush(data) {
     return (myfeed);
 }
 function DevRGBLight(data) {
-    var status =0;
+    var status =0;status=devSt(data.idx,data.Status);
     room_tab.Switches=1;
     switch(data.SwitchType) {
         case 'Push On Button': status=1;break;
@@ -231,6 +231,7 @@ function DevDimmer(data) {
     var status =0;
     room_tab.Switches=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
+    status=devSt(data.idx,data.Status);
     if (data.Status == 'Set Level') {
         status = 1;
     }
@@ -247,7 +248,7 @@ function DevDimmer(data) {
     return(myfeed);
 };
 function DevShutterInverted(data) {
-    var status=0;
+    var status=0;status=devSt(data.idx,data.Status);
     room_tab.Switches=1;
     var lvl=0;
     var mydev={MaxDimLevel : null,Action:null,graph:null};
@@ -271,7 +272,7 @@ function DevShutterInverted(data) {
     return(myfeed);
 };
 function DevShutter(data) {
-    var status=0;
+    var status=0;status=devSt(data.idx,data.Status);
     room_tab.Switches=1;
     var lvl=0;
     var stoppable=0;
