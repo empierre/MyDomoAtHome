@@ -193,7 +193,7 @@ function DevPush(data) {
     myfeed.params={"key": "Status", "value": status};*/
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
     params=[];
-    params.push({"key": "Status", "value": status.toString()});
+    //params.push({"key": "Status", "value": status.toString()});
     params.push({"key": "pulseable", "value": "1"});
     myfeed.params=params;
     return (myfeed);
@@ -207,7 +207,7 @@ function DevRGBLight(data) {
         default: status=0;break;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": "Switches"};
-    if (data.Status == 'Set Level') {
+    if (data.Status.match(/Set Level/)) {
         var mydev={MaxDimLevel : null,Action:null,graph:null};
         if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
         mydev.MaxDimLevel=data.MaxDimLevel;
@@ -231,8 +231,9 @@ function DevDimmer(data) {
     var status =0;
     room_tab.Switches=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
+    console.log(data.Status);
     status=devSt(data.idx,data.Status);
-    if (data.Status == 'Set Level') {
+    if (data.Status.match(/Set Level/)) {
         status = 1;
     }
     var mydev={MaxDimLevel : null,Action:null,graph:null};
@@ -241,9 +242,9 @@ function DevDimmer(data) {
     //console.log(mydev);
     device_tab[data.idx]=mydev;
     params=[];
-    params.push({"key": "Status", "value": status});
+    params.push({"key": "Status", "value": status.toString()});
     params.push({"key": "Level", "value": data.Level.toString()});
-    //TODO key Energyt value unit
+    //TODO key Energy value unit
     myfeed.params=params;
     return(myfeed);
 };
@@ -577,7 +578,7 @@ function DevFlow(data) {
     var ptrn2= /([0-9]+(?:\.[0-9]+)?) Liter/;
     var ptrn2b= /([0-9]+(?:\.[0-9]+)?) m3/;
     var ptrn3= /[\s,]+/;
-    var ptrn4= /(\d+) l\/min/;
+    var ptrn4= /([0-9]+(?:\.[0-9]+)?) l\/min/;
     var combo=[];
     var usage_l=0;
 
@@ -585,6 +586,7 @@ function DevFlow(data) {
     var params=[];
 
     var res=ptrn4.exec(data.Data);
+    //console.log(res[1]);
     var total=0;
     if (res != null) {total = Number(res[1]);}
     params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "l/s", "graphable":true});
@@ -640,9 +642,20 @@ function DevPressure(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": "Weather"};
     params=[];
     if (data.SubType==="Pressure") {
-        params.push({"key": "Value", "value": data.Pressure, "unit": "mbar", "graphable": "true"});
+        if (data.Pressure<800) {
+            var mb=data.Pressure*1000;
+            params.push({"key": "Value", "value": mb, "unit": "mbar", "graphable": "true"});
+        } else {
+            params.push({"key": "Value", "value": data.Pressure, "unit": "mbar", "graphable": "true"});
+        }
+
     } else {
-        params.push({"key": "Value", "value": data.Barometer, "unit": "mbar", "graphable": "true"});
+        if (data.Barometer<800) {
+            var mb=data.Barometer*1000;
+            params.push({"key": "Value", "value": mb, "unit": "mbar", "graphable": "true"});
+        } else {
+            params.push({"key": "Value", "value": data.Barometer, "unit": "mbar", "graphable": "true"});
+        }
     }
 
     myfeed.params=params;
@@ -716,9 +729,9 @@ function DevThermostat(data) {
     room_tab.Utility=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Utility"};
     var params=[];
-    params.push({"key":"cursetpoint","value":data.SetPoint});
-    params.push({"key":"curtemp","value":data.SetPoint});
-    params.push({"key":"step","value": 0.5});
+    params.push({"key":"cursetpoint","value":data.SetPoint.toString()});
+    params.push({"key":"curtemp","value":data.SetPoint.toString()});
+    params.push({"key":"step","value": "0.5"});
     params.push({"key":"curmode","value":"default"});
     params.push({"key":"availablemodes","value":"default"});
     myfeed.params=params;
@@ -819,16 +832,38 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
     var actionName = req.params.actionName;
     var actionParam = req.params.actionParam;
     switch (actionName) {
-        case 'setStatus':
-            var action;
-            if (actionParam==1) {
-                action="On";
-            } else {
-                action="Off";
-            };
+        case 'pulse':
             res.type('json');
             var options = {
-                url: domo_path+"/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd="+action+"&level=0&passcode=",
+                url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=0&passcode=",
+                headers: {
+                    'User-Agent': 'request'
+                }
+            };
+            console.log(options.url);
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    var data = JSON.parse(body);
+                    if (data.status == 'OK') {
+                        res.status(200).send({success: true});
+                    } else {
+                        res.status(500).send({success: false, errormsg: data.message});
+                    }
+                } else {
+                    res.status(500).send({success: false, errormsg: 'error'});
+                }
+            });
+            break;
+        case 'setStatus':
+            var action;
+            if (actionParam == 1) {
+                action = "On";
+            } else {
+                action = "Off";
+            }
+            res.type('json');
+            var options = {
+                url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=" + action + "&level=0&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -836,9 +871,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             //console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    var data=JSON.parse(body);
+                    var data = JSON.parse(body);
                     if (data.status == 'OK') {
-                        res.status(200).send({success: true});} else {
+                        res.status(200).send({success: true});
+                    } else {
                         res.status(500).send({success: false, errormsg: data.message});
                     }
                 } else {
@@ -852,7 +888,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setAck':
             res.type('json');
             var options = {
-                url: domo_path+"/json.htm?type=command&param=resetsecuritystatus&idx="+deviceId+"&switchcmd=Normal",
+                url: domo_path + "/json.htm?type=command&param=resetsecuritystatus&idx=" + deviceId + "&switchcmd=Normal",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -860,9 +896,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             //console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    var data=JSON.parse(body);
+                    var data = JSON.parse(body);
                     if (data.status == 'OK') {
-                        res.status(200).send({success: true});} else {
+                        res.status(200).send({success: true});
+                    } else {
                         res.status(500).send({success: false, errormsg: data.message});
                     }
                 } else {
@@ -871,49 +908,50 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             });
             break;
         case 'setLevel':
-            var my_url;var lsetLevel;
+            var my_url;
+            var lsetLevel;
             switch (device_tab[deviceId].Action) {
                 case 1:
-                    if (actionParam==1) {
-                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+actionParam+"&passcode=";
-                    } else if (actionParam==0) {
-                            my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=On&level="+actionParam+"&passcode=";
+                    if (actionParam == 1) {
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + actionParam + "&passcode=";
+                    } else if (actionParam == 0) {
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
                     }
                     break;
                 case 2:
                 case 3:
-                    if (actionParam==100) {
-                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=On&level="+actionParam+"&passcode=";
+                    if (actionParam == 100) {
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
                     } else {
-                        lsetLevel=Math.ceil(actionParam*(device_tab[deviceId].MaxDimLevel)/100);
-                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+lsetLevel+"&passcode=";
+                        lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + lsetLevel + "&passcode=";
                     }
                     break;
                 case 5:
-                //Blinds inverted
-                    if (actionParam==100) {
-                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=On&level=0&passcode=";
+                    //Blinds inverted
+                    if (actionParam == 100) {
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=0&passcode=";
                     } else {
-                        lsetLevel=Math.ceil(actionParam*(device_tab[deviceId].MaxDimLevel)/100);
-                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+lsetLevel+"&passcode=";
+                        lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + lsetLevel + "&passcode=";
                     }
                     break;
                 case 6:
-                //Blinds -> On for Closed, Off for Open
-                    if (actionParam==100) {
-                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+actionParam+"&passcode=";
+                    //Blinds -> On for Closed, Off for Open
+                    if (actionParam == 100) {
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + actionParam + "&passcode=";
                     } else {
-                        my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Off&level="+actionParam+"&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + actionParam + "&passcode=";
                     }
                     break;
                 default:
-                    lsetLevel=Math.ceil(actionParam*(device_tab[deviceId].MaxDimLevel)/100);
-                    my_url="/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Set%20Level&level="+lsetLevel+"&passcode=";
+                    lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
+                    my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode=";
                     break;
             }
             res.type('json');
             var options = {
-                url: domo_path+my_url,
+                url: domo_path + my_url,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -921,9 +959,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             //console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    var data=JSON.parse(body);
+                    var data = JSON.parse(body);
                     if (data.status == 'OK') {
-                        res.status(200).send({success: true});} else {
+                        res.status(200).send({success: true});
+                    } else {
                         res.status(500).send({success: false, errormsg: data.message});
                     }
                 } else {
@@ -934,7 +973,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'stopShutter':
             res.type('json');
             var options = {
-                url: domo_path+"/json.htm?type=command&param=switchlight&idx="+deviceId+"&switchcmd=Stop&level=0&passcode=",
+                url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Stop&level=0&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -942,9 +981,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             //console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    var data=JSON.parse(body);
+                    var data = JSON.parse(body);
                     if (data.status == 'OK') {
-                        res.status(200).send({success: true});} else {
+                        res.status(200).send({success: true});
+                    } else {
                         res.status(500).send({success: false, errormsg: data.message});
                     }
                 } else {
@@ -958,7 +998,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setSetPoint':
             res.type('json');
             var options = {
-                url: domo_path+"/json.htm?type=command&param=setsetpoint&idx="+deviceId+"used=true&setpoint="+actionParam,
+                url: domo_path + "/json.htm?type=command&param=setused&idx=" + deviceId + "used=true&setpoint=" + actionParam,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -966,9 +1006,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             //console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    var data=JSON.parse(body);
+                    var data = JSON.parse(body);
                     if (data.status == 'OK') {
-                        res.status(200).send({success: true});} else {
+                        res.status(200).send({success: true});
+                    } else {
                         res.status(500).send({success: false, errormsg: data.message});
                     }
                 } else {
@@ -978,10 +1019,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             break;
         case 'launchScene':
             res.type('json');
-            var sc=deviceId.match(/^SC(\d+)/);
+            var sc = deviceId.match(/^SC(\d+)/);
             //console.log(sc[1]);
             var options = {
-                url: domo_path+"/json.htm?type=command&param=switchscene&idx="+sc[1]+"&switchcmd=On&passcode=",
+                url: domo_path + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=On&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -989,9 +1030,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             //console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    var data=JSON.parse(body);
+                    var data = JSON.parse(body);
                     if (data.status == 'OK') {
-                        res.status(200).send({success: true});} else {
+                        res.status(200).send({success: true});
+                    } else {
                         res.status(500).send({success: false, errormsg: data.message});
                     }
                 } else {
@@ -1002,7 +1044,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setColor':
             res.type('json');
             var options = {
-                url: domo_path+"/json.htm?type=command&param=setcolorbrightnessvalue&idx="+deviceId+"&passcode=",
+                url: domo_path + "/json.htm?type=command&param=setcolorbrightnessvalue&idx=" + deviceId + "&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1010,9 +1052,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             //console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    var data=JSON.parse(body);
+                    var data = JSON.parse(body);
                     if (data.status == 'OK') {
-                        res.status(200).send({success: true});} else {
+                        res.status(200).send({success: true});
+                    } else {
                         res.status(500).send({success: false, errormsg: data.message});
                     }
                 } else {
@@ -1022,10 +1065,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             break;
         case 'setChoice':
             if (deviceId.match(/^S/)) {
-                var sc=deviceId.match(/^SC(\d+)/);
+                var sc = deviceId.match(/^SC(\d+)/);
                 res.type('json');
                 var options = {
-                    url: domo_path+"/json.htm?type=command&param=switchscene&idx="+sc[1]+"&switchcmd="+actionParam+"&passcode=",
+                    url: domo_path + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=" + actionParam + "&passcode=",
                     headers: {
                         'User-Agent': 'request'
                     }
@@ -1033,9 +1076,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                 //console.log(options.url);
                 request(options, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
-                        var data=JSON.parse(body);
+                        var data = JSON.parse(body);
                         if (data.status == 'OK') {
-                            res.status(200).send({success: true});} else {
+                            res.status(200).send({success: true});
+                        } else {
                             res.status(500).send({success: false, errormsg: data.message});
                         }
                     } else {
@@ -1044,9 +1088,45 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                 });
                 break;
             } else {
-                res.status(403).send({success:false,errormsg:'not implemented'});
+                res.type('json');
+                var level = 0;
+                switch (actionParam) {
+                    case 'Level1':
+                        level = 10;
+                        break;
+                    case 'Level2':
+                        level = 20;
+                        break;
+                    case 'Level3':
+                        level = 30;
+                        break;
+                    case 'Off'   :
+                        level = 0;
+                        break;
+                    default:
+                        break;
+                }
+                var options = {
+                    url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + level + "&passcode=",
+                    headers: {
+                        'User-Agent': 'request'
+                    }
+                };
+                //console.log(options.url);
+                request(options, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        var data = JSON.parse(body);
+                        if (data.status == 'OK') {
+                            res.status(200).send({success: true});
+                        } else {
+                            res.status(500).send({success: false, errormsg: data.message});
+                        }
+                    } else {
+                        res.status(500).send({success: false, errormsg: 'error'});
+                    }
+                });
+                break;
             }
-
         case 'setMode':
             res.status(403).send({success:false,errormsg:'not implemented'});
             break;
