@@ -26,7 +26,7 @@ var request = require("request");
 var nconf = require('nconf');
 var os = require("os");
 var moment = require('moment');
-var morgan = require('morgan')
+var morgan = require('morgan');
 var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var basicAuth = require('basic-auth');
@@ -38,10 +38,10 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.17";
+var ver="0.0.18";
 var device_tab={};
 var room_tab=[];
-var device = {MaxDimLevel : null,Action:null,graph:null};
+var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
 var app_name="MyDomoAtHome Dev";
 var domo_path    = process.env.DOMO || "http://127.0.0.1:8080";
 var port         = process.env.PORT || '3002';
@@ -52,7 +52,7 @@ app.set('view engine', 'ejs');
 var home = process.env.MDAH_HOME || path.resolve(__dirname+"/..");
 app.use(express.static(path.join(__dirname + '/public')));
 app.set('views', path.resolve(__dirname + '/views'));
-app.use(morgan('combined'))
+app.use(morgan('combined'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -156,26 +156,13 @@ function DevMultiSwitch(data) {
     params.push({"key": "LastRun", "value": dt});
     var status;
     //console.log("L:"+data.Level);
-    switch(data.Level) {
-        case 0:
-            status = 'Off';
-            break;
-        case 10:
-            status = 'Level1';
-            break;
-        case 20:
-            status = 'Level2';
-            break;
-        case 30:
-            status = 'Level3';
-            break;
-        default:
-            status = 'Off';
-            break;
-    }
-    //console.log("S:"+status);
-    params.push({"key": "Value", "value": status.toString()});
     var res=data.LevelNames.split('|').join(',');
+    var ret=data.LevelNames.split('|');
+    var mydev={MaxDimLevel : null,Action:null,graph:null,Selector:ret};
+    //console.log(mydev);
+    device_tab[data.idx]=mydev;
+    var lvl=(data.Level)/10;
+    params.push({"key": "Value", "value": ret[lvl].toString()});
     params.push({"key": "Choices", "value": res});
     myfeed.params=params;
     return(myfeed);
@@ -231,7 +218,7 @@ function DevDimmer(data) {
     var status =0;
     room_tab.Switches=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
-    console.log(data.Status);
+    //console.log(data.Status);
     status=devSt(data.idx,data.Status);
     if (data.Status.match(/Set Level/)) {
         status = 1;
@@ -646,7 +633,7 @@ function DevPressure(data) {
             var mb=data.Pressure*1000;
             params.push({"key": "Value", "value": mb, "unit": "mbar", "graphable": "true"});
         } else {
-            params.push({"key": "Value", "value": data.Pressure, "unit": "mbar", "graphable": "true"});
+            params.push({"key": "Value", "value": data.Pressure, "unit": "bar", "graphable": "true"});
         }
 
     } else {
@@ -654,7 +641,7 @@ function DevPressure(data) {
             var mb=data.Barometer*1000;
             params.push({"key": "Value", "value": mb, "unit": "mbar", "graphable": "true"});
         } else {
-            params.push({"key": "Value", "value": data.Barometer, "unit": "mbar", "graphable": "true"});
+            params.push({"key": "Value", "value": data.Barometer, "unit": "bar", "graphable": "true"});
         }
     }
 
@@ -998,7 +985,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setSetPoint':
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=setused&idx=" + deviceId + "used=true&setpoint=" + actionParam,
+                url: domo_path + "/json.htm?type=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1090,22 +1077,10 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             } else {
                 res.type('json');
                 var level = 0;
-                switch (actionParam) {
-                    case 'Level1':
-                        level = 10;
-                        break;
-                    case 'Level2':
-                        level = 20;
-                        break;
-                    case 'Level3':
-                        level = 30;
-                        break;
-                    case 'Off'   :
-                        level = 0;
-                        break;
-                    default:
-                        break;
-                }
+                //console.log(device_tab[deviceId].Selector);
+                //console.log(device_tab[deviceId].Selector.indexOf(actionParam));
+                level=device_tab[deviceId].Selector.indexOf(actionParam)*10;
+                //console.log("level="+level);
                 var options = {
                     url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + level + "&passcode=",
                     headers: {
