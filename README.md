@@ -1,4 +1,4 @@
-# MyDomoAtHome
+# MyDomoAtHome nodeJS
 DOMO/REST Gateway between Domoticz and Imperihome ISS
 
 [![NPM Version][npm-image]][npm-url]
