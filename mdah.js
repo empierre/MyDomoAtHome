@@ -38,7 +38,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.18";
+var ver="0.0.19";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
@@ -446,6 +446,71 @@ function DevElectricity(data) {
             total = Math.ceil(Number(res[1]));
         }
         params.push({"key": "Watts", "value": total.toString(),"unit": "W","graphable":"true"});
+    }
+
+    myfeed.params=params;
+    return(myfeed);
+}
+function DevCounterIncremental(data) {
+    room_tab.Utility=1;
+    var ptrn1= /(\d+) Watt/;
+    var ptrn2= /([0-9]+(?:\.[0-9]+)?) /;
+    var ptrn3= /[\s,]+/;
+
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+    var params=[];
+    var unit;
+    switch(data.SwitchTypeVal) {
+        case '0':
+            //energy
+            unit='kWh';
+            break;
+        case '1':
+            //gas
+            unit='m3';
+            break;
+        case '2':
+            //water
+            unit='m3';
+            break;
+        case '3':
+            //counter free
+            unit=data.ValueUnits.toString();
+            break;
+        case '4':
+            //energy generated
+            unit='kWh';
+            break;
+        default:
+            break;
+    }
+
+    if (data.Counter) {
+        var res = data.CounterToday;
+        var usage = 0;
+        if (res != null) {
+            usage = res;
+        }
+        if (!usage) {
+            usage = 0;
+        }
+        params.push({"key": "Watts", "value": usage, "unit": unit});
+        if (data.Counter) {
+            var res = ptrn2.exec(data.Counter);
+            console.log(res[1]);
+            var total = 0;
+            if (res != null) {
+                total = Math.ceil(Number(res[1]));
+            }
+            params.push({"key": "ConsoTotal", "value": total.toString(),"unit": unit,"graphable":"true"});
+        }
+    } else {
+        var res = ptrn2.exec(data.Data);
+        var total = 0;
+        if (res != null) {
+            total = Math.ceil(Number(res[1]));
+        }
+        params.push({"key": "Watts", "value": total.toString(),"unit": unit,"graphable":"true"});
     }
 
     myfeed.params=params;
@@ -1389,6 +1454,9 @@ app.get("/devices", function(req, res){
                             break;
                         case 'Sound Level':
                             result.push(DevNoise(data.result[i]));
+                            break;
+                        case 'Counter Incremental':
+                            result.push(DevCounterIncremental(data.result[i]));
                             break;
                         default:
                             console.log("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
