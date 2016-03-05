@@ -393,7 +393,7 @@ function DevGenericSensor(data) {
         myfeed.params = params;
     } else {
         params=[];
-        console.log(data;)
+        //console.log(data;)
         params.push({"key": "Value", "value": data.Data.toString()});
         myfeed.params = params;
     }

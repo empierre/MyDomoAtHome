@@ -20,7 +20,7 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 M2 milestone will provide extended support to other platforms with Docker and Synology 
 - [X] Free
 - [X] Multi-platform (Linux, Mac OS X, Windows)
-- [-] Micro-services (Docker)
+- [X] Micro-services (Docker)
 - [ ] Synology package
   - [ ] Synology hosted package
 - [-] Debian package 
@@ -121,7 +121,7 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
     
 ### Stoping a docker process
 
-    docker stop DOCKER_ID //(found from the docker ps)
+    docker stop mdah 
   
 # Testing the installation
   - Check the domoticz is accessible from the hosting machine:
