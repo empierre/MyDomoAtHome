@@ -393,6 +393,7 @@ function DevGenericSensor(data) {
         myfeed.params = params;
     } else {
         params=[];
+        console.log(data;)
         params.push({"key": "Value", "value": data.Data.toString()});
         myfeed.params = params;
     }
@@ -497,7 +498,7 @@ function DevCounterIncremental(data) {
         params.push({"key": "Watts", "value": usage, "unit": unit});
         if (data.Counter) {
             var res = ptrn2.exec(data.Counter);
-            console.log(res[1]);
+            //console.log(res[1]);
             var total = 0;
             if (res != null) {
                 total = Math.ceil(Number(res[1]));
