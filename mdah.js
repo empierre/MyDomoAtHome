@@ -437,9 +437,7 @@ function DevElectricity(data) {
             if (res != null) {
                 total = Math.ceil(Number(res[1]));
             }
-            params.push({"key": "ConsoTotal", "value": total.toString()});
-            params.push({"key": "unit", "value": "kWh"});
-            params.push({"key": "graphable", "value": "true"});
+            params.push({"key": "ConsoTotal", "value": total.toString(),"unit": "kWh","graphable":"true"});
         }
     } else {
         var res = ptrn2.exec(data.Data);
@@ -447,9 +445,7 @@ function DevElectricity(data) {
         if (res != null) {
             total = Math.ceil(Number(res[1]));
         }
-        params.push({"key": "Watts", "value": total.toString()});
-        params.push({"key": "unit", "value": "W"});
-        params.push({"key": "graphable", "value": "true"});
+        params.push({"key": "Watts", "value": total.toString(),"unit": "W","graphable":"true"});
     }
 
     myfeed.params=params;
@@ -495,13 +491,13 @@ function DevElectricityMultiple(data) {
 }
 function DevGas(data) {
     room_tab.Utility=1;
-    var ptrn1= /(\d+) m3/;
+    var ptrn1= /([0-9]+(?:\.[0-9]+)?) m3/;
     var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
     var ptrn3= /[\s,]+/;
 
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
     var params=[];
-    if (data.CounterToday>0) {
+    if (data.CounterToday) {
         var res= ptrn1.exec(data.CounterToday);
         var usage=0;
         if (res != null) {usage=res[1]}
@@ -509,16 +505,13 @@ function DevGas(data) {
         if (!usage) {
             usage = 0;
         }
-        params.push({"key": "Watts", "value": usage.toString()});
-        params.push({"key": "unit", "value": "m3"});
+        params.push({"key": "Watts", "value": usage.toString(),"unit":"m3"});
     }
     if (data.Data) {
         var res=ptrn2.exec(data.Counter);
         var total=0;
         if (res != null) {total = Math.ceil(res[1]);}
-        params.push({"key": "ConsoTotal", "value": total.toString()});
-        params.push({"key": "unit", "value": "m3"});
-        params.push({"key": "graphable", "value": "true"});
+        params.push({"key": "ConsoTotal", "value": total.toString(),"unit":"m3"});
     }
     myfeed.params=params;
     return(myfeed);
@@ -548,7 +541,7 @@ function DevWater(data) {
         var res=ptrn2b.exec(data.Counter);
         var total=0;
         if (res != null) {total = Number(res[1]);}
-        params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "m3", "graphable": true});
+        params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "m3", "graphable": "true"});
     }
     myfeed.params=params;
     //combo.push(myfeed);
@@ -569,14 +562,14 @@ function DevFlow(data) {
     var combo=[];
     var usage_l=0;
 
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
     var params=[];
 
     var res=ptrn4.exec(data.Data);
     //console.log(res[1]);
     var total=0;
     if (res != null) {total = Number(res[1]);}
-    params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "l/s", "graphable":true});
+    params.push({"key": "Value", "value": total.toString(), "unit": "l/s", "graphable":true});
     myfeed.params=params;
     return(myfeed);
 }
