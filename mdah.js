@@ -1180,24 +1180,25 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, 
     var enddate = req.params.enddate;
     var duration = (enddate - startdate) / 1000;
 
-    var PLine;
+    var PLine='';
     if (deviceId.match(/L/)) {
         var pid;
         pid = deviceId.match(/(\d+)_L(.)/);
         deviceId = pid[0];
-        PLine = pid[1];
+        PLine = pid[1]||'';
     }
     var type = getDeviceType(deviceId).toLowerCase();
-    var ptype = type;
+    var ptype = type;var curl="&method=1";;
 
     if ((type === "lux") || (type === "energy")) {
-        type = "counter";
+        type = "counter";curl="&method=1";
     }
     if (type === "air quality") {
         type = "counter";
     }
     if ((ptype === "general")) {
-        type = "Percentage";
+        //type = "Percentage";
+        type = "counter";
     }
     if ((paramKey === "hygro")) {
         type = "temp";
@@ -1221,7 +1222,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, 
     }
     res.type('json');
     var options = {
-        url: domo_path + "/json.htm?type=graph&sensor="+type+"&idx="+deviceId+"&range="+range,
+        url: domo_path + "/json.htm?type=graph&sensor="+type+curl+"&idx="+deviceId+"&range="+range,
         headers: {
             'User-Agent': 'request'
         }
@@ -1231,15 +1232,86 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, 
         if (!error && response.statusCode == 200) {
             var data = JSON.parse(body);
             var result = [];
+            var params=[];
+            var lastEu;
+            //TODO: http://192.168.0.28:8080/json.htm?type=graph&sensor=humidity&idx=243&range=day
+            console.log(data);
+            if (! data.result) {
+                var feeds = {"date": startdate, "value": 0};
+                params.push(feeds);
+                var rest = {};
+                rest.values = params;
+                res.json(rest);
+            }
             for (var i = 0; i < data.result.length; i++) {
-                //console.log(data.result[i].Type);
-                /*switch (data.result[i].Type) {
-                    case (data.result[i].Type.match(/Lighting/) || {}).input:
-                    default:
-                }*/
+                //console.log(data.result[i].lux);
+                if ((paramKey === "temp") && (data.result[i].te)) {
+                    var value = data.result[i].te;
+                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    var feeds = {"date": dt, "value": value};
+                    params.push(feeds);
+                } else if (((paramKey === "hygro") && (data.result[i].hu)) || (type === "Humidity")) {
+                    var value = data.result[i].hu;
+                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    var feeds = {"date": dt, "value": value};
+                    params.push(feeds);
+                } else if (ptype === "air quality") {
+                    var value = data.result[i].co2;
+                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    var feeds = {"date": dt, "value": value};
+                    params.push(feeds);
+                } else if (data.result[i].mm) {
+                    var value = data.result[i].mm;
+                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    var feeds = {"date": dt, "value": value};
+                    params.push(feeds);
+                } else if ((data.result[i].lux)||(data.result[i].lux_max)) {
+                    var value = (data.result[i].lux||(data.result[i].lux_max));
+                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    var feeds = {"date": dt, "value": value};
+                    params.push(feeds);
+                } else if (data.result[i].uvi) {
+                    var value = data.result[i].uvi;
+                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    var feeds = {"date": dt, "value": value};
+                    params.push(feeds);
+                } else if (data.result[i].v) {
+                    var value = data.result[i].v;
+                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    var feeds = {"date": dt, "value": value};
+                    params.push(feeds);
+                } else if (data.result[i].sp) {
+                    var value = data.result[i].sp;
+                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    var feeds = {"date": dt, "value": value};
+                    params.push(feeds);
+                } else if ((type === "counter") || (type === "Percentage")) {
+                    var value;
+                    if (PLine) {
+                        value = eval(data.result[i] + ".v" + PLine);
+                    } else {
+                        value=(data.result[i].v||data.result[i].v_max);
+                    }
+                    if (data.result[i].v2) {
+                        value = value + data.result[i].v2;
+                    }
+                    var date = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    if (data.result[i].eu) {
+                        if ((value > 0) || ((data.result[i].eu - lastEu) > 0)) {
+                            var feeds = {"date": date, "value": value};
+                            params.push(feeds);
+                        }
+                        lastEu = data.result[i].eu;
+                    } else {
+                        var feeds = {"date": date, "value": value};
+                        params.push(feeds);
+                    }
+                } else {
+                    console.log("UNK");
+                }
             }
             var rest = {};
-            rest.devices = result;
+            rest.values = params;
             res.json(rest);
         } else {
             //TODO
