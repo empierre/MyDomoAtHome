@@ -1,4 +1,4 @@
-# MyDomoAtHome
+# MyDomoAtHome Legacy
 DOMO/REST Gateway between Domoticz and Imperihome ISS
 
 ![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
@@ -77,17 +77,22 @@ The default port is now 3001.
 ## Docker installation
 
 ### Duplicate the image
-    docker pull epierre/mydomoathome
+
+    docker pull epierre/mdah
     
 ### Launch the process
 Remember to change the IP below and authorize in Domoticz the docker IP range
-    docker run --name=mydomoathome --env domo_path="http://ip:8080" -it --rm -p 3001:3001 epierre/mydomoathome
+
+    docker run --name=mdah --env DOMO="http://your_ip:8080" -it --rm -p 3002:3002 epierre/mdah
 
 ### Check running docker processes
+
     docker ps
     
 ### Stoping a docker process
-    docker stop DOCKER_ID (found from the docler ps)
+
+    docker stop mdah 
+  
   
 # Testing the installation
   - Check the domoticz is accessible from the hosting machine:
