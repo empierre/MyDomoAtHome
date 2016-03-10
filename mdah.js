@@ -288,6 +288,7 @@ function DevShutterInverted(data) {
     //console.log(data.Status+" "+data.Level);
     if (data.Status === 'Open') {
         lvl=data.Level;
+        if (lvl==0) {lvl=100;}
         status=1;
     } else if (data.Status.match(/Set Level/)) {
         var ptrn2= /(Set Level: (\d+)%/;
@@ -295,9 +296,10 @@ function DevShutterInverted(data) {
         //console.log(data.status+" "+lvl);
         if (lvl>0) {status=1} else {status=0};
     } else {
-        lvl=0;
+        lvl=100;
         status=0;
     };
+    console.log(data.idx+" "+status+" "+lvl);
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
     params=[];
     params.push({"key": "Status", "value": status});
@@ -305,6 +307,7 @@ function DevShutterInverted(data) {
     params.push({"key": "stoppable", "value": "1"});
     params.push({"key": "pulsable", "value": "0"});
     myfeed.params=params;
+    console.log(params);
     return(myfeed);
 };
 function DevShutter(data) {
@@ -334,7 +337,7 @@ function DevShutter(data) {
     params=[];
     params.push({"key": "Status", "value": status});
     params.push({"key": "Level", "value": lvl.toString()});
-    params.push({"key": "stoppable", "value": "1"});
+    params.push({"key": "stoppable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "0"});
 
     myfeed.params=params;
