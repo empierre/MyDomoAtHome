@@ -328,7 +328,7 @@ function DevShutter(data) {
         //console.log(data.status+" "+lvl);
         if (lvl>0) {status=1} else {status=0};
     } else {
-        lvl=0;
+        lvl=data.Level||0;
         status=0;
     };
     //console.log(data.idx+" "+status+" "+lvl);
