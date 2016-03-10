@@ -296,10 +296,10 @@ function DevShutterInverted(data) {
         //console.log(data.status+" "+lvl);
         if (lvl>0) {status=1} else {status=0};
     } else {
-        lvl=100;
+        lvl=0;
         status=0;
     };
-    console.log(data.idx+" "+status+" "+lvl);
+    //console.log(data.idx+" "+status+" "+lvl);
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
     params=[];
     params.push({"key": "Status", "value": status});
@@ -307,7 +307,7 @@ function DevShutterInverted(data) {
     params.push({"key": "stoppable", "value": "1"});
     params.push({"key": "pulsable", "value": "0"});
     myfeed.params=params;
-    console.log(params);
+    //console.log(params);
     return(myfeed);
 };
 function DevShutter(data) {
