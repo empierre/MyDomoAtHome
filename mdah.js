@@ -243,9 +243,15 @@ function DevShutterInverted(data) {
     if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
     mydev.Action=5;
     device_tab[data.idx]=mydev;
-    if (data.Status == 'Open') {
-        lvl=100;
+    //console.log(data.Status+" "+data.Level);
+    if (data.Status === 'Open') {
+        lvl=data.Level;
         status=1;
+    } else if (data.Status.match(/Set Level/)) {
+        var ptrn2= /(Set Level: (\d+)%/;
+        lvl = ptrn2.exec(data.Status);
+        //console.log(data.status+" "+lvl);
+        if (lvl>0) {status=1} else {status=0};
     } else {
         lvl=0;
         status=0;
@@ -268,13 +274,19 @@ function DevShutter(data) {
     if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
     mydev.Action=6;
     device_tab[data.idx]=mydev;
+    //console.log(data.Status+" "+data.Level);
     if (data.Status == 'Open') {
-        lvl=100;
+        lvl=data.Level||100;
         status=1;
+    } else if (data.Status.match(/Set Level/)) {
+        lvl = data.Level;
+        //console.log(data.status+" "+lvl);
+        if (lvl>0) {status=1} else {status=0};
     } else {
         lvl=0;
         status=0;
     };
+    //console.log(data.idx+" "+status+" "+lvl);
     if ((data.SwitchType == 'Venetian Blinds EU')||(data.SwitchType == 'Venetian Blinds US')||(data.SwitchType == 'RollerTrol, Hasta new')) {stoppable=1;}
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
     params=[];
@@ -487,14 +499,16 @@ function DevCounterIncremental(data) {
     }
 
     if (data.Counter) {
-        var res = data.CounterToday;
+        var res = ptrn2.exec(data.CounterToday);
         var usage = 0;
         if (res != null) {
-            usage = res;
+            usage = Math.ceil(Number(res[1]));
         }
         if (!usage) {
             usage = 0;
         }
+        res = Math.ceil(usage);
+        //console.log("T1 "+data.CounterToday);
         params.push({"key": "Watts", "value": usage, "unit": unit});
         if (data.Counter) {
             var res = ptrn2.exec(data.Counter);
@@ -503,6 +517,7 @@ function DevCounterIncremental(data) {
             if (res != null) {
                 total = Math.ceil(Number(res[1]));
             }
+            //console.log("T2"+total);
             params.push({"key": "ConsoTotal", "value": total.toString(),"unit": unit,"graphable":"true"});
         }
     } else {
@@ -511,6 +526,7 @@ function DevCounterIncremental(data) {
         if (res != null) {
             total = Math.ceil(Number(res[1]));
         }
+        //console.log(total);
         params.push({"key": "Watts", "value": total.toString(),"unit": unit,"graphable":"true"});
     }
 
