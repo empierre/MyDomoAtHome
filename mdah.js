@@ -100,27 +100,69 @@ function devSt(deviceId,Status) {
 	switch (Status) {
         case "On":
             rbl=1;
-            //device_tab[deviceId].Action=1;
+            var mydev=device_tab[deviceId];
+            if (mydev) {
+                mydev.Action=1;
+                device_tab[deviceId]=mydev;
+            } else {
+                mydev={MaxDimLevel : null,Action:1,graph:null,Selector:null};
+            }
+            device_tab[deviceId]=mydev;
             break;
 		case "Off":
             rbl=0;
-            //device_tab[deviceId].Action=1;
+            var mydev=device_tab[deviceId];
+            if (mydev) {
+                mydev.Action=1;
+                device_tab[deviceId]=mydev;
+            } else {
+                mydev={MaxDimLevel : null,Action:1,graph:null,Selector:null};
+            }
+            device_tab[deviceId]=mydev;
             break;
 		case "Open":
             rbl=1;
-            //device_tab[deviceId].Action=2;
+            var mydev=device_tab[deviceId];
+            if (mydev) {
+                mydev.Action=1;
+                device_tab[deviceId]=mydev;
+            } else {
+                mydev={MaxDimLevel : null,Action:2,graph:null,Selector:null};
+            }
+            device_tab[deviceId]=mydev;
             break;
 		case "Closed":
             rbl=0;
-            //device_tab[deviceId].Action=2;
+            var mydev=device_tab[deviceId];
+            if (mydev) {
+                mydev.Action=1;
+                device_tab[deviceId]=mydev;
+            } else {
+                mydev={MaxDimLevel : null,Action:2,graph:null,Selector:null};
+            }
+            device_tab[deviceId]=mydev;
             break;
         case "Panic":
             rbl=1;
-            //device_tab[deviceId].Action=3;
+            var mydev=device_tab[deviceId];
+            if (mydev) {
+                mydev.Action=1;
+                device_tab[deviceId]=mydev;
+            } else {
+                mydev={MaxDimLevel : null,Action:3,graph:null,Selector:null};
+            }
+            device_tab[deviceId]=mydev;
             break;
 		case "Normal":
             rbl=0;
-            //device_tab[deviceId].Action=3;
+            var mydev=device_tab[deviceId];
+            if (mydev) {
+                mydev.Action=1;
+                device_tab[deviceId]=mydev;
+            } else {
+                mydev={MaxDimLevel : null,Action:3,graph:null,Selector:null};
+            }
+            device_tab[deviceId]=mydev;
             break;
 		default: rbl=Status;break;
 	}
@@ -972,6 +1014,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setLevel':
             var my_url;
             var lsetLevel;
+            console.log(device_tab[deviceId]);
             switch (device_tab[deviceId].Action) {
                 case 1:
                     if (actionParam == 1) {
@@ -1003,7 +1046,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     if (actionParam == 100) {
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + actionParam + "&passcode=";
                     } else {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + actionParam + "&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
                     }
                     break;
                 default:
@@ -1018,7 +1061,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     'User-Agent': 'request'
                 }
             };
-            //console.log(options.url);
+            console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
