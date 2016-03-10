@@ -4,6 +4,7 @@ if [ $# -eq 0 ]
     echo "No arguments supplied"
 fi
 git commit -a
+git push
 npm version $1
 ver=$1
 perl -pi -e "s/Version: .*/Version: ${ver}/g" packaging/mdah/deb-src/DEBIAN/control
