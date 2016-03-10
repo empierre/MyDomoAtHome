@@ -287,8 +287,7 @@ function DevShutterInverted(data) {
     device_tab[data.idx]=mydev;
     //console.log(data.Status+" "+data.Level);
     if (data.Status === 'Open') {
-        lvl=data.Level;
-        if (lvl==0) {lvl=100;}
+        lvl=data.Level||100;
         status=1;
     } else if (data.Status.match(/Set Level/)) {
         var ptrn2= /(Set Level: (\d+)%/;
@@ -296,7 +295,7 @@ function DevShutterInverted(data) {
         //console.log(data.status+" "+lvl);
         if (lvl>0) {status=1} else {status=0};
     } else {
-        lvl=0;
+        lvl=data.Level||0;
         status=0;
     };
     //console.log(data.idx+" "+status+" "+lvl);
@@ -471,43 +470,73 @@ function DevGenericSensorT(data) {
     return (myfeed);
 };
 function DevElectricity(data) {
-    room_tab.Utility=1;
-    var ptrn1= /(\d+) Watt/;
-    var ptrn2= /([0-9]+(?:\.[0-9]+)?) Watt/;
-    var ptrn3= /[\s,]+/;
+    room_tab.Utility = 1;
+    var ptrn1 = /(\d+) Watt/;
+    var ptrn2 = /([0-9]+(?:\.[0-9]+)?) Watt/;
+    var ptrn3 = /[\s,]+/;
 
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
-    var params=[];
-    if (data.Usage) {
-        var res = ptrn2.exec(data.Usage);
-        var usage = 0;
-        if (res != null) {
-            usage = res[1]
-        }
+    var myfeed;
+    var params = [];var combo = [];
+    if (data.UsageDeliv) {
+        //Energy pannel
+        //develectricity Counter/Usage
+        myfeed= {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        params.push({"key": "Watts", "value": data.Usage.toString(), "unit": "W"});
+        params.push({"key": "ConsoTotal", "value": data.Counter.toString(), "unit": "kWh", "graphable": "true"});
+        myfeed.params=params;
+        combo.push(myfeed);
+        //develectricity CounterDeliv/UsageDeliv
+        params=[];
+        myfeed= {"id": data.idx, "name": data.Name+ "Deliv", "type": "DevElectricity", "room": "Utility"};
+        params.push({"key": "Watts", "value": data.UsageDeliv.toString(), "unit": "W"});
+        params.push({"key": "ConsoTotal", "value": data.CounterDeliv.toString(), "unit": "kWh", "graphable": "true"});
+        myfeed.params=params;
+        combo.push(myfeed);
+        //devgeneric for CounterToday/CounterDelivToday
+        params=[];
+        myfeed= {"id": data.idx, "name": data.Name+" CounterToday", "type": "DevGenericSensor", "room": "Utility"};
+        params.push({"key": "Value", "value": data.CounterToday.toString(), "unit": "kWh", "graphable": "true"});
+        myfeed.params=params;
+        combo.push(myfeed);
+        params=[];
+        myfeed= {"id": data.idx, "name": data.Name+" CounterDelivToday", "type": "DevGenericSensor", "room": "Utility"};
+        params.push({"key": "Value", "value": data.CounterDelivToday.toString(), "unit": "kWh", "graphable": "true"});
+        myfeed.params=params;
+        combo.push(myfeed);
+        return(combo);
 
-        if (!usage) {
-            usage = 0;
-        }
-        params.push({"key": "Watts", "value": usage, "unit": "W"});
-        if (data.Data) {
+    } else {
+        myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        if (data.Usage) {
+            var res = ptrn2.exec(data.Usage);
+            var usage = 0;
+            if (res != null) {
+                usage = res[1]
+            }
+
+            if (!usage) {
+                usage = 0;
+            }
+            params.push({"key": "Watts", "value": usage, "unit": "W"});
+            if (data.Data) {
+                var res = ptrn2.exec(data.Data);
+                var total = 0;
+                if (res != null) {
+                    total = Math.ceil(Number(res[1]));
+                }
+                params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "kWh", "graphable": "true"});
+            }
+        } else {
             var res = ptrn2.exec(data.Data);
             var total = 0;
             if (res != null) {
                 total = Math.ceil(Number(res[1]));
             }
-            params.push({"key": "ConsoTotal", "value": total.toString(),"unit": "kWh","graphable":"true"});
+            params.push({"key": "Watts", "value": total.toString(), "unit": "W", "graphable": "true"});
         }
-    } else {
-        var res = ptrn2.exec(data.Data);
-        var total = 0;
-        if (res != null) {
-            total = Math.ceil(Number(res[1]));
-        }
-        params.push({"key": "Watts", "value": total.toString(),"unit": "W","graphable":"true"});
+        myfeed.params=params;
+        return(myfeed);
     }
-
-    myfeed.params=params;
-    return(myfeed);
 }
 function DevCounterIncremental(data) {
     room_tab.Utility=1;
