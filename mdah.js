@@ -38,7 +38,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.19";
+var ver="0.0.23";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
@@ -480,31 +480,61 @@ function DevElectricity(data) {
     if (data.UsageDeliv) {
         //Energy pannel
         //develectricity Counter/Usage
-        myfeed= {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
-        params.push({"key": "Watts", "value": data.Usage.toString(), "unit": "W"});
-        params.push({"key": "ConsoTotal", "value": data.Counter.toString(), "unit": "kWh", "graphable": "true"});
+        var myfeed= {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var params = []
+        //console.log(data.Usage+" "+data.Counter);
+        var res = ptrn2.exec(data.Usage);
+        var usage = 0;
+        if (res != null) {
+            usage = Math.ceil(Number(res[1]));
+        }
+        //console.log(usage+" "+data.Counter);
+        params.push({"key": "Watts", "value": usage, "unit": "W"});
+        params.push({"key": "ConsoTotal", "value": Math.ceil(Number(data.Counter)), "unit": "kWh", "graphable": "true"});
         myfeed.params=params;
         combo.push(myfeed);
+        //console.log(combo);
         //develectricity CounterDeliv/UsageDeliv
-        params=[];
-        myfeed= {"id": data.idx, "name": data.Name+ "Deliv", "type": "DevElectricity", "room": "Utility"};
-        params.push({"key": "Watts", "value": data.UsageDeliv.toString(), "unit": "W"});
-        params.push({"key": "ConsoTotal", "value": data.CounterDeliv.toString(), "unit": "kWh", "graphable": "true"});
+        var params=[];
+        var myfeed= {"id": data.idx, "name": data.Name+ "Deliv", "type": "DevElectricity", "room": "Utility"};
+        //console.log(data.UsageDeliv+" "+data.CounterDeliv);
+        var res = ptrn2.exec(data.UsageDeliv);
+        var usagedeliv = 0;
+        if (res != null) {
+            usagedeliv = Math.ceil(Number(res[1]));
+        }
+        //console.log(usage+" "+data.Counter);
+        params.push({"key": "Watts", "value": usagedeliv, "unit": "W"});
+        params.push({"key": "ConsoTotal", "value": Math.ceil(Number(data.CounterDeliv)), "unit": "kWh", "graphable": "true"});
         myfeed.params=params;
         combo.push(myfeed);
+        //console.log(combo);
         //devgeneric for CounterToday/CounterDelivToday
-        params=[];
-        myfeed= {"id": data.idx, "name": data.Name+" CounterToday", "type": "DevGenericSensor", "room": "Utility"};
-        params.push({"key": "Value", "value": data.CounterToday.toString(), "unit": "kWh", "graphable": "true"});
+        var params=[];
+        console.log(data.CounterToday);
+        console.log(data.CounterDelivToday);
+        var myfeed= {"id": data.idx, "name": data.Name+" CounterToday", "type": "DevGenericSensor", "room": "Utility"};
+        var res = ptrn2.exec(data.CounterToday);
+        var CounterToday = 0;
+        if (res != null) {
+            CounterToday = Math.ceil(Number(res[1]));
+        }
+        //console.log(usage+" "+data.Counter);
+        params.push({"key": "Value", "value": CounterToday, "unit": "kWh", "graphable": "true"});
         myfeed.params=params;
         combo.push(myfeed);
-        params=[];
-        myfeed= {"id": data.idx, "name": data.Name+" CounterDelivToday", "type": "DevGenericSensor", "room": "Utility"};
-        params.push({"key": "Value", "value": data.CounterDelivToday.toString(), "unit": "kWh", "graphable": "true"});
+        var params=[];
+        var myfeed= {"id": data.idx, "name": data.Name+" CounterDelivToday", "type": "DevGenericSensor", "room": "Utility"};
+        var res = ptrn2.exec(data.CounterDelivToday);
+        var CounterDelivToday = 0;
+        if (res != null) {
+            CounterDelivToday = Math.ceil(Number(res[1]));
+        }
+        //console.log(usage+" "+data.Counter);
+        params.push({"key": "Value", "value": Math.ceil(Number(data.CounterDelivToday)), "unit": "kWh", "graphable": "true"});
         myfeed.params=params;
         combo.push(myfeed);
         return(combo);
-
     } else {
         myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
         if (data.Usage) {
@@ -537,6 +567,44 @@ function DevElectricity(data) {
         myfeed.params=params;
         return(myfeed);
     }
+}
+function DevElectricityMultiple(data) {
+    room_tab.Utility=1;
+    var ptrn1= /(\d+) Watt/;
+    var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
+    var ptrn3= /[\s,]+/;
+    var combo=[];
+
+    var res=data.Data.split(ptrn3);
+    var usage=0;
+    if (res != null) {
+        //L1
+        usage=res[0];
+        var myfeed = {"id": data.idx+"_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var params=[];
+        params.push({"key": "Watts", "value": usage.toString()});
+        params.push({"key": "unit", "value": "W"});
+
+        myfeed.params=params;
+        combo.push(myfeed);
+        //L2
+        usage=res[2];
+        var myfeed = {"id": data.idx+"_L2", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var params=[];
+        params.push({"key": "Watts", "value": usage.toString()});
+        params.push({"key": "unit", "value": "W"});;
+        myfeed.params=params;
+        combo.push(myfeed);
+        //L3
+        usage=res[4];
+        var myfeed = {"id": data.idx+"_L3", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var params=[];
+        params.push({"key": "Watts", "value": usage.toString()});
+        params.push({"key": "unit", "value": "W"});
+        myfeed.params=params;
+        combo.push(myfeed);
+    }
+    return(combo);
 }
 function DevCounterIncremental(data) {
     room_tab.Utility=1;
@@ -606,44 +674,6 @@ function DevCounterIncremental(data) {
 
     myfeed.params=params;
     return(myfeed);
-}
-function DevElectricityMultiple(data) {
-    room_tab.Utility=1;
-    var ptrn1= /(\d+) Watt/;
-    var ptrn2= /([0-9]+(?:\.[0-9]+)?)/;
-    var ptrn3= /[\s,]+/;
-    var combo=[];
-
-    var res=data.Data.split(ptrn3);
-    var usage=0;
-    if (res != null) {
-        //L1
-        usage=res[0];
-        var myfeed = {"id": data.idx+"_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
-        var params=[];
-        params.push({"key": "Watts", "value": usage.toString()});
-        params.push({"key": "unit", "value": "W"});
-
-        myfeed.params=params;
-        combo.push(myfeed);
-        //L2
-        usage=res[2];
-        var myfeed = {"id": data.idx+"_L2", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
-        var params=[];
-        params.push({"key": "Watts", "value": usage.toString()});
-        params.push({"key": "unit", "value": "W"});;
-        myfeed.params=params;
-        combo.push(myfeed);
-        //L3
-        usage=res[4];
-        var myfeed = {"id": data.idx+"_L3", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
-        var params=[];
-        params.push({"key": "Watts", "value": usage.toString()});
-        params.push({"key": "unit", "value": "W"});
-        myfeed.params=params;
-        combo.push(myfeed);
-    }
-    return(combo);
 }
 function DevGas(data) {
     room_tab.Utility=1;
@@ -1508,7 +1538,10 @@ app.get("/devices", function(req, res){
                 case 'P1 Smart Meter':
                     switch(data.result[i].SubType) {
                         case 'Energy':
-                            result.push(DevElectricity(data.result[i]));
+                            var rt=DevElectricity(data.result[i]);
+                            for(var ii = 0; ii < rt.length; ii++) {
+                                result.push(rt[ii]);
+                            }
                             break;
                         case 'Gas':
                             result.push(DevGas(data.result[i]));
