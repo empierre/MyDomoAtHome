@@ -485,7 +485,7 @@ function DevElectricity(data) {
     if (data.UsageDeliv) {
         //Energy pannel
         //develectricity Counter/Usage
-        var myfeed= {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var myfeed1= {"id": data.idx+"_1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
         var params = []
         //console.log(data.Usage+" "+data.Counter);
         var res = ptrn2.exec(data.Usage);
@@ -496,12 +496,12 @@ function DevElectricity(data) {
         //console.log(usage+" "+data.Counter);
         params.push({"key": "Watts", "value": usage, "unit": "W"});
         params.push({"key": "ConsoTotal", "value": Math.ceil(Number(data.Counter)), "unit": "kWh", "graphable": "true"});
-        myfeed.params=params;
-        combo.push(myfeed);
+        myfeed1.params=params;
+        combo.push(myfeed1);
         //console.log(combo);
         //develectricity CounterDeliv/UsageDeliv
         var params=[];
-        var myfeed= {"id": data.idx, "name": data.Name+ "Deliv", "type": "DevElectricity", "room": "Utility"};
+        var myfeed2= {"id": data.idx+"_2", "name": data.Name+ "Deliv", "type": "DevElectricity", "room": "Utility"};
         //console.log(data.UsageDeliv+" "+data.CounterDeliv);
         var res = ptrn2.exec(data.UsageDeliv);
         var usagedeliv = 0;
@@ -511,14 +511,13 @@ function DevElectricity(data) {
         //console.log(usage+" "+data.Counter);
         params.push({"key": "Watts", "value": usagedeliv, "unit": "W"});
         params.push({"key": "ConsoTotal", "value": Math.ceil(Number(data.CounterDeliv)), "unit": "kWh", "graphable": "true"});
-        myfeed.params=params;
-        combo.push(myfeed);
+        myfeed2.params=params;
+        combo.push(myfeed2);
         //console.log(combo);
         //devgeneric for CounterToday/CounterDelivToday
         var params=[];
-        console.log(data.CounterToday);
-        console.log(data.CounterDelivToday);
-        var myfeed= {"id": data.idx, "name": data.Name+" CounterToday", "type": "DevGenericSensor", "room": "Utility"};
+        //console.log(data.CounterToday);
+        var myfeed3= {"id": data.idx+"_3", "name": data.Name+" CounterToday", "type": "DevGenericSensor", "room": "Utility"};
         var res = ptrn2.exec(data.CounterToday);
         var CounterToday = 0;
         if (res != null) {
@@ -526,19 +525,20 @@ function DevElectricity(data) {
         }
         //console.log(usage+" "+data.Counter);
         params.push({"key": "Value", "value": CounterToday, "unit": "kWh", "graphable": "true"});
-        myfeed.params=params;
-        combo.push(myfeed);
+        myfeed3.params=params;
+        combo.push(myfeed3);
+        console.log(data.CounterDelivToday);
         var params=[];
-        var myfeed= {"id": data.idx, "name": data.Name+" CounterDelivToday", "type": "DevGenericSensor", "room": "Utility"};
+        var myfeed4= {"id": data.idx+"_4", "name": data.Name+" CounterDelivToday", "type": "DevGenericSensor", "room": "Utility"};
         var res = ptrn2.exec(data.CounterDelivToday);
         var CounterDelivToday = 0;
         if (res != null) {
             CounterDelivToday = Math.ceil(Number(res[1]));
         }
-        //console.log(usage+" "+data.Counter);
-        params.push({"key": "Value", "value": Math.ceil(Number(data.CounterDelivToday)), "unit": "kWh", "graphable": "true"});
-        myfeed.params=params;
-        combo.push(myfeed);
+        console.log(usage+" "+data.CounterDelivToday);
+        params.push({"key": "Value", "value": Math.ceil(Number(CounterDelivToday)), "unit": "kWh", "graphable": "false"});
+        myfeed4.params=params;
+        combo.push(myfeed4);
         return(combo);
     } else {
         myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -1659,6 +1659,9 @@ app.get("/devices", function(req, res){
                             break;
                         case 'Counter Incremental':
                             result.push(DevCounterIncremental(data.result[i]));
+                            break;
+                        case 'Generic Sensor':
+                            result.push(DevGenericSensor(data.result[i]));
                             break;
                         default:
                             console.log("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
