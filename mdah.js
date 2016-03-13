@@ -60,7 +60,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // load conf file
 nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
     if (err) {
-        console.error("No conf:"+err.message);
+        console.error("No conf in etc:"+err.message);
+        return;
+    }});
+nconf.use('file', { file: './config.json' },function (err) {
+    if (err) {
+        console.error("No local conf:"+err.message);
         return;
     }});
 nconf.load();
