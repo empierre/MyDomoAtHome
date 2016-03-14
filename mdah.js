@@ -38,7 +38,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.24";
+var ver="0.0.25";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
@@ -527,7 +527,7 @@ function DevElectricity(data) {
         params.push({"key": "Value", "value": CounterToday, "unit": "kWh", "graphable": "true"});
         myfeed3.params=params;
         combo.push(myfeed3);
-        console.log(data.CounterDelivToday);
+        //console.log(data.CounterDelivToday);
         var params=[];
         var myfeed4= {"id": data.idx+"_4", "name": data.Name+" CounterDelivToday", "type": "DevGenericSensor", "room": "Utility"};
         var res = ptrn2.exec(data.CounterDelivToday);
@@ -535,7 +535,7 @@ function DevElectricity(data) {
         if (res != null) {
             CounterDelivToday = Math.ceil(Number(res[1]));
         }
-        console.log(usage+" "+data.CounterDelivToday);
+        //console.log(usage+" "+data.CounterDelivToday);
         params.push({"key": "Value", "value": Math.ceil(Number(CounterDelivToday)), "unit": "kWh", "graphable": "false"});
         myfeed4.params=params;
         combo.push(myfeed4);
@@ -1660,7 +1660,7 @@ app.get("/devices", function(req, res){
                         case 'Counter Incremental':
                             result.push(DevCounterIncremental(data.result[i]));
                             break;
-                        case 'Generic Sensor':
+                        case 'Custom Sensor':
                             result.push(DevGenericSensor(data.result[i]));
                             break;
                         default:
