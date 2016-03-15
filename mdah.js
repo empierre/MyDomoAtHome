@@ -1522,6 +1522,9 @@ app.get("/devices", function(req, res){
                         case 'Selector':
                             result.push(DevMultiSwitch(data.result[i]));
                             break;
+                        case 'Media Player':
+                            //TODO
+                            break;
                         default:
                             console.log("UNK Sw "+data.result[i].Name);
                             break;
