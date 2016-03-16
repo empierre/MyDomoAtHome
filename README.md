@@ -21,11 +21,12 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 - [X] Free
 - [X] Multi-platform (Linux, Mac OS X, Windows)
 - [X] Micro-services (Docker)
-- [ ] Synology package
+- [-] Synology
+- - [X] Synology docker image
   - [ ] Synology hosted package
 - [-] Debian package 
   - [X] personal hosting
-  - [ ] debian hosted package
+  - [ ] debian hosted package - need a peer
   - [ ] raspbian hosted package
 - [-] Support major type of sensors/feature of Domoticz
   - [X] Weather and Environmental sensors  
@@ -40,6 +41,7 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
   - [X] Dynamic room creation
 - Optionnal
   - [ ] RGB lamps (depending on Domoticz)
+  - [ ] Evohome
   - [X] Push On buttons (depending on Imperihome)
   - [-] Alarm pannel (partial)
 
