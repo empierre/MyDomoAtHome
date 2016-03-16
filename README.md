@@ -44,7 +44,7 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
   - [-] Alarm pannel (partial with ImperiHome)
   - [ ] End to end authentificaton
   - [ ] Auto updatable
-  - 
+  - [ ] Installation / usage logs
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
