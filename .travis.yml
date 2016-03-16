@@ -19,6 +19,7 @@ before_script:
   - npm install syno-upstarter --save
   - npm install -g gulp 
   - npm install gulp-jshint gulp-sass gulp-concat gulp-uglify gulp-rename --save-dev 
+  - npm install
 notifications:
   recipients:
     - domoticz@e-nef.com
