@@ -1,5 +1,5 @@
 # MyDomoAtHome nodeJS
-DOMO/REST Gateway between Domoticz and Imperihome ISS
+REST Gateway between Domoticz and Imperihome ISS
 
 [![NPM Version][npm-image]][npm-url]
 <span class="badge-npmdownloads"><a href="https://npmjs.org/package/node-mydomoathome" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/node-mydomoathome.svg" alt="NPM downloads" /></a></span>
