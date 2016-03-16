@@ -1,5 +1,6 @@
 language: node_js
 node_js:
+  - "4.4"
   - "4.2.2"
   - "4.2"
   - "4.1"
@@ -9,10 +10,9 @@ node_js:
   - "0.10"
   - "0.8"
   - "0.6"
-  - "iojs"
 before_install:
   - npm install
-  - npm install -g express
+  - npm install express
   - npm install supervisor -g
   - npm install nconf --save
   - npm install syno-upstarter --save
