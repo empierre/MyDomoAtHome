@@ -32,7 +32,7 @@ RUN apt-get -y install npm nodejs git git-core
 RUN cachebuster=b953b35 git clone -b nodejs https://github.com/empierre/MyDomoAtHome.git dist
 #RUN cd MyDomoAtHome && bash run-once.sh
 COPY . /src
-RUN cd /src; npm install
+RUN cd /src/dist; npm install
 #RUN npm install node-mydomoathome
 
 ##################################################
