@@ -10,7 +10,7 @@ node_js:
   - "0.8"
   - "0.6"
   - "iojs"
-before_script:
+before_install:
   - npm install
   - npm install -g express
   - npm install supervisor -g
@@ -29,5 +29,6 @@ notifications:
 #env:
 #after_failure: "cat /home/travis/builds/npm-debug.log"
 install: npm i
+before_script: npm i
 script: "node mdah.js"
 
