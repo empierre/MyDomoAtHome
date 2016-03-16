@@ -20,11 +20,13 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 M2 milestone will provide extended support to other platforms with Docker and Synology 
 - [X] Free
 - [X] Multi-platform (Linux, Mac OS X, Windows)
+- [X] Dependency-less 
+- [X] Node.js rewrite
 - [X] Micro-services (Docker)
 - [-] Synology
 - - [X] Synology docker image
   - [ ] Synology hosted package
-- [-] Debian package 
+- [-] Debian package- noarch
   - [X] personal hosting
   - [ ] debian hosted package - need a peer
   - [ ] raspbian hosted package
@@ -34,16 +36,15 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
   - [X] Switches
   - [X] Thermostat
   - [ ] Graphs
-- [X] Dependency-less 
-- [X] Node.js rewrite
-- [ ] Auto updatable
-- [ ] Support every single type of sensors/feature of Domoticz
   - [X] Dynamic room creation
-- Optionnal
-  - [ ] RGB lamps (depending on Domoticz)
-  - [ ] Evohome
+- TODO
+  - [ ] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
+  - [ ] Evohome (depending on Imperihome)
   - [X] Push On buttons (depending on Imperihome)
-  - [-] Alarm pannel (partial)
+  - [-] Alarm pannel (partial with ImperiHome)
+  - [ ] End to end authentificaton
+  - [ ] Auto updatable
+  - 
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
