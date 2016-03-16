@@ -18,7 +18,7 @@ before_install:
   - npm install syno-upstarter --save
   - npm install -g gulp 
   - npm install gulp-jshint gulp-sass gulp-concat gulp-uglify gulp-rename --save-dev 
-  - npm install underscore moment path request body-parser basic-auth errorhandler sync-request morgan http 
+  - npm install underscore moment path request body-parser basic-auth errorhandler sync-request morgan http method-override
   - npm install
 notifications:
   recipients:
