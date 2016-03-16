@@ -22,7 +22,7 @@ ENV TERM xterm
 RUN apt-get update --fix-missing
 RUN apt-get install -yq curl
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
+RUN apt-get install tzdata
 RUN apt-get -y install npm nodejs git git-core
 
 ##################################################
