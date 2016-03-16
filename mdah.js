@@ -930,6 +930,25 @@ function DevSceneGroup(data) {
     return(myfeed);
 };
 
+function DevMultiSwitchHeating(data) {
+    var ptrn4= /[\s]+|/;
+    room_tab.Switches=1;
+    var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
+    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
+    var params=[];
+    params.push({"key": "LastRun", "value": dt});
+    var status;
+    //console.log("L:"+data.Level);
+    var mydev={MaxDimLevel : null,Action:10,graph:null,Selector:"Normal,Auto,AutoWithEco,Away,DayOff,Custom,HeatingOff"};
+    //console.log(mydev);
+    device_tab[data.idx]=mydev;
+    var lvl=(data.Level)/10;
+    params.push({"key": "Value", "value": data.Status.toString()});
+    params.push({"key": "Choices", "value": "Normal,Auto,AutoWithEco,Away,DayOff,Custom,HeatingOff"});
+    myfeed.params=params;
+    return(myfeed);
+};
+
 function getDeviceType(deviceId) {
     var url=domo_path +"/json.htm?type=devices&rid=" + deviceId;
     var res = requester('GET',url);
@@ -1259,6 +1278,33 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     }
                 });
                 break;
+            } else if (device_tab[deviceId].Action === 10) {
+                res.type('json');
+                var level = 0;
+                //console.log(device_tab[deviceId].Selector);
+                //console.log(device_tab[deviceId].Selector.indexOf(actionParam));
+                level=device_tab[deviceId].Selector.indexOf(actionParam)*10;
+                //console.log("level="+level);
+                var options = {
+                    url: domo_path + "/json.htm?type=command&param=switchmodal&idx=" + deviceId + "&status="+actionParam+"&action=1",
+                    headers: {
+                        'User-Agent': 'request'
+                    }
+                };
+                console.log(options.url);
+                request(options, function (error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        var data = JSON.parse(body);
+                        if (data.status == 'OK') {
+                            res.status(200).send({success: true});
+                        } else {
+                            res.status(500).send({success: false, errormsg: data.message});
+                        }
+                    } else {
+                        res.status(500).send({success: false, errormsg: 'error'});
+                    }
+                });
+                break;
             } else {
                 res.type('json');
                 var level = 0;
@@ -1272,7 +1318,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                         'User-Agent': 'request'
                     }
                 };
-                //console.log(options.url);
+                console.log(options.url);
                 request(options, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         var data = JSON.parse(body);
@@ -1666,6 +1712,20 @@ app.get("/devices", function(req, res){
                         case 'Custom Sensor':
                             result.push(DevGenericSensor(data.result[i]));
                             break;
+                        default:
+                            console.log("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            break;
+                    }
+                    break;
+                case 'Heating':
+                    switch(data.result[i].SubType) {
+                        case 'Evohome':
+                            result.push(DevMultiSwitchHeating(data.result[i]));
+                            break;
+                        /*case 'Zone':
+                            break;
+                        case 'Hot Water':
+                            break;*/
                         default:
                             console.log("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                             break;

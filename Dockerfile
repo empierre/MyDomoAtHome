@@ -22,8 +22,14 @@ ENV TERM xterm
 RUN apt-get update --fix-missing
 RUN apt-get install -yq curl
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-
 RUN apt-get -y install npm nodejs git git-core
+
+##################################################
+# Install MDAH                                   #
+##################################################
+# Set the time zone
+RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
+VOLUME /etc/timezone /etc/localtime
 
 ##################################################
 # Install MDAH                                   #
