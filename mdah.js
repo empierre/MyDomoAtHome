@@ -38,7 +38,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.25";
+var ver="0.0.26";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
@@ -1235,12 +1235,12 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setColor':
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=setcolorbrightnessvalue&idx=" + deviceId + "&passcode=",
+                url: domo_path + "/json.htm?type=command&param=setcolorbrightnessvalue&idx=" + deviceId + "&hex="+actionParam.toUpperCase(),
                 headers: {
                     'User-Agent': 'request'
                 }
             };
-            //console.log(options.url);
+            console.log(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -1526,10 +1526,11 @@ app.get("/devices", function(req, res){
                         case 'On/Off':
                         case 'Contact':
                         case 'Dusk Sensor':
-                        case 'Lighting Limitless/Applamp':
                             if (data.result[i].SubType =='RGB') {
                                 result.push(DevRGBLight(data.result[i]));
-                            } else {
+                            } else if (data.result[i].SubType =='RGBW') {
+                                result.push(DevRGBLight(data.result[i]));
+                            } else  {
                                 result.push(DevSwitch(data.result[i]));
                             }
                             break;
@@ -1537,10 +1538,17 @@ app.get("/devices", function(req, res){
                         case 'Push Off Button':
                             result.push(DevPush(data.result[i]));
                             break;
-                        case 'RGB':
-                            result.push(DevRGBLight(data.result[i]));
-                            break;
                         case 'Dimmer':
+                            if (data.result[i].SubType =='RGB') {
+                                console.log("OK"+data.result[i].SubType);
+                                result.push(DevRGBLight(data.result[i]));
+                            } else if (data.result[i].SubType =='RGBW') {
+                                console.log("OK"+data.result[i].SubType);
+                                result.push(DevRGBLight(data.result[i]));
+                            } else  {
+                                result.push(DevDimmer(data.result[i]));
+                            }
+                            break;
                         case 'Doorbell':
                             result.push(DevDimmer(data.result[i]));
                             break;
@@ -1602,6 +1610,10 @@ app.get("/devices", function(req, res){
                             break;
                         default:
                     }
+                    break;
+                case 'Lighting Limitless/Applamp':
+                    console.log(data.result[i].SubType);
+                    result.push(DevRGBLight(data.result[i]));
                     break;
                 case 'YouLess Meter':
                     switch(data.result[i].SubType) {

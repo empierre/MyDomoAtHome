@@ -21,6 +21,7 @@ ENV TERM xterm
 
 RUN apt-get update --fix-missing
 RUN apt-get install -yq curl
+RUN apt-get install -yq apt-utils
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get install tzdata
 RUN apt-get -y install npm nodejs git git-core
@@ -30,7 +31,7 @@ RUN apt-get -y install npm nodejs git git-core
 ##################################################
 # Set the time zone
 RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata
-VOLUME /etc/timezone /etc/localtime
+#VOLUME /etc/timezone /etc/localtime
 
 ##################################################
 # Install MDAH                                   #
