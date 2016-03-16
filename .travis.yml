@@ -29,5 +29,5 @@ notifications:
 #env:
 #after_failure: "cat /home/travis/builds/npm-debug.log"
 install: npm i
-script: "npm mdah.js"
+script: "node mdah.js"
 
