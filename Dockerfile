@@ -40,7 +40,9 @@ RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tz
 RUN cachebuster=b953b35 git clone -b nodejs https://github.com/empierre/MyDomoAtHome.git dist
 #RUN cd MyDomoAtHome && bash run-once.sh
 COPY . /src
-RUN cd /src/dist; npm install
+RUN ls /
+RUN ls /src
+RUN cd /src; npm install
 #RUN npm install node-mydomoathome
 
 ##################################################
@@ -50,7 +52,7 @@ RUN cd /src/dist; npm install
 EXPOSE 3002
 
 WORKDIR dist 
-ADD     . dist
+ADD . dist
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
   npm install -g forever nodemon mocha supervisor
 CMD ["forever", "/src/mdah.js"]

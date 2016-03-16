@@ -1,0 +1,33 @@
+language: node_js
+node_js:
+  - "4.2.2"
+  - "4.2"
+  - "4.1"
+  - "4.0"
+  - "0.12"
+  - "0.11"
+  - "0.10"
+  - "0.8"
+  - "0.6"
+  - "iojs"
+before_install:
+  - npm install
+  - npm install -g express
+  - npm install supervisor -g
+  - npm install nconf --save
+  - npm install syno-upstarter --save
+  - npm install -g gulp 
+  - npm install gulp-jshint gulp-sass gulp-concat gulp-uglify gulp-rename --save-dev 
+  - npm install underscore moment path request body-parser basic-auth errorhandler sync-request morgan http os
+  - npm install
+notifications:
+  recipients:
+    - domoticz@e-nef.com
+  email:
+    on_success: change
+    on_failure: always
+#env:
+#after_failure: "cat /home/travis/builds/npm-debug.log"
+install: npm i
+before_script: npm i
+script: "node mdah.js"
