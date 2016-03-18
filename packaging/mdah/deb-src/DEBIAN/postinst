@@ -76,7 +76,12 @@ if ! [ -d '/var/log/mydomoathome' ]; then
   mkdir -p '/var/log/mydomoathome'
 fi
 
+if ! [ -d '/var/www' ]; then
+  mkdir -p '/var/www'
+fi
+
 chown 'www-data:www-data' '/var/log/mydomoathome'
+chown 'www-data:www-data' '/var/www/'
 chown -R 'www-data:www-data' '/usr/share/mydomoathome'
 chown 'www-data:www-data' /etc/mydomoathome/config.json
 
