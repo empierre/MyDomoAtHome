@@ -22,6 +22,8 @@ ENV TERM xterm
 ##################################################
 
 RUN apt-get update --fix-missing
+RUN apt-get -y install sudo
+RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 RUN apt-get install -yq curl
 RUN apt-get install -yq apt-utils
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
