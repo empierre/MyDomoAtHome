@@ -295,8 +295,7 @@ function DevShutterInverted(data) {
         lvl=data.Level||100;
         status=1;
     } else if (data.Status.match(/Set Level/)) {
-        var ptrn2= /(Set Level: (\d+)%/;
-        lvl = ptrn2.exec(data.Status);
+        lvl = data.Level;
         //console.log(data.status+" "+lvl);
         if (lvl>0) {status=1} else {status=0};
     } else {
