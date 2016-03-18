@@ -6,12 +6,12 @@ case "$1" in
     install)
 	npm cache clean
         npm install -g forever
-        npm install -g sync-request 
-        npm install -g npm-install-missing 
+        #npm install -g sync-request 
+        #npm install -g npm-install-missing 
         ;;
 
     upgrade|abort-upgrade)
-        npm install -g npm-install-missing 
+        #npm install -g npm-install-missing 
         #cd /usr/share/mydomoathome/app/ && npm-install-missing
         ;;
         
