@@ -56,7 +56,7 @@ RUN dpkg -i   node-mydomoathome-latest.deb
 EXPOSE 3002
 
 WORKDIR dist 
-#ADD . dist
+ADD . dist
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
   npm install -g forever nodemon mocha supervisor
-CMD ["forever", "/src/mdah.js"]
+CMD ["forever", "/usr/share/mydomoathome/app/mdah.js"]
