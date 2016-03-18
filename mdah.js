@@ -487,47 +487,38 @@ function DevElectricity(data) {
         //develectricity Counter/Usage
         var myfeed1= {"id": data.idx+"_1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
         var params = []
-        //console.log(data.Usage+" "+data.Counter);
         var res = ptrn2.exec(data.Usage);
         var usage = 0;
         if (res != null) {
             usage = Math.ceil(Number(res[1]));
         }
-        //console.log(usage+" "+data.Counter);
         params.push({"key": "Watts", "value": usage, "unit": "W"});
         params.push({"key": "ConsoTotal", "value": Math.ceil(Number(data.Counter)), "unit": "kWh", "graphable": "true"});
         myfeed1.params=params;
         combo.push(myfeed1);
-        //console.log(combo);
         //develectricity CounterDeliv/UsageDeliv
         var params=[];
         var myfeed2= {"id": data.idx+"_2", "name": data.Name+ "Deliv", "type": "DevElectricity", "room": "Utility"};
-        //console.log(data.UsageDeliv+" "+data.CounterDeliv);
         var res = ptrn2.exec(data.UsageDeliv);
         var usagedeliv = 0;
         if (res != null) {
             usagedeliv = Math.ceil(Number(res[1]));
         }
-        //console.log(usage+" "+data.Counter);
         params.push({"key": "Watts", "value": usagedeliv, "unit": "W"});
         params.push({"key": "ConsoTotal", "value": Math.ceil(Number(data.CounterDeliv)), "unit": "kWh", "graphable": "true"});
         myfeed2.params=params;
         combo.push(myfeed2);
-        //console.log(combo);
         //devgeneric for CounterToday/CounterDelivToday
         var params=[];
-        //console.log(data.CounterToday);
         var myfeed3= {"id": data.idx+"_3", "name": data.Name+" CounterToday", "type": "DevGenericSensor", "room": "Utility"};
         var res = ptrn2.exec(data.CounterToday);
         var CounterToday = 0;
         if (res != null) {
             CounterToday = Math.ceil(Number(res[1]));
         }
-        //console.log(usage+" "+data.Counter);
         params.push({"key": "Value", "value": CounterToday, "unit": "kWh", "graphable": "true"});
         myfeed3.params=params;
         combo.push(myfeed3);
-        //console.log(data.CounterDelivToday);
         var params=[];
         var myfeed4= {"id": data.idx+"_4", "name": data.Name+" CounterDelivToday", "type": "DevGenericSensor", "room": "Utility"};
         var res = ptrn2.exec(data.CounterDelivToday);
@@ -535,7 +526,6 @@ function DevElectricity(data) {
         if (res != null) {
             CounterDelivToday = Math.ceil(Number(res[1]));
         }
-        //console.log(usage+" "+data.CounterDelivToday);
         params.push({"key": "Value", "value": Math.ceil(Number(CounterDelivToday)), "unit": "kWh", "graphable": "false"});
         myfeed4.params=params;
         combo.push(myfeed4);

@@ -8,7 +8,7 @@ cd /usr/share/mydomoathome/app/ && npm install npm-install-missing
 chown www-data.www-data /etc/mydomoathome/config.json
 cd /usr/share/mydomoathome/app
 #/usr/bin/npm i
-npm-install-missing
+/usr/share/mydomoathome/app/node_modules/npm-install-missing/bin/npm-install-missing
 update-rc.d mydomoathome defaults
 
 init_type='auto'

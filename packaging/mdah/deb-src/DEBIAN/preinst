@@ -4,13 +4,15 @@ set -e
 npm config set loglevel error
 case "$1" in
     install)
+	npm cache clean
         npm install -g forever
-        npm install sync-request
-        npm install npm-install-missing
+        npm install -g sync-request 
+        npm install -g npm-install-missing 
         ;;
 
     upgrade|abort-upgrade)
-        #cd /usr/share/mydomoathome/app/ && npm-install-missing
+        npm install -g npm-install-missing 
+        cd /usr/share/mydomoathome/app/ && npm-install-missing
         ;;
         
     configure)
