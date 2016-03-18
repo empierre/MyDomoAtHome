@@ -1530,10 +1530,10 @@ app.get("/devices", function(req, res){
                             break;
                         case 'Dimmer':
                             if (data.result[i].SubType =='RGB') {
-                                console.log("OK"+data.result[i].SubType);
+                                //console.log("OK"+data.result[i].SubType);
                                 result.push(DevRGBLight(data.result[i]));
                             } else if (data.result[i].SubType =='RGBW') {
-                                console.log("OK"+data.result[i].SubType);
+                                //console.log("OK"+data.result[i].SubType);
                                 result.push(DevRGBLight(data.result[i]));
                             } else  {
                                 result.push(DevDimmer(data.result[i]));
@@ -1543,6 +1543,7 @@ app.get("/devices", function(req, res){
                             result.push(DevDimmer(data.result[i]));
                             break;
                         case 'Blinds Inverted':
+                        case 'Blinds Percentage Inverted':
                             result.push(DevShutterInverted(data.result[i]));
                             break;
                         case 'Blinds Percentage':
@@ -1602,7 +1603,7 @@ app.get("/devices", function(req, res){
                     }
                     break;
                 case 'Lighting Limitless/Applamp':
-                    console.log(data.result[i].SubType);
+                    //console.log(data.result[i].SubType);
                     result.push(DevRGBLight(data.result[i]));
                     break;
                 case 'YouLess Meter':
