@@ -63,8 +63,8 @@ If not please do:
 
 On RASPBIAN (Raspberry PI/PI2), please install first to have a stable nodeJS :
 
-    wget http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
-    wget http://www.e-nef.com/domoticz/mdah/npm_2.14.7_armhf.deb
+    wget -q http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
+    wget -q http://www.e-nef.com/domoticz/mdah/npm_2.14.7_armhf.deb
     sudo dpkg -i nodejs_4.4.2_armhf.deb
     sudo dpkg -i npm_2.14.7_armhf.deb
 
@@ -88,7 +88,7 @@ And check again
 ### Installing the software Debian package .deb
 
     rm node-mydomoathome-latest.deb
-    wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb
+    wget -q http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb
     sudo dpkg -i node-mydomoathome-latest.deb
   edit /etc/mydomoathome/config.json with your values
   
