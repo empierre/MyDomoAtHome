@@ -4,15 +4,10 @@ if [ $# -eq 0 ]
     echo "No arguments supplied"
 fi
 git commit -a
-git push
-npm version $1
 ver=$1
-perl -pi -e "s/Version: .*/Version: ${ver}/g" packaging/mdah/deb-src/DEBIAN/control
 cd ./packaging/mdah/ && sudo bash ./redeb.sh
 cd ../..
 mv -f ./packaging/mdah/node-mydomoathome-1.deb ./binary/
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-latest.deb
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-$1.deb
 sitecopy -u mdah
-npm publish 
-./make.docker.sh
