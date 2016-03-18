@@ -77,8 +77,8 @@ if ! [ -d '/var/log/mydomoathome' ]; then
 fi
 
 chown 'www-data:www-data' '/var/log/mydomoathome'
-chown -r 'www-data:www-data' '/usr/share/mydomoathome'
-chown www-data.www-data /etc/mydomoathome/config.json
+chown -R 'www-data:www-data' '/usr/share/mydomoathome'
+chown 'www-data:www-data' /etc/mydomoathome/config.json
 
 #NPM specifics
 cd /usr/share/mydomoathome/app
