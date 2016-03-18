@@ -68,8 +68,8 @@ start_service () {
   elif hash systemctl 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'systemd' ]]; then
       {
-        systemctl preset "$service_name.service" && \
-	systemctl enable "$service_name.service" && \
+        systemctl enable "$service_name.service" && \
+	systemctl preset "$service_name.service" && \
         systemctl start "$service_name.service"
       } || echo "${service_name} could not be registered or started"
     fi
