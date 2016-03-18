@@ -119,7 +119,7 @@ The default port is now 3002.
 
 ### Duplicate the image
 
-    docker pull epierre/mdah
+    docker pull epierre/iss-mdah
     
 ### Launch the process
 Remember to change the IP below and authorize in Domoticz the docker IP range
