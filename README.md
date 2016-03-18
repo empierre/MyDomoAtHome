@@ -82,14 +82,22 @@ On all other (debian, ubuntu...), version 4 is required (testing/unstable are fi
 
 And check again 
 
-    sudo node —version // should print version 4.4.x or similar
-    sudo npm —version // should print version 2.2.x or similar
+    node —version // should print version 4.4.x or similar
+    npm —version // should print version 2.2.x or similar
 
 ### Installing the software Debian package .deb
 
+    rm node-mydomoathome-latest.deb
     wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb
     sudo dpkg -i node-mydomoathome-latest.deb
   edit /etc/mydomoathome/config.json with your values
+  
+### Migrating from old/Legacy MyDomoAtHome
+
+Shut down the old service
+    sudo service MyDomoAtHome.sh stop
+  
+N.B. you can have the both at the same time, just chane the App name in the config.json file
 
 ## Running the service
 
