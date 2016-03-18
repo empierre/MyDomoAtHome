@@ -97,7 +97,7 @@ chown 'www-data:www-data' /etc/mydomoathome/config.json
 cd /usr/share/mydomoathome/app
 npm config set loglevel info
 #cd /usr/share/mydomoathome/app/ && sudo -u www-data npm install npm-install-missing
-npm_install 'emydomoathome'
+npm_install 'mydomoathome'
 #sudo -u www-data /usr/bin/npm install --production
 #sudo -u www-data /usr/share/mydomoathome/app/node_modules/npm-install-missing/bin/npm-install-missing
 
