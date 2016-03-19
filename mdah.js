@@ -289,6 +289,7 @@ function DevShutterInverted(data) {
     var mydev={MaxDimLevel : null,Action:null,graph:null};
     if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
     mydev.Action=5;
+    mydev.MaxDimLevel=data.MaxDimLevel;
     device_tab[data.idx]=mydev;
     //console.log(data.Status+" "+data.Level);
     if (data.Status === 'Open') {
@@ -321,6 +322,7 @@ function DevShutter(data) {
     var mydev={MaxDimLevel : null,Action:null,graph:null};
     if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
     mydev.Action=6;
+    mydev.MaxDimLevel=data.MaxDimLevel;
     device_tab[data.idx]=mydev;
     //console.log(data.Status+" "+data.Level);
     if (data.Status == 'Open') {
@@ -1110,10 +1112,11 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                 case 5:
                     //Blinds inverted
                     if (actionParam == 100) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=0&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=0&passcode=";
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + lsetLevel + "&passcode=";
+                        console.log(actionParam+" "+lsetLevel);
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + lsetLevel + "&passcode=";
                     }
                     break;
                 case 6:
