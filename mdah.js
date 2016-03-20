@@ -38,7 +38,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.27";
+var ver="0.0.28";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
@@ -1227,7 +1227,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setColor':
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=setcolorbrightnessvalue&idx=" + deviceId + "&hex="+actionParam.toUpperCase(),
+                url: domo_path + "/json.htm?type=command&param=setcolbrightnessvalue&idx=" + deviceId + "&hex="+actionParam.toUpperCase(),
                 headers: {
                     'User-Agent': 'request'
                 }
