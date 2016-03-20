@@ -42,7 +42,7 @@ var ver="0.0.28";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
-var app_name="MyDomoAtHome Dev";
+var app_name="MyDomoAtHome";
 var domo_path    = process.env.DOMO || "http://127.0.0.1:8080";
 var port         = process.env.PORT || '3002';
 
