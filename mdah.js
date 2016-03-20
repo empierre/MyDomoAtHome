@@ -72,8 +72,8 @@ nconf.load();
 if (! nconf.get('domo_path')) {
     console.log('WARNING: /etc/mydomoathome/config.json not found, defaulting')
 } else {
-    domo_path=nconf.get('domo_path');
-    app.set('port', nconf.get('port') || port);
+    domo_path=process.env.DOMO || nconf.get('domo_path');
+    app.set('port', process.env.PORT || nconf.get('port'));
 }
 
 
