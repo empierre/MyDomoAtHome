@@ -38,7 +38,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.28";
+var ver="0.0.29";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
@@ -247,7 +247,7 @@ function DevRGBLight(data) {
         mydev.MaxDimLevel=data.MaxDimLevel;
         device_tab[data.idx]=mydev;
         params=[];
-        params.push({"key": "Status", "value": status});
+        params.push({"key": "Status", "value": "1"});//hyp: set level only when on
         params.push({"key": "dimmable", "value": "1"});
         params.push({"key": "Level", "value": data.Level.toString()});
         //TODO whitechannel
