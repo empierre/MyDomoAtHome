@@ -799,7 +799,7 @@ function DevTH(data) {
             combo.push(myfeed);
             return(combo);
             return(combo);
-        default: logger.info('General: should not happen");break;
+        default: logger.info("General: should not happen");break;
     }
 };
 function DevPressure(data) {
