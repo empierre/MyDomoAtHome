@@ -22,6 +22,7 @@ gpg -abs -o Release.gpg Release
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-$1.deb
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-latest.deb
 sitecopy -u mdah
+cd ..
 npm publish 
 curl -X POST --data-urlencode 'payload={"channel": "#general", "username": "webhookbot", "text": "New package available at <http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb|node-mydomoathome-latest.deb>", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
 ./make.docker.sh
