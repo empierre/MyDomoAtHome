@@ -13,6 +13,7 @@ cd ../..
 mv -f ./packaging/mdah/node-mydomoathome-1.deb ./binary/
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-latest.deb
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-$1.deb
+cd binary
 apt-ftparchive packages . > Packages
 gzip -c Packages > Packages.gz
 apt-ftparchive release . >Release
