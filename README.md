@@ -87,7 +87,6 @@ And check again
 
 ### Installing the software Debian package .deb
 
-    rm node-mydomoathome-latest.deb
     wget -q http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb
     sudo dpkg -i node-mydomoathome-latest.deb
   edit /etc/mydomoathome/config.json with your values
@@ -96,8 +95,9 @@ And check again
 
 Shut down the old service
     sudo service MyDomoAtHome.sh stop
+    rm /etc/init.d/MyDomoAtHome.sh
   
-N.B. you can have the both at the same time, just chane the App name in the config.json file
+N.B. you can have the both at the same time, just chane the App name in the config.json file and the port.
 
 ## Running the service
 
@@ -115,7 +115,7 @@ The default port is now 3002.
 
     sudo service mydomoathome reload
 
-## Docker installation
+## Docker installation (only for those using this form: big synologyes, Xpenologies...)
 
 ### Duplicate the image
 

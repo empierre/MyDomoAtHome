@@ -1,0 +1,32 @@
+# language setting
+language: node_js
+
+# version numbers, testing against one version of node
+node_js:
+    - 0.12
+    - 4.2
+    - 4.4
+
+env:
+    - XUNIT_FILE=./shippable/testresults/result.xml API_PORT=3002
+
+before_install:
+    - node --version
+    - mkdir -p ./shippable/testresults
+    - mkdir -p ./shippable/codecoverage
+
+build:
+   ci:
+       - grunt
+   on_success:
+       - cd packaging/mdah && redeb.sh
+
+integrations:
+    notifications:
+        - integrationName: SlackForShippable
+          type: slack
+          recipients:
+              - www-notifications
+          on_success: always
+          on_failure: always
+
