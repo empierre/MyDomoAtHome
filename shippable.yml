@@ -16,7 +16,7 @@ build:
 
 integrations:
     notifications:
-        - integrationName: www_notif
+        - integrationName: MyDomoAtHome
           type: slack
           recipients:
               - www-notifications
