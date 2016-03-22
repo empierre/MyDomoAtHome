@@ -1,7 +1,7 @@
 {
   "name": "node-mydomoathome",
   "description": "Rest interface for Domoticz to Imperihome",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "dependencies": {
     "basic-auth": "^1.0.3",
     "body-parser": "^1.5.2",
@@ -58,7 +58,7 @@
     "DSM",
     "Synology"
   ],
-   "jshintConfig": {
+  "jshintConfig": {
     "node": true,
     "undef": true,
     "noarg": true,
@@ -94,5 +94,5 @@
       "MessageTypes",
       "safeGet"
     ]
-   }
+  }
 }
