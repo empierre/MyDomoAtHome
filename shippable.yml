@@ -1,0 +1,25 @@
+# language setting
+language: node_js
+
+# version numbers, testing against one version of node
+node_js:
+    - 0.12
+    - 4.2
+    - 4.4
+
+
+build:
+   ci:
+       - grunt
+   on_success:
+       - cd packaging/mdah && redeb.sh
+
+integrations:
+    notifications:
+        - integrationName: www_notif
+          type: slack
+          recipients:
+              - www-notifications
+          on_success: always
+          on_failure: always
+
