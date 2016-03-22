@@ -1,4 +1,4 @@
-//##############################################################################
+cons//##############################################################################
 //  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
 //      Copyright (C) 2014-2016 Emmanuel PIERRE (domoticz@e-nef.com)
 //
@@ -33,6 +33,8 @@ var basicAuth = require('basic-auth');
 //var multer = require('multer');
 var errorHandler = require('errorhandler');
 var requester = require('sync-request');
+var winston = require('winston');
+global.logger = winston;
 var app = express();
 
 //working variaboles
@@ -56,6 +58,7 @@ app.use(morgan('combined'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+logger(winston.transports.File, { filename: '/var/log/mydomoathome/error.log' });
 
 // load conf file
 nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
@@ -70,7 +73,7 @@ nconf.use('file', { file: './config.json' },function (err) {
     }});
 nconf.load();
 if (! nconf.get('domo_path')) {
-    console.log('WARNING: /etc/mydomoathome/config.json not found, defaulting')
+    logger.info('WARNING: /etc/mydomoathome/config.json not found, defaulting')
 } else {
     domo_path=nconf.get('domo_path');
     app.set('port', nconf.get('port') || port);
@@ -796,7 +799,7 @@ function DevTH(data) {
             combo.push(myfeed);
             return(combo);
             return(combo);
-        default: console.log("should not happen");break;
+        default: logger.info('General: should not happen");break;
     }
 };
 function DevPressure(data) {
@@ -1021,7 +1024,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     'User-Agent': 'request'
                 }
             };
-            console.log(options.url);
+            logger.info('options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -1091,7 +1094,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
         case 'setLevel':
             var my_url;
             var lsetLevel;
-            console.log(device_tab[deviceId]);
+            logger.info(device_tab[deviceId]);
             switch (device_tab[deviceId].Action) {
                 case 1:
                     if (actionParam == 1) {
@@ -1139,7 +1142,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     'User-Agent': 'request'
                 }
             };
-            console.log(options.url);
+            logger.info('ptions.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -1232,7 +1235,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     'User-Agent': 'request'
                 }
             };
-            console.log(options.url);
+            logger.info(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -1283,7 +1286,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                         'User-Agent': 'request'
                     }
                 };
-                console.log(options.url);
+                logger.info(options.url);
                 request(options, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         var data = JSON.parse(body);
@@ -1310,7 +1313,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                         'User-Agent': 'request'
                     }
                 };
-                console.log(options.url);
+                logger.info(options.url);
                 request(options, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         var data = JSON.parse(body);
@@ -1329,7 +1332,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             res.status(403).send({success:false,errormsg:'not implemented'});
             break;
         default:
-            console.log("unknown action: " + deviceId + " " + actionName + " " + actionParam);
+            logger.info("unknown action: " + deviceId + " " + actionName + " " + actionParam);
             res.status(403).send({success:false,errormsg:'not implemented'});
             break;
     }
@@ -1373,7 +1376,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, 
     if ((paramKey === "Watts")) {
         type = "counter";
     }
-    console.log(deviceId + PLine + type);
+    logger.info(deviceId + PLine + type);
     var range;
     if (duration <= 172800) {
         range = "day";
@@ -1391,7 +1394,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, 
             'User-Agent': 'request'
         }
     };
-    console.log(options.url);
+    logger.info(options.url);
     request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var data = JSON.parse(body);
@@ -1399,7 +1402,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, 
             var params=[];
             var lastEu;
             //TODO: http://192.168.0.28:8080/json.htm?type=graph&sensor=humidity&idx=243&range=day
-            console.log(data);
+            logger.info(data);
             if (! data.result) {
                 var feeds = {"date": startdate, "value": 0};
                 params.push(feeds);
@@ -1471,7 +1474,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, 
                         params.push(feeds);
                     }
                 } else {
-                    console.log("UNK");
+                    logger.info("UNK");
                 }
             }
             var rest = {};
@@ -1573,7 +1576,7 @@ app.get("/devices", function(req, res){
                             //TODO
                             break;
                         default:
-                            console.log("UNK Sw "+data.result[i].Name);
+                            logger.info("UNK Sw "+data.result[i].Name);
                             break;
                     }
                     break;
@@ -1586,7 +1589,7 @@ app.get("/devices", function(req, res){
                             result.push(DevGenericSensor(data.result[i]));
                             break;
                         default:
-                            console.log("UNK Sec "+data.result[i].Name);
+                            logger.info("UNK Sec "+data.result[i].Name);
                             break;
                     }
                     break;
@@ -1614,7 +1617,7 @@ app.get("/devices", function(req, res){
                             result.push(DevElectricity(data.result[i]));
                             break;
                         default:
-                            console.log("UNK Sec "+data.result[i].Name);
+                            logger.info("UNK Sec "+data.result[i].Name);
                             break;
                     }
                     break;
@@ -1675,7 +1678,7 @@ app.get("/devices", function(req, res){
                             result.push(DevElectricity(data.result[i]));
                             break;
                         default:
-                            console.log("RFX Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.info("RFX Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                     }
                     break;
                 case 'General':
@@ -1703,7 +1706,7 @@ app.get("/devices", function(req, res){
                             result.push(DevGenericSensor(data.result[i]));
                             break;
                         case 'Unknown':
-                            console.log("Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.info("Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                             break;
                         case 'Waterflow':
                             result.push(DevFlow(data.result[i]));
@@ -1718,7 +1721,7 @@ app.get("/devices", function(req, res){
                             result.push(DevGenericSensor(data.result[i]));
                             break;
                         default:
-                            console.log("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.info("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                             break;
                     }
                     break;
@@ -1732,7 +1735,7 @@ app.get("/devices", function(req, res){
                         case 'Hot Water':
                             break;*/
                         default:
-                            console.log("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.info("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                             break;
                     }
                     break;
@@ -1746,7 +1749,7 @@ app.get("/devices", function(req, res){
                     result.push(DevSceneGroup(data.result[i]));
                     break;
                 default:
-                    console.log("Unknown type "+data.result[i].Type);
+                    logger.info("Unknown type "+data.result[i].Type);
                     break;
                 }
             }
@@ -1771,10 +1774,10 @@ app.get("/devices", function(req, res){
 // all environments
 
 
-console.log("Domoticz server: "+domo_path);
-console.log("Node version: "+process.versions.node);
-console.log("MDAH version: "+ver);
-console.log("OS version: "+os.type()+" "+os.platform()+" "+os.release());
+logger.info("Domoticz server: "+domo_path);
+logger.info("Node version: "+process.versions.node);
+logger.info("MDAH version: "+ver);
+logger.info("OS version: "+os.type()+" "+os.platform()+" "+os.release());
 var interfaces = os.networkInterfaces();
 var addresses = [];
 var my_ip;
@@ -1787,7 +1790,7 @@ for (var k in interfaces) {
         }
     }
 }
-console.log("Hostname: "+os.hostname()+" "+my_ip+" in "+os.homedir());
+logger.info("Hostname: "+os.hostname()+" "+my_ip+" in "+os.homedir());
 /*nconf.save(function (err) {
     if (err) {
         console.error(err.message);
@@ -1810,7 +1813,7 @@ process.once('SIGINT', function () {
 // this function is called when you want the server to die gracefully
 // i.e. wait for existing connections
 var gracefulShutdown = function() {
-    console.log("Received kill signal, shutting down gracefully.");
+    logger.info("Received kill signal, shutting down gracefully.");
     server.close(function() {
         console.log("Closed out remaining connections.");
         process.exit()
@@ -1824,12 +1827,13 @@ var gracefulShutdown = function() {
 //start server
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){
-    console.log('MDAH port: ' + app.get('port'));
+    logger.info('MDAH port: ' + app.get('port'));
 });
 
 server.on('error', function (e) {
   if (e.code == 'EADDRINUSE') {
-    console.log('Address in use, retrying...');
+    logger.info('Address in use, retrying...');
+    
     setTimeout(function () {
       server.close();
       server.listen(port);
