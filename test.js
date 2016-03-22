@@ -1,6 +1,6 @@
 'use strict';
 
-var apiPort = process.env.API_PORT;
+var apiPort = process.env.API_PORT||3002;
 var apiURL = 'http://localhost:' + apiPort + '/';
 
 var superagent = require('superagent');
