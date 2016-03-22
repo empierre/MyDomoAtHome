@@ -1,4 +1,4 @@
-cons//##############################################################################
+//##############################################################################
 //  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
 //      Copyright (C) 2014-2016 Emmanuel PIERRE (domoticz@e-nef.com)
 //
