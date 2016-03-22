@@ -1024,7 +1024,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     'User-Agent': 'request'
                 }
             };
-            logger.info('options.url);
+            logger.info(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
