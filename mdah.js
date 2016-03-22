@@ -40,7 +40,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.29";
+var ver="0.0.30";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
@@ -58,7 +58,7 @@ app.use(morgan('combined'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-logger(winston.transports.File, { filename: '/var/log/mydomoathome/error.log' });
+logger.add(winston.transports.File, { filename: '/var/log/mydomoathome/usage.log' });
 
 // load conf file
 nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
@@ -1118,7 +1118,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=0&passcode=";
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
-                        console.log(actionParam+" "+lsetLevel);
+                        logger.info(actionParam+" "+lsetLevel);
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + lsetLevel + "&passcode=";
                     }
                     break;
@@ -1332,7 +1332,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             res.status(403).send({success:false,errormsg:'not implemented'});
             break;
         default:
-            logger.info("unknown action: " + deviceId + " " + actionName + " " + actionParam);
+            logger.warn("unknown action: " + deviceId + " " + actionName + " " + actionParam);
             res.status(403).send({success:false,errormsg:'not implemented'});
             break;
     }
@@ -1474,7 +1474,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function(req, 
                         params.push(feeds);
                     }
                 } else {
-                    logger.info("UNK");
+                    logger.warn("UNK");
                 }
             }
             var rest = {};
@@ -1576,7 +1576,7 @@ app.get("/devices", function(req, res){
                             //TODO
                             break;
                         default:
-                            logger.info("UNK Sw "+data.result[i].Name);
+                            logger.warn("UNK Sw "+data.result[i].Name);
                             break;
                     }
                     break;
@@ -1589,7 +1589,7 @@ app.get("/devices", function(req, res){
                             result.push(DevGenericSensor(data.result[i]));
                             break;
                         default:
-                            logger.info("UNK Sec "+data.result[i].Name);
+                            logger.warn("UNK Sec "+data.result[i].Name);
                             break;
                     }
                     break;
@@ -1617,7 +1617,7 @@ app.get("/devices", function(req, res){
                             result.push(DevElectricity(data.result[i]));
                             break;
                         default:
-                            logger.info("UNK Sec "+data.result[i].Name);
+                            logger.warn("UNK Sec "+data.result[i].Name);
                             break;
                     }
                     break;
@@ -1678,7 +1678,7 @@ app.get("/devices", function(req, res){
                             result.push(DevElectricity(data.result[i]));
                             break;
                         default:
-                            logger.info("RFX Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.warn("RFX Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                     }
                     break;
                 case 'General':
@@ -1706,7 +1706,7 @@ app.get("/devices", function(req, res){
                             result.push(DevGenericSensor(data.result[i]));
                             break;
                         case 'Unknown':
-                            logger.info("Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.warn("Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                             break;
                         case 'Waterflow':
                             result.push(DevFlow(data.result[i]));
@@ -1721,7 +1721,7 @@ app.get("/devices", function(req, res){
                             result.push(DevGenericSensor(data.result[i]));
                             break;
                         default:
-                            logger.info("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.warn("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                             break;
                     }
                     break;
@@ -1735,7 +1735,7 @@ app.get("/devices", function(req, res){
                         case 'Hot Water':
                             break;*/
                         default:
-                            logger.info("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.warn("General Unknown "+data.result[i].Name+" "+data.result[i].SubType);
                             break;
                     }
                     break;
@@ -1749,7 +1749,7 @@ app.get("/devices", function(req, res){
                     result.push(DevSceneGroup(data.result[i]));
                     break;
                 default:
-                    logger.info("Unknown type "+data.result[i].Type);
+                    logger.warn("Unknown type "+data.result[i].Type);
                     break;
                 }
             }
@@ -1813,9 +1813,9 @@ process.once('SIGINT', function () {
 // this function is called when you want the server to die gracefully
 // i.e. wait for existing connections
 var gracefulShutdown = function() {
-    logger.info("Received kill signal, shutting down gracefully.");
+    logger.warn("Received kill signal, shutting down gracefully.");
     server.close(function() {
-        console.log("Closed out remaining connections.");
+        logger.warn("Closed out remaining connections.");
         process.exit()
     });
     // if after
