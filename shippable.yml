@@ -16,7 +16,7 @@ build:
 
 integrations:
     notifications:
-        - integrationName: empierre/MyDomoAtHome
+        - integrationName: SlackForShippable
           type: slack
           recipients:
               - www-notifications
