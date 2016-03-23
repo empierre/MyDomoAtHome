@@ -2,6 +2,11 @@ image: node:4.2.2
   
 before_script:
 - apt-get update -qq && apt-get install -y -qq sqlite3 libsqlite3-dev nodejs
+- npm install -g npm@2.x
+- npm install -g gulp 
+- npm install -g grunt-cli
+- npm install gulp-jshint gulp-concat gulp-uglify gulp-rename --save-dev 
+- npm install
 
 cache:
   paths:
