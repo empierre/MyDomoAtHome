@@ -125,6 +125,7 @@ add the line:
     deb http://www.e-nef.com/domoticz/mdah/ /
 
     sudo apt-get update
+    sudo apt-get install mydomoathome  
     sudo apt-get upgrade
 
 ## Docker installation (only for those using this form: big synologyes, Xpenologies...)
