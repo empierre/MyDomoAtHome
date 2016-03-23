@@ -2,7 +2,8 @@
 REST Gateway between Domoticz and Imperihome ISS
 
 [![NPM Version][npm-image]][npm-url]
-<span class="badge-npmdownloads"><a href="https://npmjs.org/package/node-mydomoathome" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/node-mydomoathome.svg" alt="NPM downloads" /></a></span>
+[![NPM](https://img.shields.io/npm/dm/node-mydomoathome.svg)
+![REST](https://travis-ci.org/empierre/MyDomoAtHome.svg?branch=nodejs)
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 ![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
