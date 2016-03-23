@@ -14,13 +14,13 @@ mv -f ./packaging/mdah/node-mydomoathome-1.deb ./binary/
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-latest.deb
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-$1.deb
 cd binary
+gpg -abs -o Release.gpg Release
+dpkg-sig -k A5435C9B --sign builder node-mydomoathome-$1.deb
+dpkg-sig -k A5435C9B --sign builder node-mydomoathome-latest.deb
 apt-ftparchive packages . > Packages
 gzip -c Packages > Packages.gz
 apt-ftparchive release . >Release
 gpg --clearsign -o InRelease Release
-gpg -abs -o Release.gpg Release
-dpkg-sig -k A5435C9B --sign builder node-mydomoathome-$1.deb
-dpkg-sig -k A5435C9B --sign builder node-mydomoathome-latest.deb
 sitecopy -u mdah
 cd ..
 npm publish 
