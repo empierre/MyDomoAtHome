@@ -20,10 +20,11 @@ before_install:
   - npm install gulp-jshint gulp-sass gulp-concat gulp-uglify gulp-rename --save-dev 
   - npm install underscore moment path request body-parser basic-auth errorhandler sync-request morgan http method-override
   - npm install
-  - mkdir ~/domoticz
-  - cd ~/domoticz
+  - mkdir domoticz
+  - cd domoticz
   - wget http://www.domoticz.com/releases/release/domoticz_linux_x86_64.tgz
   - tar xvfz domoticz_linux_x86_64.tgz
+  - cd ..
 notifications:
   recipients:
     - domoticz@e-nef.com
