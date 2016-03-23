@@ -116,7 +116,7 @@ The default port is now 3002.
 
 ## Upgrading
  
-    wget -O - http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
+    wget -qO - http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
     sudo vi /etc/apt/sources.list
 
 add the line:
