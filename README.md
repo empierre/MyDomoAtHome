@@ -116,12 +116,14 @@ The default port is now 3002.
     sudo service mydomoathome reload
 
 ## Upgrading
-   
+
     wget -O - http://http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
     sudo vi /etc/apt/sources.list
 
 add the line:
     deb http://www.e-nef.com/domoticz/mdah/ /
+
+then do:
     sudo apt-get update
     sudo apt-get upgrade
 
