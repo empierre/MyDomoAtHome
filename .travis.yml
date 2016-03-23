@@ -12,14 +12,13 @@ node_js:
   - "0.6"
 before_install:
   - npm install -g npm@2.x
-  - npm install
   - npm install express
   - npm install supervisor -g
   - npm install nconf --save
   - npm install syno-upstarter --save
   - npm install -g gulp 
   - npm install -g grunt-cli
-  - npm install gulp-jshint gulp-sass gulp-concat gulp-uglify gulp-rename --save-dev 
+  - npm install gulp-jshint gulp-concat gulp-uglify gulp-rename --save-dev 
   - npm install underscore moment path request body-parser basic-auth errorhandler sync-request morgan http method-override
   - npm install
   - mkdir domoticz
