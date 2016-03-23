@@ -38,16 +38,15 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
   - [ ] Graphs
   - [X] Dynamic room creation
 - TODO
-  - [ ] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
+  - [X] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
   - [ ] Evohome (depending on Imperihome)
   - [X] Push On buttons (depending on Imperihome)
   - [-] Alarm pannel (partial with ImperiHome)
   - [ ] End to end authentificaton
   - [ ] Auto updatable
-  - [ ] Installation / usage logs
+  - [X] Installation / usage logs
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
-
 
 
 
@@ -117,7 +116,7 @@ The default port is now 3002.
 
 ## Upgrading
  
-    wget -O - http://http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
+    wget -O - http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
     sudo vi /etc/apt/sources.list
 
 add the line:
