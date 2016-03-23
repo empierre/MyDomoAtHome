@@ -45,7 +45,7 @@
   "homepage": "https://github.com/empierre/MyDomoAtHome#readme",
   "main": "mdah.js",
   "scripts": {
-    "test": "gulp test",
+    "test": "grunt",
     "start": "nodejs mdah.js"
   },
   "node_deb": {
