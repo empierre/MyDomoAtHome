@@ -7,7 +7,7 @@ module.exports = function (grunt) {
     express: {
       test: {
         options: {
-          script: 'api.app.js'
+          script: 'mdah.js'
         }
       }
     },
