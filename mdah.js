@@ -1790,7 +1790,11 @@ for (var k in interfaces) {
         }
     }
 }
-logger.info("Hostname: "+os.hostname()+" "+my_ip+" in "+os.homedir());
+if (process.versions.node<1) {
+	logger.info("Hostname: "+os.hostname()+" "+my_ip);
+} else {
+	logger.info("Hostname: "+os.hostname()+" "+my_ip+" in "+os.homedir());
+}
 /*nconf.save(function (err) {
     if (err) {
         console.error(err.message);
