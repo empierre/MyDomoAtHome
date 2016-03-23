@@ -11,6 +11,7 @@ node_js:
   - "0.8"
   - "0.6"
 before_install:
+  - npm install -g npm@2.x
   - npm install
   - npm install express
   - npm install supervisor -g
