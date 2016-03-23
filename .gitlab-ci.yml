@@ -1,0 +1,21 @@
+image: node:4.2.2
+  
+before_script:
+- apt-get update -qq && apt-get install -y -qq sqlite3 libsqlite3-dev nodejs
+
+cache:
+  paths:
+  - node_modules/
+
+stages:
+  - test
+  - deploy
+job_runtests:
+  stage: test
+  script:
+    - npm test
+
+job_deploy:
+  stage: deploy
+  script:
+    -  npm install &&  forever mdah.js
