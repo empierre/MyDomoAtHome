@@ -49,7 +49,8 @@ RUN apt-get install -y nodejs
 #RUN apt-get install npm
 RUN npm install -g npm@2.x
 RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb
-RUN dpkg -i   node-mydomoathome-latest.deb
+RUN mv /etc/mydomoathome/config.json /etc/mydomoathome/config.json.old
+RUN dpkg -i node-mydomoathome-latest.deb
 VOLUME /etc/mydomoathome
 VOLUME /etc/mydomoathome/config.json
 
