@@ -35,5 +35,6 @@ notifications:
 install: npm i
 before_script: 
   - npm i
-  - domoticz/domoticz
-script: "node mdah.js"
+  - domoticz/domoticz &
+  - node mdah.js &
+script: "grunt"
