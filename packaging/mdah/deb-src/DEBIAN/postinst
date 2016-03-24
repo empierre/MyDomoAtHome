@@ -88,8 +88,8 @@ if ! [ -d '/var/www' ]; then
   mkdir -p '/var/www'
 fi
 
-if ! [ -e '/etc/mydomoathome/config.json']; then
-  mv /etc/mydomoathome/config.json.orig /etc/mydomoathome/config.json
+if ! [ -e '/etc/mydomoathome/config.json' ]; then
+  mv '/etc/mydomoathome/config.json.orig' '/etc/mydomoathome/config.json'
 fi
 
 chown 'www-data:www-data' '/var/log/mydomoathome'
