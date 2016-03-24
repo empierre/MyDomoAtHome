@@ -42,9 +42,10 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
   - [X] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
   - [ ] Evohome (depending on Imperihome)
   - [X] Push On buttons (depending on Imperihome)
-  - [-] Alarm pannel (partial with ImperiHome)
+  - [ ] Alarm pannel (partial with ImperiHome)
   - [ ] End to end authentificaton
-  - [ ] Auto updatable
+  - [ ] Auto updatable through apt-get
+  - [ ] Auto updatable through button
   - [X] Installation / usage logs
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
@@ -87,8 +88,19 @@ And check again
 
 ### Installing the software Debian package .deb
 
-    wget -q http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb
-    sudo dpkg -i node-mydomoathome-latest.deb
+    wget -qO - http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
+    sudo vi /etc/apt/sources.list
+   
+  Add the line:
+  
+    deb http://www.e-nef.com/domoticz/mdah/ /
+
+  Then:
+
+    sudo apt-get update
+    sudo apt-get install mydomoathome  
+    sudo apt-get upgrade
+
   edit /etc/mydomoathome/config.json with your values
   
 ### Migrating from old/Legacy MyDomoAtHome
@@ -114,19 +126,6 @@ The default port is now 3002.
 ### Restart the service :
 
     sudo service mydomoathome reload
-
-## Upgrading
- 
-    wget -qO - http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
-    sudo vi /etc/apt/sources.list
-
-add the line:
-
-    deb http://www.e-nef.com/domoticz/mdah/ /
-
-    sudo apt-get update
-    sudo apt-get install mydomoathome  
-    sudo apt-get upgrade
 
 ## Docker installation (only for those using this form: big synologyes, Xpenologies...)
 
