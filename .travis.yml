@@ -27,6 +27,8 @@ before_install:
 notifications:
   recipients:
     - domoticz@e-nef.com
+  slack: 
+    mydomoathome:dYICWN8iWCZFrtlZCyMIVwtw
   email:
     on_success: change
     on_failure: always
