@@ -61,7 +61,7 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 
 ### Check the nodeJS version installed - mandatory for PI !
 
-   sudo dpkg --list |grep node // should print version 3.x or above
+   sudo dpkg --list |grep nodejs // should return version 3.x or above
 
 If not please do:
 
