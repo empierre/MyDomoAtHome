@@ -103,6 +103,8 @@ And check again
 
   edit /etc/mydomoathome/config.json with your values
   
+     sudo service MyDomoAtHome.sh restart
+  
 ### Migrating from old/Legacy MyDomoAtHome
 
 Shut down the old service
