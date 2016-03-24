@@ -28,7 +28,7 @@ notifications:
   slack: 
     mydomoathome:dYICWN8iWCZFrtlZCyMIVwtw
   email:
-    on_success: change
+#    on_success: change
     on_failure: always
 #env:
 #after_failure: "cat /home/travis/builds/npm-debug.log"
