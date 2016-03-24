@@ -15,7 +15,7 @@ REST Gateway between Domoticz and Imperihome ISS
 ![REST](https://img.shields.io/badge/Odroid-tested_ok-green.svg)
 ![REST](https://img.shields.io/badge/Intel-tested_ok-green.svg)
 
-![MyDomoAtHome](http://domoticz.com/wiki/images/5/55/Imperihome2.png "MyDomoAtHome ISS")
+![MyDomoAtHome](http://domoticz.com/wiki/images/f/f1/Imperihome2.png "MyDomoAtHome ISS")
 
 # Features and goals
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
