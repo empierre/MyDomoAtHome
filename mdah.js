@@ -40,7 +40,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.34;
+var ver="0.0.34"
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
