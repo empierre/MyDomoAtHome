@@ -61,16 +61,15 @@ M2 milestone will provide extended support to other platforms with Docker and Sy
 
 ### Check the nodeJS version installed - mandatory for PI !
 
-   sudo node —version // should print version 3.x or above
+   sudo dpkg --list |grep node // should print version 3.x or above
 
 If not please do:
 
 On RASPBIAN (Raspberry PI/PI2), please install first to have a stable nodeJS :
 
     wget -q http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
-    wget -q http://www.e-nef.com/domoticz/mdah/npm_2.14.7_armhf.deb
     sudo dpkg -i nodejs_4.4.2_armhf.deb
-    sudo dpkg -i npm_2.14.7_armhf.deb
+    sudo npm install -g npm@2.x
 
 On all other (debian, ubuntu...), version 4 is required (testing/unstable are fine):
 
