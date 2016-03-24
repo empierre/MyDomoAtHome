@@ -16,6 +16,7 @@ mv -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-$1.deb
 cd binary
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-$1.deb
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-latest.deb
+rm -f Packages Packages.gz Release InRelease Release.gpg
 apt-ftparchive packages . > Packages
 gzip -c Packages > Packages.gz
 apt-ftparchive release . >Release
