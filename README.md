@@ -101,7 +101,6 @@ And check again
 
     sudo apt-get update
     sudo apt-get install mydomoathome  
-    sudo apt-get upgrade
 
   edit /etc/mydomoathome/config.json with your values
   
