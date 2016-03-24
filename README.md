@@ -159,7 +159,7 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
   
 # Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
-  - English : http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713
+  - English : http://www.domoticz.com/forum/viewtopic.php?f=21&t=6882
   - French  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
   - Send domoticz.db for an undetected device: domoticz at e-nef.com
 
