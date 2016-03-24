@@ -89,7 +89,7 @@ if ! [ -d '/var/www' ]; then
 fi
 
 if [ ! -f '/etc/mydomoathome/config.json' ]; then
-  mv '/etc/mydomoathome/config.json.orig' '/etc/mydomoathome/config.json'
+  mv '/etc/mydomoathome/config.json.dist' '/etc/mydomoathome/config.json'
 fi
 
 chown 'www-data:www-data' '/var/log/mydomoathome'
