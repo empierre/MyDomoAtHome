@@ -40,7 +40,7 @@ var app = express();
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.35";
+var ver="0.0.36";
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
@@ -61,23 +61,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 logger.add(winston.transports.File, { filename: '/var/log/mydomoathome/usage.log' });
 
 // load conf file
-nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
-    if (err) {
-        console.error("No conf in etc:"+err.message);
-        return;
-    }});
 nconf.use('file', { file: './config.json' },function (err) {
     if (err) {
         console.error("No local conf:"+err.message);
         return;
     }});
+
+nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
+    if (err) {
+        console.error("No conf in etc:"+err.message);
+        return;
+    }});
 nconf.load();
 if (! nconf.get('domo_path')) {
-    logger.info('WARNING: /etc/mydomoathome/config.json not found, defaulting')
+    logger.warn('/etc/mydomoathome/config.json not found, defaulting')
 } else {
     domo_path=process.env.DOMO || nconf.get('domo_path');
     app.set('port', process.env.PORT || nconf.get('port'));
+    app_name=nconf.get('app_name')||"MyDomoAtHome";
 }
+
 
 function versionCompare(v1, v2, options) {
     var lexicographical = options && options.lexicographical,
@@ -1821,7 +1824,7 @@ app.get("/devices", function(req, res){
 
 logger.info("Domoticz server: "+domo_path);
 logger.info("Node version: "+process.versions.node);
-logger.info("MDAH version: "+ver);
+logger.info("MDAH version: "+app_name+" "+ver);
 logger.info("OS version: "+os.type()+" "+os.platform()+" "+os.release());
 var interfaces = os.networkInterfaces();
 var addresses = [];
