@@ -59,6 +59,7 @@ start_service () {
   if hash service 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'upstart' ]]; then
       service "$service_name" start || echo "${service_name} could not be registered or started"
+      service enable "$service_name"
     fi
   elif hash start 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'upstart' ]]; then
