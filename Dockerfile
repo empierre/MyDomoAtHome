@@ -13,7 +13,6 @@ USER root
 # Ensure UTF-8
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
-
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
 
@@ -21,6 +20,8 @@ ENV TERM xterm
 # Install tools                                  #
 ##################################################
 
+RUN locale-gen en_US.UTF-8
+RUN dpkg-reconfigure locales
 RUN apt-get update --fix-missing
 RUN apt-get -y install sudo
 RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
@@ -48,8 +49,8 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
 RUN apt-get install -y nodejs
 #RUN apt-get install npm
 RUN npm install -g npm@2.x
-RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb
-RUN dpkg -i node-mydomoathome-latest.deb
+RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.0.35.deb
+RUN dpkg -i node-mydomoathome-0.0.35.deb
 RUN mv /etc/mydomoathome/config.json /etc/mydomoathome/config.json.old
 VOLUME /etc/mydomoathome
 VOLUME /etc/mydomoathome/config.json
