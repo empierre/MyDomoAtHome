@@ -20,6 +20,7 @@ ENV TERM xterm
 # Install tools                                  #
 ##################################################
 
+RUN apt-get install debconf
 RUN locale-gen en_US.UTF-8
 RUN dpkg-reconfigure locales
 RUN apt-get update --fix-missing
