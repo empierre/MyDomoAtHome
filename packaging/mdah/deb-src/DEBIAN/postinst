@@ -64,6 +64,8 @@ start_service () {
   elif hash start 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'upstart' ]]; then
       start "$service_name" || echo "${service_name} could not be registered or started"
+      echo ENABLED=1 > "/etc/default/$service_name"
+      echo start > "/etc/init/$service_name.override"
     fi
   elif hash systemctl 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'systemd' ]]; then
