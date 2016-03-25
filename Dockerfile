@@ -10,6 +10,9 @@ USER root
 # Set environment variables                      #
 ##################################################
 
+RUN apt-get install -yq apt-utils
+RUN apt-get install debconf
+RUN apt-get update -qq && apt-get install -y locales -qq && locale-gen en_US.UTF-8 en_us && dpkg-reconfigure locales && dpkg-reconfigure locales && locale-gen C.UTF-8 && /usr/sbin/update-locale LANG=C.UTF-8
 # Ensure UTF-8
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
@@ -20,14 +23,10 @@ ENV TERM xterm
 # Install tools                                  #
 ##################################################
 
-RUN apt-get install debconf
-RUN locale-gen en_US.UTF-8
-RUN dpkg-reconfigure locales
 RUN apt-get update --fix-missing
 RUN apt-get -y install sudo
 RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 RUN apt-get install -yq curl
-RUN apt-get install -yq apt-utils
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get install tzdata
 RUN apt-get -y install git git-core
