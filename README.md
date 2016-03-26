@@ -109,6 +109,7 @@ And check again
 ### Migrating from old/Legacy MyDomoAtHome
 
 Shut down the old service
+
     sudo service MyDomoAtHome.sh stop
     rm /etc/init.d/MyDomoAtHome.sh
   

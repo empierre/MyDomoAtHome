@@ -34,13 +34,14 @@ var basicAuth = require('basic-auth');
 var errorHandler = require('errorhandler');
 var requester = require('sync-request');
 var winston = require('winston');
+var pjson = require('./package.json');
 global.logger = winston;
 var app = express();
 
 //working variaboles
 var last_version_dt;
 var last_version =getLastVersion();
-var ver="0.0.38";
+var ver=pjson.version;
 var device_tab={};
 var room_tab=[];
 var device = {MaxDimLevel : null,Action:null,graph:null,Selector:null};
