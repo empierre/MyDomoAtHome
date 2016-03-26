@@ -8,9 +8,9 @@ ver=$1
 perl -pi -e "s/Version: .*/Version: ${ver}/" packaging/mdah/deb-src/DEBIAN/control
 perl -pi -e "s/^RUN wget.*/RUN wget http:\/\/www.e-nef.com\/domoticz\/mdah\/node-mydomoathome-${ver}.deb/" Dockerfile
 perl -pi -e "s/RUN dpkg -i node-mydomoathome.*/RUN dpkg -i node-mydomoathome-${ver}.deb/" Dockerfile
+git commit -a
 npm version $1
 ./git-release.sh $1
-git commit -a
 git push origin --tags
 git push
 cd ./packaging/mdah/ && sudo bash ./redeb.sh
