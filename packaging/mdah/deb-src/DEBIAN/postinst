@@ -50,6 +50,7 @@ npm_install() {
   if [ -e 'node_modules' ]; then
     rm -rf 'node_modules'
   fi
+  sudo -u www-data npm config set loglevel warn
   sudo -u www-data npm install --production
 }
 
@@ -58,12 +59,12 @@ start_service () {
 
   if hash service 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'upstart' ]]; then
-      service "$service_name" start || echo "${service_name} could not be registered or started"
+      service "$service_name" start || echo "$service_name could not be registered or started"
       service enable "$service_name"
     fi
   elif hash start 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'upstart' ]]; then
-      start "$service_name" || echo "${service_name} could not be registered or started"
+      start "$service_name" || echo "$service_name could not be registered or started"
       echo ENABLED=1 > "/etc/default/$service_name"
       echo start > "/etc/init/$service_name.override"
     fi
@@ -72,8 +73,8 @@ start_service () {
       {
         systemctl enable "$service_name.service" && \
 	systemctl preset "$service_name.service" && \
-        systemctl start "$service_name.service"
-      } || echo "${service_name} could not be registered or started"
+        systemctl start  "$service_name.service"
+      } || echo "$service_name could not be registered or started"
     fi
   else
     die 'Your system does not appear to use upstart or systemd, so the service could not be started'
@@ -82,6 +83,9 @@ start_service () {
 
 addGroup 'www-data' ''
 addUser 'www-data' '' 'www-data' 'www-data user-daemon' '/bin/false'
+chown 'www-data:www-data' '/var/www/'
+chown -R 'www-data:www-data' '/usr/share/mydomoathome'
+npm_install 'mydomoathome'
 
 if ! [ -d '/var/log/mydomoathome' ]; then
   mkdir -p '/var/log/mydomoathome'
@@ -96,18 +100,10 @@ if [ ! -f '/etc/mydomoathome/config.json' ]; then
 fi
 
 chown 'www-data:www-data' '/var/log/mydomoathome'
-chown 'www-data:www-data' '/var/www/'
-chown -R 'www-data:www-data' '/usr/share/mydomoathome'
 chown 'www-data:www-data' /etc/mydomoathome/config.json
-
-#NPM specifics
-cd /usr/share/mydomoathome/app
-npm config set loglevel warn
-npm_install 'mydomoathome'
-#sudo -u www-data /usr/bin/npm install --production
 
 update-rc.d mydomoathome defaults
 
-if [[ "$init_type" == 'auto' ]]; then
+if [[ "$init_type" == 'auto' ]] || [[ "$init_type" == 'systemd' ]] || [[ "$init_type" == 'upstart' ]]; then
   start_service 'mydomoathome'
 fi
