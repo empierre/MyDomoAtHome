@@ -49,7 +49,7 @@ APPLICATION_PATH="/usr/share/mydomoathome/app/mdah.js"
 # Process ID file path.
 PIDFILE="/tmp/mdah.pid"
 # Log file path.
-LOGFILE="/tmp/mdah.log"
+LOGFILE="/var/log/mydomoathome/mdah.log"
 # Forever settings to prevent the application spinning if it fails on launch.
 MIN_UPTIME="5000"
 SPIN_SLEEP_TIME="2000"
@@ -99,7 +99,7 @@ stop() {
     if [ -f $PIDFILE ]; then
         echo "Shutting down $NAME"
         # Tell Forever to stop the process.
-        forever stop $APPLICATION_PATH 2>&1 > /dev/null
+        sudo -u $USER forever stop $APPLICATION_PATH 2>&1 > /dev/null
         # Get rid of the pidfile, since Forever won't do that.
         rm -f $PIDFILE
         RETVAL=$?
@@ -127,7 +127,7 @@ status() {
     #
     # So instead we add an extra layer of indirection with this to bypass that
     # issue.
-    echo `forever list` | grep -q "$APPLICATION_PATH"
+    echo `sudo -u $USER forever list` | grep -q "$APPLICATION_PATH"
     if [ "$?" -eq "0" ]; then
         echo "$NAME is running."
         RETVAL=0
