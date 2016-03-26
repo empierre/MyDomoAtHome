@@ -181,7 +181,7 @@ function devSt(deviceId,Status) {
             rbl=1;
             var mydev=device_tab[deviceId];
             if (mydev) {
-                mydev.Action=1;
+                mydev.Action=2;
                 device_tab[deviceId]=mydev;
             } else {
                 mydev={MaxDimLevel : null,Action:2,graph:null,Selector:null};
@@ -192,7 +192,7 @@ function devSt(deviceId,Status) {
             rbl=0;
             var mydev=device_tab[deviceId];
             if (mydev) {
-                mydev.Action=1;
+                mydev.Action=2;
                 device_tab[deviceId]=mydev;
             } else {
                 mydev={MaxDimLevel : null,Action:2,graph:null,Selector:null};
@@ -203,7 +203,7 @@ function devSt(deviceId,Status) {
             rbl=1;
             var mydev=device_tab[deviceId];
             if (mydev) {
-                mydev.Action=1;
+                mydev.Action=3;
                 device_tab[deviceId]=mydev;
             } else {
                 mydev={MaxDimLevel : null,Action:3,graph:null,Selector:null};
@@ -214,7 +214,7 @@ function devSt(deviceId,Status) {
             rbl=0;
             var mydev=device_tab[deviceId];
             if (mydev) {
-                mydev.Action=1;
+                mydev.Action=3;
                 device_tab[deviceId]=mydev;
             } else {
                 mydev={MaxDimLevel : null,Action:3,graph:null,Selector:null};
@@ -325,6 +325,7 @@ function DevDimmer(data) {
     var mydev={MaxDimLevel : null,Action:null,graph:null};
     if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
     mydev.MaxDimLevel=data.MaxDimLevel;
+    mydev.Action=0;
     //console.log(mydev);
     device_tab[data.idx]=mydev;
     params=[];
@@ -1145,15 +1146,15 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             var lsetLevel;
             logger.info(device_tab[deviceId]);
             switch (device_tab[deviceId].Action) {
-                case 1:
+                case 1: //on/off
                     if (actionParam == 1) {
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + actionParam + "&passcode=";
                     } else if (actionParam == 0) {
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
                     }
                     break;
-                case 2:
-                case 3:
+                case 2: //blinds
+                case 3: //security
                     if (actionParam == 100) {
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
                     } else {
