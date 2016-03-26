@@ -4,8 +4,7 @@ if [ $# -eq 0 ]
     echo "No arguments supplied"
 fi
 git commit -a
-git tag -a v$1 -name "Release of version $1"
-#git push origin v$1
+git tag -a "v$1" -name "Release of version $1"
 git push origin --tags
 git push
 npm version $1
