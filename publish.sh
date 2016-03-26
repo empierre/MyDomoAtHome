@@ -4,6 +4,8 @@ if [ $# -eq 0 ]
     echo "No arguments supplied"
 fi
 git commit -a
+git tag v$1
+git push origin v$1
 git push
 npm version $1
 ver=$1
