@@ -6,11 +6,12 @@ fi
 git commit -a
 git tag v$1
 git push origin v$1
+#git push origin --tags
 git push
 npm version $1
 ver=$1
 perl -pi -e "s/Version: .*/Version: ${ver}/" packaging/mdah/deb-src/DEBIAN/control
-perl -pi -e "s/RUN wget.*/RUN wget.*/http:\/\/www.e-nef.com\/domoticz\/mdah\/node-mydomoathome-${ver}.deb/" Dockerfile
+perl -pi -e "s/^RUN wget.*/RUN wget http:\/\/www.e-nef.com\/domoticz\/mdah\/node-mydomoathome-${ver}.deb/" Dockerfile
 perl -pi -e "s/RUN dpkg -i node-mydomoathome.*/RUN dpkg -i node-mydomoathome-${ver}.deb/" Dockerfile
 cd ./packaging/mdah/ && sudo bash ./redeb.sh
 cd ../..
