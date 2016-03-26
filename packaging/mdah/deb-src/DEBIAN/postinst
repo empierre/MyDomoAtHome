@@ -50,7 +50,8 @@ npm_install() {
   if [ -e 'node_modules' ]; then
     rm -rf 'node_modules'
   fi
-  sudo -u www-data npm config set loglevel warn
+  #sudo -u www-data npm config set loglevel warn
+  sudo npm config set loglevel warn
   sudo -u www-data npm install --production
 }
 
