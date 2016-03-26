@@ -32,8 +32,8 @@ case "$1" in
    remove|failed-upgrade|abort-upgrade|abort-install|disappear)
    ;;
    purge)
-      deleteUser www-data
-      deleteGroup www-data
+      #deleteUser www-data
+      #deleteGroup www-data
    ;;
    upgrade)
    ;;

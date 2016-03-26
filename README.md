@@ -78,7 +78,6 @@ On all other (debian, ubuntu...), version 4 is required (testing/unstable are fi
   
   The following commands install npm and then upgrade it to the latest 2.x version.
   
-    sudo apt-get install npm
     sudo npm install -g npm@2.x
   
   Note: npm version 3 is the latest version, but is currently not recommended for use.
