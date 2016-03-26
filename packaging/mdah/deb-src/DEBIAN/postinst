@@ -62,6 +62,7 @@ start_service () {
     if [[ "$init_type" == 'auto' || "$init_type" == 'upstart' ]]; then
       service "$service_name" start || echo "$service_name could not be registered or started"
       #service enable "$service_name"
+      update-rc.d mydomoathome defaults
     fi
   elif hash start 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'upstart' ]]; then
@@ -103,7 +104,6 @@ fi
 chown 'www-data:www-data' '/var/log/mydomoathome'
 chown 'www-data:www-data' /etc/mydomoathome/config.json
 
-update-rc.d mydomoathome defaults
 
 if [[ "$init_type" == 'auto' ]] || [[ "$init_type" == 'systemd' ]] || [[ "$init_type" == 'upstart' ]]; then
   start_service 'mydomoathome'

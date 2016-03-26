@@ -5,6 +5,7 @@ if [ $# -eq 0 ]
 fi
 git commit -a
 git tag -a "v$1" -m "Release of version $1"
+./git-release.sh $1
 git push origin --tags
 git push
 npm version $1
