@@ -11,7 +11,7 @@
 ### BEGIN INIT INFO
 # Provides:             mydomoathome
 # Required-Start:       $syslog $remote_fs $network
-# Required-Stop:        $syslog $remote_fs $network
+# Required-Stop:        $syslog $remote_fs 
 # Should-Start:         $local_fs
 # Should-Stop:          $local_fs
 # Default-Start:        2 3 4 5

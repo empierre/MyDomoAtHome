@@ -58,7 +58,15 @@ npm_install() {
 start_service () {
   declare -r service_name="$1"
 
-  if hash service 2> /dev/null; then
+  if hash systemctl 2> /dev/null; then
+    if [[ "$init_type" == 'auto' || "$init_type" == 'systemd' ]]; then
+      {
+        systemctl enable "$service_name.service" && \
+	systemctl preset "$service_name.service" && \
+        systemctl start  "$service_name.service"
+      } || echo "$service_name could not be registered or started"
+    fi
+  elif hash service 2> /dev/null; then
     if [[ "$init_type" == 'auto' || "$init_type" == 'upstart' ]]; then
       service "$service_name" start || echo "$service_name could not be registered or started"
       #service enable "$service_name"
@@ -69,14 +77,7 @@ start_service () {
       start "$service_name" || echo "$service_name could not be registered or started"
       echo ENABLED=1 > "/etc/default/$service_name"
       echo start > "/etc/init/$service_name.override"
-    fi
-  elif hash systemctl 2> /dev/null; then
-    if [[ "$init_type" == 'auto' || "$init_type" == 'systemd' ]]; then
-      {
-        systemctl enable "$service_name.service" && \
-	systemctl preset "$service_name.service" && \
-        systemctl start  "$service_name.service"
-      } || echo "$service_name could not be registered or started"
+      update-rc.d mydomoathome defaults
     fi
   else
     die 'Your system does not appear to use upstart or systemd, so the service could not be started'
