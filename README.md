@@ -100,11 +100,11 @@ And check again
   Then:
 
     sudo apt-get update
-    sudo apt-get install mydomoathome  
+    sudo apt-get install MyDomoAtHome 
 
   edit /etc/mydomoathome/config.json with your values
   
-     sudo service MyDomoAtHome.sh restart
+     sudo service mydomoathome restart
   
 ### Migrating from old/Legacy MyDomoAtHome
 
