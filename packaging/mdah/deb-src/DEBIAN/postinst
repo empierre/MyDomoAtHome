@@ -82,6 +82,10 @@ start_service () {
   fi
 }
 
+if ! [ -d '/var/www' ]; then
+  mkdir -p '/var/www'
+fi
+
 addGroup 'www-data' ''
 addUser 'www-data' '' 'www-data' 'www-data user-daemon' '/bin/false'
 chown 'www-data:www-data' '/var/www/'
@@ -90,10 +94,6 @@ npm_install 'mydomoathome'
 
 if ! [ -d '/var/log/mydomoathome' ]; then
   mkdir -p '/var/log/mydomoathome'
-fi
-
-if ! [ -d '/var/www' ]; then
-  mkdir -p '/var/www'
 fi
 
 if [ ! -f '/etc/mydomoathome/config.json' ]; then
