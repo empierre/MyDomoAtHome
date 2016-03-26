@@ -53,6 +53,8 @@ LOGFILE="/tmp/mdah.log"
 # Forever settings to prevent the application spinning if it fails on launch.
 MIN_UPTIME="5000"
 SPIN_SLEEP_TIME="2000"
+USER=www-data
+GROUP=www-data
  
 NODE_PATH=""
  
@@ -83,7 +85,7 @@ start() {
     #
     # Note that redirecting the output to /dev/null (or anywhere) is necessary
     # to make this script work if provisioning the service via Chef.
-    forever \
+    sudo -u $USER forever \
       --pidFile $PIDFILE \
       -a \
       -l $LOGFILE \
