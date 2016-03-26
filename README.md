@@ -69,6 +69,7 @@ On RASPBIAN (Raspberry PI/PI2), please install first to have a stable nodeJS :
 
     wget -q http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
     sudo dpkg -i nodejs_4.4.2_armhf.deb
+    sudo apt-get install npm
     sudo npm install -g npm@2.x
 
 On all other (debian, ubuntu...), version 4 is required (testing/unstable are fine):
