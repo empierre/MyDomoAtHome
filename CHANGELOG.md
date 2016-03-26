@@ -3,6 +3,7 @@
 #### 0.0.38
 - Corrected
   - startup issues on service like
+  - head version
 
 #### 0.0.37
 - Corrected
