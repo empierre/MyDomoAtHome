@@ -1,5 +1,11 @@
 # CHANGELOG
 
+#### 0.0.47
+- Corrected
+  - startup issues on PI 1
+  - app_name now taken into account
+  - basic Dimmer issue
+
 #### 0.0.38
 - Corrected
   - startup issues on service like
