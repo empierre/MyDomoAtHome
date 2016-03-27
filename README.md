@@ -67,7 +67,7 @@ If not please do:
 
 On RASPBIAN (Raspberry PI/PI2), please install first to have a stable nodeJS :
 
-    sudo apt-get remove nodejs
+    sudo apt-get remove node
     wget -q http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
     sudo dpkg -i nodejs_4.4.2_armhf.deb
     sudo apt-get install npm
