@@ -67,6 +67,7 @@ If not please do:
 
 On RASPBIAN (Raspberry PI/PI2), please install first to have a stable nodeJS :
 
+    sudo apt-get remove nodejs
     wget -q http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
     sudo dpkg -i nodejs_4.4.2_armhf.deb
     sudo apt-get install npm
@@ -74,6 +75,7 @@ On RASPBIAN (Raspberry PI/PI2), please install first to have a stable nodeJS :
 
 On all other (debian, ubuntu...), version 4 is required (testing/unstable are fine):
 
+    apt-get remove nodejs
     curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
     sudo apt-get install -y nodejs
   
@@ -101,6 +103,8 @@ And check again
 
     sudo apt-get update
     sudo apt-get install MyDomoAtHome 
+
+  Important remark: do not install as roos, but sudo as an unprivilegied user
 
   edit /etc/mydomoathome/config.json with your values
   
