@@ -80,7 +80,7 @@ On all other (debian, ubuntu...), version 4 is required (testing/unstable are fi
     curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
     sudo apt-get install -y nodejs
   
-  The following commands install npm and then upgrade it to the latest 2.x version.
+   The following commands install npm and then upgrade it to the latest 2.x version.
   
     sudo npm install -g npm@2.x
   
