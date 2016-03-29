@@ -65,4 +65,4 @@ WORKDIR dist
 ADD . dist
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
   npm install -g forever nodemon mocha supervisor
-CMD ["forever", "--minUptime 1000 --spinSleepTime 1000 --max-old-space-size=128 /usr/share/mydomoathome/app/mdah.js"]
+CMD ["forever", "start","--minUptime 1000 --spinSleepTime 1000 --max-old-space-size=128", "/usr/share/mydomoathome/app/mdah.js"]
