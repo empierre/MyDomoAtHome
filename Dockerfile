@@ -50,8 +50,8 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
 RUN apt-get install -y nodejs
 #RUN apt-get install npm
 RUN npm install -g npm@2.x
-RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.0.47.deb
-RUN dpkg -i node-mydomoathome-0.0.47.deb
+RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.0.48.deb
+RUN dpkg -i node-mydomoathome-0.0.48.deb
 RUN mv /etc/mydomoathome/config.json /etc/mydomoathome/config.json.old
 VOLUME /etc/mydomoathome/config.json
 
@@ -65,4 +65,5 @@ WORKDIR dist
 ADD . dist
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
   npm install -g forever nodemon mocha supervisor
-CMD ["forever", "start","--minUptime 1000 --spinSleepTime 1000 --max-old-space-size=128", "/usr/share/mydomoathome/app/mdah.js"]
+#CMD ["forever", "start","--minUptime 1000 --spinSleepTime 1000 --max-old-space-size=128", "/usr/share/mydomoathome/app/mdah.js"]
+CMD ["forever", "/usr/share/mydomoathome/app/mdah.js"]
