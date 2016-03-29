@@ -73,7 +73,7 @@ nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
         console.error("No conf in etc:"+err.message);
         return;
     }});
-nconf.load({ file: './config.json' },function (err) {
+nconf.load(function (err) {
     if (err) {
         console.error("No local conf:"+err.message);
         return;
