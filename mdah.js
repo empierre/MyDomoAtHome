@@ -1610,6 +1610,7 @@ app.get("/devices", function(req, res){
                         case 'Blinds':
                         case 'Venetian Blinds EU':
                         case 'Venetian Blinds US':
+                        case 'RollerTrol, Hasta new':
                             result.push(DevShutter(data.result[i]));
                             break;
                         case 'Motion Sensor':
