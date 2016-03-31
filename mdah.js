@@ -302,6 +302,7 @@ function DevRGBLight(data) {
         var mydev={MaxDimLevel : null,Action:null,graph:null};
         if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
         mydev.MaxDimLevel=data.MaxDimLevel;
+        mydev.Action=0;
         device_tab[data.idx]=mydev;
         params=[];
         params.push({"key": "Status", "value": "1"});//hyp: set level only when on
