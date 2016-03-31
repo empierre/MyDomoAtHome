@@ -64,19 +64,23 @@ logger.add(winston.transports.File, { filename: '/var/log/mydomoathome/usage.log
 // load conf file
 nconf.use('file', { file: './config.json' },function (err) {
     if (err) {
-        console.error("No local conf:"+err.message);
+        logger.warn("No local conf:"+err.message);
         return;
     }
 });
-
+nconf.load(function (err) {
+    if (err) {
+        logger.warn("No local conf:"+err.message);
+        return;
+    }});
 nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
     if (err) {
-        console.error("No conf in etc:"+err.message);
+        logger.warn("No conf in etc:"+err.message);
         return;
     }});
 nconf.load(function (err) {
     if (err) {
-        console.error("No local conf:"+err.message);
+        logger.warn("No local conf:"+err.message);
         return;
     }});
 if (! nconf.get('domo_path')) {
@@ -229,7 +233,7 @@ function devSt(data) {
             }
             device_tab[deviceId]=mydev;
             break;
-		default: rbl=Status;break;
+		default: rbl=data.Status;break;
 	}
 	return rbl;
 }
