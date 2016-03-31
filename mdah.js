@@ -515,7 +515,7 @@ function DevGenericSensor(data) {
         params=[];
         params.push({"key": "Value", "value": data.Status.toString()});
         myfeed.params = params;
-    } else {
+    } else if (data.Data) {
         params=[];
         //console.log(data;)
         params.push({"key": "Value", "value": data.Data.toString()});
