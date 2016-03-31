@@ -351,7 +351,7 @@ function DevDimmer(data) {
 function DevShutterInverted(data) {
     var status=0;status=devSt(data);
     room_tab.Switches=1;
-    var lvl=0;
+    var lvl=0;var stoppable=0;
     var mydev={MaxDimLevel : null,Action:null,graph:null};
     if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
     mydev.Action=5;
@@ -370,11 +370,12 @@ function DevShutterInverted(data) {
         status=0;
     };
     //console.log(data.idx+" "+status+" "+lvl);
+    if ((data.SwitchType == 'Venetian Blinds EU')||(data.SwitchType == 'Venetian Blinds US')||(data.SwitchType == 'RollerTrol, Hasta new')) {stoppable=1;}
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
     params=[];
     params.push({"key": "Status", "value": status});
     params.push({"key": "Level", "value": lvl.toString()});
-    params.push({"key": "stoppable", "value": "1"});
+    params.push({"key": "stoppable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "0"});
     myfeed.params=params;
     //console.log(params);
@@ -392,7 +393,7 @@ function DevShutter(data) {
     device_tab[data.idx]=mydev;
     //console.log(data.Status+" "+data.Level);
     if (data.Status == 'Open') {
-        lvl=data.Level||100;
+        lvl=100||data.Level;
         status=1;
     } else if ((data.Status.match(/Set Level/)||(data.HaveDimmer==='true') )) {
         lvl = data.Level;
@@ -1183,7 +1184,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     break;
                 case 5:
                     //Blinds inverted
-                    if (actionParam == 100) {
+                    if (actionParam == 0) {
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=0&passcode=";
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
