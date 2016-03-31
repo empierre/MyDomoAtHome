@@ -796,6 +796,7 @@ function DevWater(data) {
         if (res != null) {total = Number(res[1]);}
         params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "m3", "graphable": "true"});
     }
+    console.log(myfeed);
     myfeed.params=params;
     //combo.push(myfeed);
     /*var myfeed = {"id": data.idx+"_1", "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
@@ -1574,7 +1575,7 @@ app.get("/devices", function(req, res){
         params.push({"key": "Value", "value": ver, "unit": "", "graphable": "false"});
         myfeed.params=params;
         result.push(myfeed);
-        if (ver != getLastVersion()) {
+        if ("v"+ver != getLastVersion()) {
             var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
             var params=[];
             params.push({"key": "Value", "value": last_version, "unit": "", "graphable": "false"});
@@ -1738,10 +1739,11 @@ app.get("/devices", function(req, res){
                             result.push(DevGas(data.result[i]));
                             break;
                         case 2:
-                            var rt=DevWater(data.result[i]);
+                            /*var rt=DevWater(data.result[i]);
                             for(var ii = 0; ii < rt.length; ii++) {
                                 result.push(rt[ii]);
-                            }
+                            }*/
+                            result.push(DevWater(data.result[i]));
                             break;
                         case 3:
                             result.push(DevElectricity(data.result[i]));
