@@ -24,6 +24,7 @@ var path = require('path');
 var request = require("request");
 //var querystring = require("querystring");
 var nconf = require('nconf');
+var fs      = require('fs');
 var os = require("os");
 var moment = require('moment');
 var morgan = require('morgan');
@@ -62,22 +63,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 logger.add(winston.transports.File, { filename: '/var/log/mydomoathome/usage.log' });
 
 // load conf file
-nconf.use('file', { file: './config.json' },function (err) {
-    if (err) {
-        logger.warn("No local conf:"+err.message);
-        return;
-    }
-});
-nconf.load(function (err) {
-    if (err) {
-        logger.warn("No local conf:"+err.message);
-        return;
-    }});
-nconf.use('file', { file: '/etc/mydomoathome/config.json' },function (err) {
-    if (err) {
-        logger.warn("No conf in etc:"+err.message);
-        return;
-    }});
+if (fileExists('./config.json')) {
+        nconf.use('file', { file: './config.json' },function (err) {
+            if (err) {
+                logger.info("No local conf:"+err.message);
+                return;
+            }
+        });
+} else {logger.info("No local conf");}
+if (fileExists('/etc/mydomoathome/config.json')) {
+    nconf.use('file', {file: '/etc/mydomoathome/config.json'}, function (err) {
+        if (err) {
+            logger.warn("No conf in etc:" + err.message);
+            return;
+        }
+    });
+} else {logger.warn("No global conf");}
 nconf.load(function (err) {
     if (err) {
         logger.warn("No local conf:"+err.message);
@@ -91,6 +92,17 @@ if (! nconf.get('domo_path')) {
     app_name=nconf.get('app_name')||"MyDomoAtHome";
 }
 
+function fileExists(filePath)
+{
+    try
+    {
+        return fs.statSync(filePath).isFile();
+    }
+    catch (err)
+    {
+        return false;
+    }
+}
 
 function versionCompare(v1, v2, options) {
     var lexicographical = options && options.lexicographical,

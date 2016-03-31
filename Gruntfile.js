@@ -19,7 +19,7 @@ module.exports = function (grunt) {
         ui: 'bdd',
         reporter: 'xunit-file'
       },
-      all: {src: ['./test.js']}
+      all: {src: ['./test/*.js']}
     }
   });
   grunt.loadNpmTasks('grunt-express-server');
