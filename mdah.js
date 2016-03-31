@@ -157,11 +157,12 @@ function getLastVersion() {
         });
     }
 };
-function devSt(deviceId,Status) {
+function devSt(data) {
 	var rbl;
 	var dimmable;
 	if (data.HaveDimmer==='true') {dimmable=1}else {dimmable=0};
-	switch (Status) {
+	var deviceId=data.deviceId;
+	switch (data.Status) {
         case "On":
             rbl=1;
             var mydev=device_tab[deviceId];
@@ -292,7 +293,7 @@ function DevPush(data) {
     return (myfeed);
 }
 function DevRGBLight(data) {
-    var status =0;status=devSt(data.idx,data.Status);
+    var status =0;status=devSt(data);
     room_tab.Switches=1;
     switch(data.SwitchType) {
         case 'Push On Button': status=1;break;
@@ -326,7 +327,7 @@ function DevDimmer(data) {
     room_tab.Switches=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
     //console.log(data.Status);
-    status=devSt(data.idx,data.Status);
+    status=devSt(data);
     if (data.Status.match(/Set Level/)) {
         status = 1;
     }
@@ -344,7 +345,7 @@ function DevDimmer(data) {
     return(myfeed);
 };
 function DevShutterInverted(data) {
-    var status=0;status=devSt(data.idx,data.Status);
+    var status=0;status=devSt(data);
     room_tab.Switches=1;
     var lvl=0;
     var mydev={MaxDimLevel : null,Action:null,graph:null};
@@ -376,7 +377,7 @@ function DevShutterInverted(data) {
     return(myfeed);
 };
 function DevShutter(data) {
-    var status=0;status=devSt(data.idx,data.Status);
+    var status=0;status=devSt(data);
     room_tab.Switches=1;
     var lvl=0;
     var stoppable=0;
@@ -413,7 +414,7 @@ function DevMotion(data) {
     room_tab.Switches=1;
     var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": "Switches"};
-    params=[];var value=devSt(data.idx,data.Status);
+    params=[];var value=devSt(data);
     //console.log(data.Status+" "+value);
     params.push({"key":"Armable", "value":"0"});
     params.push({"key":"ackable", "value":"0"});
@@ -427,7 +428,7 @@ function DevDoor(data) {//TODO
     room_tab.Switches=1;
     var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
-    params=[];var value=devSt(data.idx,data.Status);
+    params=[];var value=devSt(data);
     params.push({"key":"armable", "value":"0"});
     params.push({"key":"Ackable", "value":"0"});
     params.push({"key":"Armed", "value":"1"});
@@ -440,7 +441,7 @@ function DevLock(data) {
     room_tab.Switches=1;
     var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
-    params=[];var value=devSt(data.idx,data.Status);
+    params=[];var value=devSt(data);
     params.push({"key":"armable", "value":"0"});
     params.push({"key":"Ackable", "value":"0"});
     params.push({"key":"Armed", "value":"1"});
@@ -455,7 +456,7 @@ function DevSmoke(data) {
     var ackable=0;
     if (data.Type=='Security') {ackable=1;}
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
-    params=[];var value=devSt(data.idx,data.Status);
+    params=[];var value=devSt(data);
     params.push({"key":"Armable", "value":"0"});
     params.push({"key":"ackable", "value":ackable.toString()});
     params.push({"key":"Armed", "value":"1"});
@@ -469,7 +470,7 @@ function DevFlood(data) {
     var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable=0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevFlood", "room": "Switches"};
-    params=[];var value=devSt(data.idx,data.Status);
+    params=[];var value=devSt(data);
     params.push({"key":"armable", "value":"0"});
     params.push({"key":"Ackable", "value":ackable.toString()});
     params.push({"key":"Armed", "value":"1"});
@@ -483,7 +484,7 @@ function DevCO2(data) {
     var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable=0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Switches"};
-    params=[];var value=devSt(data.idx,data.Status);
+    params=[];var value=devSt(data);
     params.push({"key":"armable", "value":"0"});
     params.push({"key":"Ackable", "value":ackable.toString()});
     params.push({"key":"Armed", "value":"1"});
@@ -497,7 +498,7 @@ function DevCO2Alert(data) {
     var dt=moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable=0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2Alert", "room": "Switches"};
-    params=[];var value=devSt(data.idx,data.Status);
+    params=[];var value=devSt(data);
     params.push({"key":"armable", "value":"0"});
     params.push({"key":"ackable", "value":ackable.toString()});
     params.push({"key":"Armed", "value":"1"});
