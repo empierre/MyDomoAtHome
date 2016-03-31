@@ -3,4 +3,4 @@ cd ./packaging/mdah/ && sudo bash ./redeb.sh
 cd ../..
 mv -f ./packaging/mdah/node-mydomoathome-1.deb ./binary/
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-latest.deb
-sudo docker build -f Dockerfile.test
+sudo docker build -f Dockerfile.test .
