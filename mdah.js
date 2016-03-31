@@ -541,6 +541,7 @@ function DevElectricity(data) {
     var ptrn1 = /(\d+) Watt/;
     var ptrn2 = /([0-9]+(?:\.[0-9]+)?) Watt/;
     var ptrn3 = /[\s,]+/;
+    var ptrn4 = /([0-9]+(?:\.[0-9]+)?) kWh/;
 
     var myfeed;
     var params = [];var combo = [];
@@ -573,7 +574,7 @@ function DevElectricity(data) {
         //devgeneric for CounterToday/CounterDelivToday
         var params=[];
         var myfeed3= {"id": data.idx+"_3", "name": data.Name+" CounterToday", "type": "DevGenericSensor", "room": "Utility"};
-        var res = ptrn2.exec(data.CounterToday);
+        var res = ptrn4.exec(data.CounterToday);
         var CounterToday = 0;
         if (res != null) {
             CounterToday = Math.ceil(Number(res[1]));
@@ -583,7 +584,7 @@ function DevElectricity(data) {
         combo.push(myfeed3);
         var params=[];
         var myfeed4= {"id": data.idx+"_4", "name": data.Name+" CounterDelivToday", "type": "DevGenericSensor", "room": "Utility"};
-        var res = ptrn2.exec(data.CounterDelivToday);
+        var res = ptrn4.exec(data.CounterDelivToday);
         var CounterDelivToday = 0;
         if (res != null) {
             CounterDelivToday = Math.ceil(Number(res[1]));
