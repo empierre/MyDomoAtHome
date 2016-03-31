@@ -46,6 +46,7 @@ NODE_BIN_DIR="/usr/bin"
 # NODE_PATH="/usr/local/lib/node_modules"
 # The application startup Javascript file path.
 APPLICATION_PATH="/usr/share/mydomoathome/app/mdah.js"
+APPLICATION_DIR="/usr/share/mydomoathome/app/"
 # Process ID file path.
 PIDFILE="/tmp/mdah.pid"
 # Log file path.
@@ -99,6 +100,7 @@ stop() {
     if [ -f $PIDFILE ]; then
         echo "Shutting down $NAME"
         # Tell Forever to stop the process.
+        cd APPLICATION_DIR
         sudo -u $USER forever stop $APPLICATION_PATH 2>&1 > /dev/null
         # Get rid of the pidfile, since Forever won't do that.
         rm -f $PIDFILE
