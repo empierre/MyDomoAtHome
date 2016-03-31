@@ -159,30 +159,32 @@ function getLastVersion() {
 };
 function devSt(deviceId,Status) {
 	var rbl;
+	var dimmable;
+	if (data.HaveDimmer==='true') {dimmable=1}else {dimmable=0};
 	switch (Status) {
         case "On":
             rbl=1;
             var mydev=device_tab[deviceId];
             if (mydev) {
-                mydev.Action=1;
+                if (dimmable) {mydev.Action=0;mydev.MaxDimLevel=data.MaxDimLevel;}else {mydev.Action=1;}
                 device_tab[deviceId]=mydev;
             } else {
                 mydev={MaxDimLevel : null,Action:1,graph:null,Selector:null};
             }
             device_tab[deviceId]=mydev;
             break;
-		case "Off":
+	case "Off":
             rbl=0;
             var mydev=device_tab[deviceId];
             if (mydev) {
-                mydev.Action=1;
+                if (dimmable) {mydev.Action=0;mydev.MaxDimLevel=data.MaxDimLevel;}else {mydev.Action=1;}
                 device_tab[deviceId]=mydev;
             } else {
                 mydev={MaxDimLevel : null,Action:1,graph:null,Selector:null};
             }
             device_tab[deviceId]=mydev;
             break;
-		case "Open":
+	case "Open":
             rbl=1;
             var mydev=device_tab[deviceId];
             if (mydev) {
@@ -193,7 +195,7 @@ function devSt(deviceId,Status) {
             }
             device_tab[deviceId]=mydev;
             break;
-		case "Closed":
+	case "Closed":
             rbl=0;
             var mydev=device_tab[deviceId];
             if (mydev) {
@@ -215,7 +217,7 @@ function devSt(deviceId,Status) {
             }
             device_tab[deviceId]=mydev;
             break;
-		case "Normal":
+	case "Normal":
             rbl=0;
             var mydev=device_tab[deviceId];
             if (mydev) {
