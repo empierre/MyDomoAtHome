@@ -796,7 +796,7 @@ function DevWater(data) {
         if (res != null) {total = Number(res[1]);}
         params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "m3", "graphable": "true"});
     }
-    console.log(myfeed);
+    //console.log(myfeed);
     myfeed.params=params;
     //combo.push(myfeed);
     /*var myfeed = {"id": data.idx+"_1", "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};

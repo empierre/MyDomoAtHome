@@ -4,4 +4,4 @@ set -e
 
 cd /usr/share/mydomoathome/app
 
-forever  --minUptime 1000 --spinSleepTime 1000 --max-old-space-size=128  mdah.js
+forever  --minUptime 1000 --spinSleepTime 1000 --max-old-space-size=128  /usr/share/mydomoathome/app/mdah.js
