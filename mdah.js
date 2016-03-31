@@ -1117,7 +1117,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             }
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=" + action + "&level=0&passcode=",
+                url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=" + action + "&passcode=",
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1168,15 +1168,19 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
             switch (device_tab[deviceId].Action) {
                 case 1: //on/off
                     if (actionParam == 1) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + actionParam + "&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode=";
                     } else if (actionParam == 0) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode=";
+                    } else {
+                        logger.error("Should not happen"+device_tab[deviceId]);
                     }
                     break;
                 case 2: //blinds
                 case 3: //security
                     if (actionParam == 100) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode=";
+                    } else if (actionParam == 0) {
+                            my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode=";
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + lsetLevel + "&passcode=";
@@ -1185,7 +1189,9 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                 case 5:
                     //Blinds inverted
                     if (actionParam == 0) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=0&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode=";
+                    } else if (actionParam == 100) {
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode=";
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
                         logger.info(actionParam+" "+lsetLevel);
@@ -1195,7 +1201,9 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                 case 6:
                     //Blinds -> On for Closed, Off for Open
                     if (actionParam == 100) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + actionParam + "&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode=";
+                    } else if (actionParam == 0) {
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode=";
                     } else {
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
                     }
