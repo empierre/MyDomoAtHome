@@ -298,7 +298,7 @@ function DevRGBLight(data) {
         default: status=0;break;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": "Switches"};
-    if (data.Status.match(/Set Level/)) {
+    if (data.Status.match(/Set Level/)||(data.HaveDimmer==='true')) {
         var mydev={MaxDimLevel : null,Action:null,graph:null};
         if (device_tab[data.idx]) {mydev=device_tab[data.idx];}
         mydev.MaxDimLevel=data.MaxDimLevel;
