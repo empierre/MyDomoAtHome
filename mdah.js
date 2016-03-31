@@ -762,17 +762,17 @@ function DevGas(data) {
 }
 function DevWater(data) {
     room_tab.Utility=1;
-    var ptrn1= /(\d+) Liter/;
-    var ptrn2= /([0-9]+(?:\.[0-9]+)?) Liter/;
+    var ptrn1=  /(\d+) Liter/;
+    var ptrn2=  /([0-9]+(?:\.[0-9]+)?) Liter/;
     var ptrn2b= /([0-9]+(?:\.[0-9]+)?) m3/;
-    var ptrn3= /[\s,]+/;
+    var ptrn3=  /[\s,]+/;
     var combo=[];
     var usage_l=0;
 
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
     var params=[];
     if (data.CounterToday) {
-        var res= ptrn1.exec(data.CounterToday);
+        var res= ptrn2.exec(data.CounterToday);
         var usage=0;
         if (res != null) {usage=Number(res[1]);usage_l=Number(res[1]);}
 
@@ -781,7 +781,7 @@ function DevWater(data) {
         }
         params.push({"key": "Watts", "value": usage.toString(), "unit": "l", "graphable": "false"});
     }
-    if (data.Data) {
+    if (data.Counter) {
         var res=ptrn2b.exec(data.Counter);
         var total=0;
         if (res != null) {total = Number(res[1]);}
