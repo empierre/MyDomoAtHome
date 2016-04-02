@@ -382,7 +382,7 @@ function DevShutterInverted(data) {
         status=0;
     };
     //console.log(data.idx+" "+status+" "+lvl);
-    if ((data.SwitchType == 'Venetian Blinds EU')||(data.SwitchType == 'Venetian Blinds US')||(data.SwitchType == 'RollerTrol, Hasta new')) {stoppable=1;}
+    if ((data.SwitchType === 'Venetian Blinds EU')||(data.SwitchType === 'Venetian Blinds US')||(data.SwitchType === 'RollerTrol, Hasta new')) {stoppable=1;}
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
     params=[];
     params.push({"key": "Status", "value": status});
@@ -416,7 +416,7 @@ function DevShutter(data) {
         status=0;
     };
     //console.log(data.idx+" "+status+" "+lvl);
-    if ((data.SwitchType == 'Venetian Blinds EU')||(data.SwitchType == 'Venetian Blinds US')||(data.SwitchType == 'RollerTrol, Hasta new')) {stoppable=1;}
+    if ((data.SwitchType === 'Venetian Blinds EU')||(data.SwitchType === 'Venetian Blinds US')||(data.SwitchType === 'RollerTrol, Hasta new')) {stoppable=1;}
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
     params=[];
     params.push({"key": "Status", "value": status});
