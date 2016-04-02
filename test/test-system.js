@@ -43,23 +43,3 @@ describe('Devices', function () {
       });
   });
 });
-describe('Setters', function () {
-  it('Testing Index call to ' + apiURL4, function (done) {
-    superagent.get(apiURL4)
-      .end(function (err, res) {
-        (err === null).should.equal(true);
-        res.statusCode.should.equal(200);
-        done();
-      });
-  });
-});
-describe('Setters', function () {
-  it('Testing Index call to ' + apiURL5, function (done) {
-    superagent.get(apiURL5)
-      .end(function (err, res) {
-        (err === null).should.equal(true);
-        res.statusCode.should.equal(200);
-        done();
-      });
-  });
-});
