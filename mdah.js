@@ -913,8 +913,8 @@ function DevRain(data) {
     room_tab.Weather=1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": "Weather"};
     var params=[];
-    params.push({"key": "Accumulation", "value": data.Rain, "unit": "mm", "graphable": "true"});
-    params.push({"key": "Value", "value": data.RainRate, "unit": "mm/h", "graphable": "true"});
+    params.push({"key": "Accumulation", "value": data.Rain.toString(), "unit": "mm", "graphable": "true"});
+    params.push({"key": "Value", "value": data.RainRate.toString(), "unit": "mm/h", "graphable": "true"});
     myfeed.params=params;
     return (myfeed);
 };
@@ -1097,6 +1097,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
     var deviceId = req.params.deviceId;
     var actionName = req.params.actionName;
     var actionParam = req.params.actionParam;
+    logger.info("GET /devices/"+deviceId+"/action/"+actionName+"/"+actionParam);
     switch (actionName) {
         case 'pulse':
             res.type('json');
