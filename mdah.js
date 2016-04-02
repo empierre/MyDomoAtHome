@@ -387,7 +387,7 @@ function DevShutterInverted(data) {
     params=[];
     params.push({"key": "Status", "value": status});
     params.push({"key": "Level", "value": lvl.toString()});
-    params.push({"key": "stoppable", "value": stoppable.toString()});
+    params.push({"key": "stopable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "0"});
     myfeed.params=params;
     //console.log(params);
@@ -421,7 +421,7 @@ function DevShutter(data) {
     params=[];
     params.push({"key": "Status", "value": status});
     params.push({"key": "Level", "value": lvl.toString()});
-    params.push({"key": "stoppable", "value": stoppable.toString()});
+    params.push({"key": "stopable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "0"});
 
     myfeed.params=params;
