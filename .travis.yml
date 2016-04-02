@@ -9,8 +9,8 @@ node_js:
 
 before_install:
   - sudo apt-get -qq update
-# - sudo apt-get install -y libudev-dev libboost-system1.58.0 libboost-thread1.58.0 
   - sudo apt-cache search libboost
+  - sudo apt-get install -y libboost-thread1.48.0
   - npm install -g npm@2.x
   - npm install express
   - npm install supervisor -g
