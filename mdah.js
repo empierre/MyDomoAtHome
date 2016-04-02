@@ -1672,6 +1672,24 @@ app.get("/devices", function(req, res){
                             break;
                     }
                     break;
+                case 'Blinds':
+                    switch(data.result[i].SwitchType) {
+                        case 'Blinds Inverted':
+                        case 'Blinds Percentage Inverted':
+                            result.push(DevShutterInverted(data.result[i]));
+                            break;
+                        case 'Blinds Percentage':
+                        case 'Blinds':
+                        case 'Venetian Blinds EU':
+                        case 'Venetian Blinds US':
+                        case 'RollerTrol, Hasta new':
+                            result.push(DevShutter(data.result[i]));
+                            break;
+                        default:
+                            logger.warn("UNK Blind "+data.result[i].Name);
+                            break;
+                    }
+                    break;
                 case 'Security':
                     switch(data.result[i].SwitchType) {
                         case 'Smoke Detector':
@@ -1799,7 +1817,7 @@ app.get("/devices", function(req, res){
                             result.push(DevGenericSensor(data.result[i]));
                             break;
                         case 'Unknown':
-                            logger.warn("Unknown "+data.result[i].Name+" "+data.result[i].SubType);
+                            logger.warn("Unknown general "+data.result[i].Name+" "+data.result[i].SubType);
                             break;
                         case 'Waterflow':
                             result.push(DevFlow(data.result[i]));
@@ -1842,7 +1860,7 @@ app.get("/devices", function(req, res){
                     result.push(DevSceneGroup(data.result[i]));
                     break;
                 default:
-                    logger.warn("Unknown type "+data.result[i].Type);
+                    logger.warn("Unknown SwitchType "+data.result[i].Type);
                     break;
                 }
             }
