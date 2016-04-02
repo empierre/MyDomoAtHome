@@ -1597,7 +1597,7 @@ app.get("/devices", function(req, res){
         params.push({"key": "Value", "value": ver, "unit": "", "graphable": "false"});
         myfeed.params=params;
         result.push(myfeed);
-        if ("v"+ver != getLastVersion()) {
+        if (versionCompare(ver,getLastVersion().substring(1))<0) {
             var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
             var params=[];
             params.push({"key": "Value", "value": last_version, "unit": "", "graphable": "false"});
@@ -1935,6 +1935,6 @@ server.on('error', function (e) {
     setTimeout(function () {
       server.close();
       server.listen(port);
-    }, 2000);
+    }, 4000);
   }
 });
