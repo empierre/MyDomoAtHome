@@ -20,18 +20,21 @@ REST Gateway between Domoticz and Imperihome ISS
 # Features and goals
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
-![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached
-![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M2 Goal reached
-M2 milestone has brought a full rewrite to node js with debian packaging
+![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached - first version after ISS has been announced
+
+![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M2 Goal reached - full rewrite to node js with debian packaging, simpler install and upgrade, better performance, less dependencies
 - [X] Free
 - [X] Multi-platform (Linux, Mac OS X, Windows)
-- [X] Dependency-less 
-- [X] Node.js rewrite
+  - [X] Dependency-less 
+  - [X] Node.js rewrite
+  - [X] Installation / usage logs
+- [X] Debian package - noarch
+  - [X] Auto updatable through apt-get
+  - [X] Third-party hosting
 - [X] Micro-services (Docker)
+  - [X] Image available on Docker Hub
 - [X] Synology
-  - [X] Synology docker image
-- [X] Debian package- noarch
-  - [X] personal hosting
+  - [X] Synology compatible docker image
 - [X] Support major type of sensors/feature of Domoticz
   - [X] Weather and Environmental sensors  
   - [X] Energy sensors (Electricity, Gas, Water)
@@ -40,12 +43,11 @@ M2 milestone has brought a full rewrite to node js with debian packaging
   - [X] Dynamic room creation
   - [X] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
   - [X] Push On buttons (depending on Imperihome)
-  - [X] Installation / usage logs
 
 M3 milestone will provide extended support to other platforms with Docker and Synology 
 - [ ] Synology
   - [ ] Synology hosted package
-- [ ] Debian package- noarch
+- [ ] Debian package - noarch
   - [ ] debian hosted package - need a peer
   - [ ] raspbian hosted package
 - [ ] Support major type of sensors/feature of Domoticz
@@ -55,7 +57,6 @@ M3 milestone will provide extended support to other platforms with Docker and Sy
   - [ ] Evohome (depending on Imperihome)
   - [ ] Alarm pannel (partial with ImperiHome)
   - [ ] End to end authentificaton
-  - [ ] Auto updatable through apt-get
   - [ ] Auto updatable through button
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")

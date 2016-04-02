@@ -21,6 +21,7 @@ before_install:
   - cd domoticz
   - wget http://www.domoticz.com/releases/release/domoticz_linux_x86_64.tgz
   - tar xvfz domoticz_linux_x86_64.tgz
+  - wget http://www.e-nef.com/domoticz/mdah/domoticz.db
   - cd ..
 notifications:
   recipients:
