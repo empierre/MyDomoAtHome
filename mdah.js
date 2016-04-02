@@ -1596,8 +1596,8 @@ app.get("/devices", function(req, res){
         var params=[];
         params.push({"key": "Value", "value": ver, "unit": "", "graphable": "false"});
         myfeed.params=params;
-        result.push(myfeed);
-        if (versionCompare(ver,getLastVersion().substring(1))<0) {
+        result.push(myfeed);var rv=getLastVersion();
+        if (versionCompare(ver,rv.substring(1))<0) {
             var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
             var params=[];
             params.push({"key": "Value", "value": last_version, "unit": "", "graphable": "false"});
