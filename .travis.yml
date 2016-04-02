@@ -6,6 +6,10 @@ node_js:
   - "4.2"
   - "0.12"
   - "0.10"
+cache:
+  - apt
+sources:
+  - trusty
 
 before_install:
   - sudo apt-get -qq update
