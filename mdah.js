@@ -1196,7 +1196,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                             my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode=";
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&level=" + lsetLevel + "&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode=";
                     }
                     break;
                 case 5:
@@ -1208,7 +1208,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
                         logger.info(actionParam+" "+lsetLevel);
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + lsetLevel + "&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode=";
                     }
                     break;
                 case 6:
@@ -1218,7 +1218,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function(req, res
                     } else if (actionParam == 0) {
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode=";
                     } else {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=" + actionParam + "&passcode=";
+                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + actionParam + "&passcode=";
                     }
                     break;
                 default:
