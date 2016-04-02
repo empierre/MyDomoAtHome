@@ -21,35 +21,42 @@ REST Gateway between Domoticz and Imperihome ISS
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached
-M2 milestone will provide extended support to other platforms with Docker and Synology 
+![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M2 Goal reached
+M2 milestone has brought a full rewrite to node js with debian packaging
 - [X] Free
 - [X] Multi-platform (Linux, Mac OS X, Windows)
 - [X] Dependency-less 
 - [X] Node.js rewrite
 - [X] Micro-services (Docker)
-- [-] Synology
-- - [X] Synology docker image
-  - [ ] Synology hosted package
-- [-] Debian package- noarch
+- [X] Synology
+  - [X] Synology docker image
+- [X] Debian package- noarch
   - [X] personal hosting
-  - [ ] debian hosted package - need a peer
-  - [ ] raspbian hosted package
-- [ ] Support major type of sensors/feature of Domoticz
+- [X] Support major type of sensors/feature of Domoticz
   - [X] Weather and Environmental sensors  
   - [X] Energy sensors (Electricity, Gas, Water)
   - [X] Switches
   - [X] Thermostat
-  - [ ] Graphs
   - [X] Dynamic room creation
-- TODO
   - [X] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
-  - [ ] Evohome (depending on Imperihome)
   - [X] Push On buttons (depending on Imperihome)
+  - [X] Installation / usage logs
+
+M3 milestone will provide extended support to other platforms with Docker and Synology 
+- [ ] Synology
+  - [ ] Synology hosted package
+- [ ] Debian package- noarch
+  - [ ] debian hosted package - need a peer
+  - [ ] raspbian hosted package
+- [ ] Support major type of sensors/feature of Domoticz
+  - [ ] Devices following planID
+  - [ ] Graphs
+- TODO
+  - [ ] Evohome (depending on Imperihome)
   - [ ] Alarm pannel (partial with ImperiHome)
   - [ ] End to end authentificaton
   - [ ] Auto updatable through apt-get
   - [ ] Auto updatable through button
-  - [X] Installation / usage logs
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
