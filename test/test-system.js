@@ -63,13 +63,3 @@ describe('Setters', function () {
       });
   });
 });
-describe('Setters', function () {
-  it('Testing Index call to ' + apiURL6, function (done) {
-    superagent.get(apiURL6)
-      .end(function (err, res) {
-        (err === null).should.equal(true);
-        res.statusCode.should.equal(200);
-        done();
-      });
-  });
-});
