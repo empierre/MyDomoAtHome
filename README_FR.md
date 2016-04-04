@@ -119,85 +119,86 @@ Et on vérifie à nouveau:
   
      sudo service mydomoathome restart
   
-### si vous restez sur une version pre 0.1.x
+### Si vous restez sur une version pre 0.1.x et ne pouvez pas mettre à jour
 
     apt-get remove mydomoathome
     apt-get update
     apt-get install MyDomoAtHome
   
-### Migrating from old/Legacy MyDomoAtHome
+### Migration de la version M1 à la nouvelle version (celle-ci)
 
-Shut down the old service
+Arrêt du service
 
     sudo service MyDomoAtHome.sh stop
     rm /etc/init.d/MyDomoAtHome.sh
   
-N.B. you can have the both at the same time, just chane the App name in the config.json file and the port.
+N.B. les deux peuvent cohabiter, il faut changer la valeur du paramètre app_name dans config.json et le port d'écoute. Vous devrez ensuite recréer une configuration dans Imperihome.
 
-### Migrating from ISS-DOMO
+### Migration depuis ISS-Domo
 
-  edit /etc/mydomoathome/config.json with your previous port (was 8000 default), change app_name value to ISS-Domo
-  and then restart the service
+  editez /etc/mydomoathome/config.json avec la valeur du port (8000 par default), et changer le paramètre app_name vers "ISS-Domo"
+  arrêtez le service ISS-Domo et démarrez le service MyDomoAtHome
 
-## Running the service
+## Gérer le service manuellement
 
-The default port is now 3002.
+Le port par défaut est 3002.
 
-### Start the service:
+### Démarrer le service:
 
     sudo service mydomoathome start
 
-### Stop the service :
+### Arrêter le service :
 
     sudo service mydomoathome stop
 
-### Restart the service :
+### Redémarrer le service :
 
     sudo service mydomoathome reload
 
-## Docker installation (only for those using this form: big synologies, Xpenologies...)
-Docker image is automatically build based on latest verion.
-Configuration can be passed through command line (see below) /etc/mydomoathome is also mounted
+## Docker (seulement pour ceux qui ont un gros synology, Xpenologies...)
+L'image Docker est automatiquement crée sur la dernière version.
+La configuration peut être passée par la ligne de commande (voir en dessous) ou dans un fichier de configuration car  /etc/mydomoathome est aussi monté dans l'image.
 
-### Duplicate the image
+### Duplication de l'image
 
     docker pull epierre/iss-mdah
     
-### Launch the process
-Remember to change the IP below and authorize in Domoticz the docker IP range
+### Lancement du processus
+N'oubliez pas de changer l'IP et d'autoriser dans Domoticz la plage d'adresse de Docker
 
     docker run --name=mdah --env DOMO="http://your_ip:8080" --env TZ=Europe/Paris -p 3002:3002 epierre/mdah
 
-### Check running docker processes
+### Vérification des processus docker actifs
 
     docker ps
     
-### Stoping a docker process
+### Arrêt d'un processus docker
 
     docker stop mdah 
   
-# Testing the installation
-  - Check in a browser it is running:
+# Test de l'installation
+
+  - Vérification dans un navigateur que le process fonctionne:
     http://gateway_ip:gateway_port/
   
-  - From there you'll get the following links in the browser.
+  - Depuis cette page, vous pourrez tester les autres URL dans un navigateur sinon vérifiez les logs dans /var/log/mydomoathome/
 
-  - Check the domoticz is accessible from the hosting machine:
+  - Vérification que le process est accessible depuis la machine faisant tourner Domoticz:
 
     curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
 
-  - Check the MDAH returns the result from the hosting machine:
+  - Vérification que MyDomoAtHome récupère bien les informations depuis Domoticz:
 
     curl http://gateway_ip:gateway_port/devices
   
 # Support: 
-  - Tracking: https://github.com/empierre/MyDomoAtHome/issues
+  - Fonctinalités et Bug report: https://github.com/empierre/MyDomoAtHome/issues
   - English : http://www.domoticz.com/forum/viewtopic.php?f=21&t=6882
-  - French  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
-  - Send domoticz.db for an undetected device: domoticz at e-nef.com
+  - Français  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
+  - Si vous avez un device manquant, envoyez votre domoticz.db à: domoticz at e-nef.com
 
 # Q&A
-  - Remember to add the gateway in the local networks under setup in domoticz !
+  - Pensez à rajouter l'IP de la gateway MyDomoAtHome (si elle est différente) dans la section réseaux locaux de Domoticz !
 
 [npm-image]: https://img.shields.io/npm/v/node-mydomoathome.svg?style=flat
 [npm-url]: https://npmjs.org/package/node-mydomoathome
