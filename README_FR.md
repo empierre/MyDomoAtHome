@@ -185,11 +185,11 @@ N'oubliez pas de changer l'IP et d'autoriser dans Domoticz la plage d'adresse de
 
   - Vérification que le process est accessible depuis la machine faisant tourner Domoticz:
 
-    curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
+     curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
 
   - Vérification que MyDomoAtHome récupère bien les informations depuis Domoticz:
 
-    curl http://gateway_ip:gateway_port/devices
+     curl http://gateway_ip:gateway_port/devices
   
 # Support: 
   - Fonctinalités et Bug report: https://github.com/empierre/MyDomoAtHome/issues
