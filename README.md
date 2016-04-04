@@ -14,7 +14,7 @@ REST Gateway between Domoticz and Imperihome ISS
 ![REST](https://img.shields.io/badge/RPI-tested_ok-green.svg)
 ![REST](https://img.shields.io/badge/Odroid-tested_ok-green.svg)
 ![REST](https://img.shields.io/badge/Intel-tested_ok-green.svg)
-![Français](README_FR.md)
+Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs/README_FR.md
 ![MyDomoAtHome](http://domoticz.com/wiki/images/f/f1/Imperihome2.png "MyDomoAtHome ISS")
 
 # Features and goals
