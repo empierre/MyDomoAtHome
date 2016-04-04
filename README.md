@@ -20,7 +20,7 @@ REST Gateway between Domoticz and Imperihome ISS
 # Features and goals
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
-![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached - first version after ISS has been announced
+![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached - first version in Perl Dancer after ISS has been announced
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M2 Goal reached - full rewrite to node js with debian packaging, simpler install and upgrade, better performance, less dependencies
 - [X] Free
@@ -69,11 +69,11 @@ M3 milestone will provide extended support to other platforms with Docker and Sy
 
 ### Check the nodeJS version installed - mandatory for PI !
 
-    sudo dpkg --list |grep nodejs // should return version 3.x or above
+    sudo dpkg --list |grep nodejs // should return version 4.x or above
 
 If not please do:
 
-On RASPBIAN (Raspberry PI/PI2), please install first to have a stable nodeJS :
+On RASPBIAN (Raspberry PI/PI2/PI3), please install first to have a stable nodeJS :
 
     sudo apt-get remove node
     wget -q http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
@@ -119,6 +119,12 @@ And check again
   
      sudo service mydomoathome restart
   
+### Stuck on a pre 0.1.x version
+
+    apt-get remove mydomoathome
+    apt-get update
+    apt-get install MyDomoAtHome
+  
 ### Migrating from old/Legacy MyDomoAtHome
 
 Shut down the old service
@@ -127,6 +133,11 @@ Shut down the old service
     rm /etc/init.d/MyDomoAtHome.sh
   
 N.B. you can have the both at the same time, just chane the App name in the config.json file and the port.
+
+### Migrating from ISS-DOMO
+
+  edit /etc/mydomoathome/config.json with your previous port (was 8000 default), change app_name value to ISS-Domo
+  and then restart the service
 
 ## Running the service
 
@@ -144,7 +155,9 @@ The default port is now 3002.
 
     sudo service mydomoathome reload
 
-## Docker installation (only for those using this form: big synologyes, Xpenologies...)
+## Docker installation (only for those using this form: big synologies, Xpenologies...)
+Docker image is automatically build based on latest verion.
+Configuration can be passed through command line (see below) /etc/mydomoathome is also mounted
 
 ### Duplicate the image
 
@@ -164,6 +177,11 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
     docker stop mdah 
   
 # Testing the installation
+  - Check in a browser it is running:
+    http://gateway_ip:gateway_port/
+  
+  - From there you'll get the following links in the browser.
+
   - Check the domoticz is accessible from the hosting machine:
 
     curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
