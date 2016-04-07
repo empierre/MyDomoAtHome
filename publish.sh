@@ -15,6 +15,7 @@ git push origin --tags
 git push
 cd ./packaging/mdah/ && sudo bash ./redeb.sh
 cd ../..
+sudo chown in.in ./packaging/mdah/node-mydomoathome-1.deb
 mv -f ./packaging/mdah/node-mydomoathome-1.deb ./binary/
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-latest.deb
 mv -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-$1.deb
