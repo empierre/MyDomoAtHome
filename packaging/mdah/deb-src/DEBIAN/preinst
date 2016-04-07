@@ -5,7 +5,13 @@ npm config set loglevel error
 case "$1" in
     install)
 	npm cache clean
+	if [ -d ~$SUDO_USER/.npm ]; then
+		sudo chown -R www-data ~$SUDO_USER/.npm
+	fi
 	if [ -d ~/.npm ]; then
+		sudo chown -R www-data ~/.npm
+	fi
+	if [ -d /root/.npm ]; then
 		sudo -u root chown -R www-data ~/.npm
 	fi
         npm install -g forever
@@ -13,7 +19,13 @@ case "$1" in
 
     upgrade|abort-upgrade)
         #cd /usr/share/mydomoathome/app/ && npm-install-missing
+	if [ -d ~$SUDO_USER/.npm ]; then
+		sudo chown -R www-data ~$SUDO_USER/.npm
+	fi
 	if [ -d ~/.npm ]; then
+		sudo chown -R www-data ~/.npm
+	fi
+	if [ -d /root/.npm ]; then
 		sudo -u root chown -R www-data ~/.npm
 	fi
         ;;
