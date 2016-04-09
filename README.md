@@ -17,13 +17,6 @@ REST Gateway between Domoticz and Imperihome ISS
 Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs/README_FR.md
 ![MyDomoAtHome](http://domoticz.com/wiki/images/f/f1/Imperihome2.png "MyDomoAtHome ISS")
 
-# New version under bêta testing
-This version is being replaced by a new version that is on bêta public testing, see it here:
-https://github.com/empierre/MyDomoAtHome/tree/nodejs
-Binaries can be found here: 
-http://www.e-nef.com/domoticz/mdah/
-To participate into the bêta test, send an email to domoticz@e-nef.com to be included in the testing slack group: https://mydomoathome.slack.com/messages/mdah-nodejs-testing/
-
 # Features and goals
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
@@ -195,15 +188,6 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
 
     curl http://gateway_ip:gateway_port/devices
 
-# Troubleshooting
-
-  Some of the following may help those fast breaking dependencies we now have:
-
-    sudo cpnam i DateTime::Format::Strptime
-    sudo curl -L http://cpanmin.us | perl - --sudo App::cpanminus
-    sudo cpanm install Time::Moment
-    sudo cpanm install Task::Plack
-  
 # Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
   - English : http://www.domoticz.com/forum/viewtopic.php?f=21&t=6882
