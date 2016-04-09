@@ -1903,7 +1903,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevWater(data.result[i]));
                                 break;
                             case 3:
-                                result.push(DevElectricity(data.result[i]));
+                                result.push(DevCounterIncremental(data.result[i]));
                                 break;
                             default:
                                 logger.warn("RFX Unknown " + data.result[i].Name + " " + data.result[i].SubType);
