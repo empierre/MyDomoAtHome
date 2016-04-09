@@ -17,6 +17,13 @@ REST Gateway between Domoticz and Imperihome ISS
 Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs/README_FR.md
 ![MyDomoAtHome](http://domoticz.com/wiki/images/f/f1/Imperihome2.png "MyDomoAtHome ISS")
 
+# New version under bêta testing
+This version is being replaced by a new version that is on bêta public testing, see it here:
+https://github.com/empierre/MyDomoAtHome/tree/nodejs
+Binaries can be found here: 
+http://www.e-nef.com/domoticz/mdah/
+To participate into the bêta test, send an email to domoticz@e-nef.com to be included in the testing slack group: https://mydomoathome.slack.com/messages/mdah-nodejs-testing/
+
 # Features and goals
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
 
@@ -60,8 +67,6 @@ M3 milestone will provide extended support to other platforms with Docker and Sy
   - [ ] Auto updatable through button
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
-
-
 
 # Standalone installation (PI, cubie, odroid, intel...)
 
@@ -189,6 +194,15 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
   - Check the MDAH returns the result from the hosting machine:
 
     curl http://gateway_ip:gateway_port/devices
+
+# Troubleshooting
+
+  Some of the following may help those fast breaking dependencies we now have:
+
+    sudo cpnam i DateTime::Format::Strptime
+    sudo curl -L http://cpanmin.us | perl - --sudo App::cpanminus
+    sudo cpanm install Time::Moment
+    sudo cpanm install Task::Plack
   
 # Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues

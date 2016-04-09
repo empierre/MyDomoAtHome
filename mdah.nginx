@@ -1,0 +1,19 @@
+# Example configuration file for NGINX
+
+      access_log off;
+      add_header Cache-Control public;
+      server_tokens off;
+      server  {
+       include    /etc/nginx/proxy_params;
+       listen 8000; # will listen on port 8000 and forward to MDAH on port 3001
+       keepalive_timeout 70;
+       server_name localhost;
+       add_header X-Frame-Options SAMEORIGIN;
+       location / {
+         proxy_pass http://localhost:3001/;
+         auth_basic            "Access Restricted";
+         auth_basic_user_file  "/etc/nginx/.htpasswd";
+         access_log /var/log/nginx/mdat.access.log;
+         error_log /var/log/nginx/mdat.error.log;
+       }
+     }
