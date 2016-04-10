@@ -1798,6 +1798,7 @@ app.get("/devices", function (req, res) {
                                 break;
                             case 'Blinds Percentage':
                             case 'Blinds':
+                            case 'RFY':
                             case 'Venetian Blinds EU':
                             case 'Venetian Blinds US':
                             case 'RollerTrol, Hasta new':
