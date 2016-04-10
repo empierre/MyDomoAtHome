@@ -1785,11 +1785,12 @@ app.get("/devices", function (req, res) {
                                 //TODO
                                 break;
                             default:
-                                logger.warn("UNK Sw " + data.result[i].Name);
+                                logger.warn("UNK Sw " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
                                 break;
                         }
                         break;
                     case 'Blinds':
+                    case 'RFY':
                         switch (data.result[i].SwitchType) {
                             case 'Blinds Inverted':
                             case 'Blinds Percentage Inverted':
@@ -1803,7 +1804,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevShutter(data.result[i]));
                                 break;
                             default:
-                                logger.warn("UNK Blind " + data.result[i].Name);
+                                logger.warn("UNK Blind " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
                                 break;
                         }
                         break;
@@ -1816,7 +1817,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevGenericSensor(data.result[i]));
                                 break;
                             default:
-                                logger.warn("UNK Sec " + data.result[i].Name);
+                                logger.warn("UNK Sec " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
                                 break;
                         }
                         break;
@@ -1844,7 +1845,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevElectricity(data.result[i]));
                                 break;
                             default:
-                                logger.warn("UNK Sec " + data.result[i].Name);
+                                logger.warn("UNK Sec " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
                                 break;
                         }
                         break;
@@ -1906,7 +1907,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevCounterIncremental(data.result[i]));
                                 break;
                             default:
-                                logger.warn("RFX Unknown " + data.result[i].Name + " " + data.result[i].SubType);
+                                logger.warn("RFX Unknown " + data.result[i].Name + " " + data.result[i].SwitchTypeVal+" "+data.result[i].SubType);
                         }
                         break;
                     case 'General':
@@ -1934,7 +1935,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevGenericSensor(data.result[i]));
                                 break;
                             case 'Unknown':
-                                logger.warn("Unknown general " + data.result[i].Name + " " + data.result[i].SubType);
+                                logger.warn("Unknown general " + data.result[i].Name + " " + data.result[i].SwitchTypeVal + " "+ data.result[i].SubType);
                                 break;
                             case 'Waterflow':
                                 result.push(DevFlow(data.result[i]));
@@ -1949,7 +1950,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevGenericSensor(data.result[i]));
                                 break;
                             default:
-                                logger.warn("General Unknown " + data.result[i].Name + " " + data.result[i].SubType);
+                                logger.warn("General Unknown " + data.result[i].Name + " " + data.result[i].SubType+" "+data.result[i].SwitchTypeVal);
                                 break;
                         }
                         break;
@@ -1977,7 +1978,7 @@ app.get("/devices", function (req, res) {
                         result.push(DevSceneGroup(data.result[i]));
                         break;
                     default:
-                        logger.warn("Unknown SwitchType " + data.result[i].Type);
+                        logger.warn("Unknown SwitchType " + data.result[i].Type+ " "+data.result[i].SwitchTypeVal);
                         break;
                 }
             }
