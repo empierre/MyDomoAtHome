@@ -65,26 +65,26 @@ logger.add(winston.transports.File, {filename: '/var/log/mydomoathome/usage.log'
 if (fileExists('./config.json')) {
     nconf.use('file', {file: './config.json'}, function (err) {
         if (err) {
-            logger.info("No local conf:" + err.message);
+            //logger.info("No local conf:" + err.message);
             return;
         }
     });
 } else {
-    logger.info("No local conf");
+    //logger.info("No local conf");
 }
 if (fileExists('/etc/mydomoathome/config.json')) {
     nconf.use('file', {file: '/etc/mydomoathome/config.json'}, function (err) {
         if (err) {
-            logger.warn("No conf in etc:" + err.message);
+            logger.warn("No global conf in /etc/mydomoathome:" + err.message);
             return;
         }
     });
 } else {
-    logger.warn("No global conf");
+    logger.warn("No global conf in /etc/mydomoathome");
 }
 nconf.load(function (err) {
     if (err) {
-        logger.warn("No local conf:" + err.message);
+        logger.warn("Conf load error:" + err.message);
         return;
     }
 });
@@ -153,7 +153,7 @@ function versionCompare(v1, v2, options) {
 }
 function getLastVersion() {
     var now = moment();
-    if ((last_version_dt) && (last_version_dt.isBefore(moment().add(4, 'h')))) {
+    if ((last_version_dt) && (last_version_dt.isBefore(moment().add(2, 'h')))) {
         return (last_version);
     } else {
         var options = {
@@ -167,6 +167,7 @@ function getLastVersion() {
                 var data = JSON.parse(body);
                 last_version_dt = now;
                 last_version = data.tag_name;
+                logger.info("Refreshing version cache: "+data.tag_name);
                 return (data.tag_name);
             } else {
                 return ("unknown");
