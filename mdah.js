@@ -1550,7 +1550,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
     var startdate = req.params.startdate;
     var enddate = req.params.enddate;
     var duration = (enddate - startdate) / 1000;
-
+    logger.info("GET /devices/" + deviceId + "/"+paramKey+"/histo/" + startdate + "/" + enddate);
     var PLine = '';
     if (deviceId.match(/L/)) {
         var pid;
@@ -1608,92 +1608,106 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
             var result = [];
             var params = [];
             var lastEu;
-            //TODO: http://192.168.0.28:8080/json.htm?type=graph&sensor=humidity&idx=243&range=day
 
-            if (!(data.result||null)) {
+            if (!(data.result||null&&data.result.length||null)) {
                 var feeds = {"date": startdate, "value": 0};
                 params.push(feeds);
                 var rest = {};
                 rest.values = params;
                 res.json(rest);
-            }
-            logger.info(data.result);
-            for (var i = 0; i < data.result.length; i++) {
-                console.log(data.result[i].v);
-                if ((paramKey === "temp") && (data.result[i].te)) {
-                    var value = data.result[i].te;
-                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    var feeds = {"date": dt, "value": value};
-                    params.push(feeds);
-                } else if (((paramKey === "hygro") && (data.result[i].hu)) || (type === "humidity")) {
-                    var value = data.result[i].hu;
-                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    var feeds = {"date": dt, "value": value};
-                    params.push(feeds);
-                } else if (ptype === "air quality") {
-                    var value = data.result[i].co2;
-                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    var feeds = {"date": dt, "value": value};
-                    params.push(feeds);
-                } else if (data.result[i] && "mm" in data.result[i]) {
-                    var value = data.result[i].mm;
-                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    var feeds = {"date": dt, "value": value};
-                    params.push(feeds);
-                /*} else if ((data.result[i].lux) || (data.result[i].lux_max)) {
-                    var value = (data.result[i].lux || (data.result[i].lux_max));
-                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    var feeds = {"date": dt, "value": value};
-                    params.push(feeds);
-                } else if (data.result[i].uvi) {
-                    var value = data.result[i].uvi;
-                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    var feeds = {"date": dt, "value": value};
-                    params.push(feeds);*/
-                } else if (data.result[i].v) {
-                    var value = data.result[i].v;
-                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    var feeds = {"date": dt, "value": value};
-                    params.push(feeds);
-                } else if (data.result[i].sp) {
-                    var value = data.result[i].sp;
-                    var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    var feeds = {"date": dt, "value": value};
-                    params.push(feeds);
-                } else if ((type === "counter") || (type === "Percentage")) {
-                    var value;
-                    if (PLine) {
-                        value = eval(data.result[i] + ".v" + PLine);
-                    } else {
-                        value = (data.result[i].v || data.result[i].v_max);
-                    }
-                    if (data.result[i].v2) {
-                        value = value + data.result[i].v2;
-                    }
-                    var date = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    if (data.result[i].eu) {
-                        if ((value > 0) || ((data.result[i].eu - lastEu) > 0)) {
-                            var feeds = {"date": date, "value": value};
-                            params.push(feeds);
+            } else {
+                //logger.info(data.result);
+                for (var i = 0; i < data.result.length; i++) {
+                    var key;
+                    for (var i in data.result[i]) {
+                        if (!(i === 'd')) {
+                            if ((i.match(/_max/)) || (i.match(/_min/))) {
+                                var ptrn = /^([^_]*)_/;
+                                key = i.match(ptrn).slice(1);
+                                //key = i.match(ptrn);
+                            } else {
+                                key = i;
+                            }
                         }
-                        lastEu = data.result[i].eu;
-                    } else {
-                        var feeds = {"date": date, "value": value};
+                    }
+                }
+                if (paramKey === 'temp') {
+                    key = 'te';
+                    for (var i = 0; i < data.result.length; i++) {
+                        var value = data.result[i][key];
+                        var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                        var feeds = {"date": dt, "value": value};
+                        params.push(feeds);
+                    }
+                } else if (paramKey === 'hygro') {
+                    key = 'hu';
+                    for (var i = 0; i < data.result.length; i++) {
+                        var value = data.result[i][key];
+                        var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                        var feeds = {"date": dt, "value": value};
+                        params.push(feeds);
+                    }
+                } else if (paramKey === 'ConsoTotal') {
+                    key = 'v';
+                    for (var i = 0; i < data.result.length; i++) {
+                        var value = data.result[i][key];
+                        var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                        var feeds = {"date": dt, "value": value};
+                        params.push(feeds);
+                    }
+                } else if (paramKey === 'speed') {
+                    key = 'sp';
+                    for (var i = 0; i < data.result.length; i++) {
+                        var value = data.result[i][key];
+                        var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                        var feeds = {"date": dt, "value": value};
                         params.push(feeds);
                     }
                 } else {
-                    logger.warn("UNK");
+                    var kmax;
+                    var kmin;
+                    if (key === 'te') {
+                        kmax = 'te';
+                        kmin = 'te';
+                    } else if (key === 'hu') {
+                        kmax = 'hu';
+                        kmin = 'hu';
+                    } else if (key === 'mm') {
+                        kmax = 'mm';
+                        kmin = 'mm';
+                    } else if (key === 'uvi') {
+                        kmax = 'uvi';
+                        kmin = 'uvi';
+                    } else {
+                        kmax = key + "_max";
+                        kmin = key + "_min";
+                    }
+                    for (var i = 0; i < data.result.length; i++) {
+                        if ((range === 'month') || (range === 'year')) {
+                            var value = (parseFloat(data.result[i][kmax]) + parseFloat(data.result[i][kmin])) / 2;
+                            var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                            var feeds = {"date": dt, "value": value};
+                            params.push(feeds);
+                        } else {
+                            var value = data.result[i][key];
+                            var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                            var feeds = {"date": dt, "value": value};
+                            params.push(feeds);
+                        }
+                    }
                 }
-            }
+
+
             var rest = {};
             rest.values = params;
             res.json(rest);
+            }
         } else {
             //TODO
             res.status(403).send({success: false, errormsg: 'not implemented'});
         }
     });
-});
+})
 
 app.get("/devices", function (req, res) {
     res.type('json');
