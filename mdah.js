@@ -1727,7 +1727,6 @@ app.get("/devices", function (req, res) {
                     case (data.result[i].Type.match(/Light/) || {}).input:
                         switch (data.result[i].SwitchType) {
                             case 'On/Off':
-                            case 'Contact':
                             case 'Dusk Sensor':
                                 if (data.result[i].SubType == 'RGB') {
                                     result.push(DevRGBLight(data.result[i]));
@@ -1770,6 +1769,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevMotion(data.result[i]));
                                 break;
                             case 'Door Lock':
+                            case 'Contact':
                                 result.push(DevDoor(data.result[i]));
                                 break;
                             case 'Smoke Detector':
