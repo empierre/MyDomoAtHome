@@ -1561,7 +1561,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
     var type = getDeviceType(deviceId).toLowerCase();
     var ptype = type;
     var curl = "&method=1";
-    ;
+
 
     if ((type === "lux") || (type === "energy")) {
         type = "counter";
@@ -1574,7 +1574,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
         //type = "Percentage";
         type = "counter";
     }
-    if ((paramKey === "hygro")) {
+    if ((paramKey === "hygro")||(type === "humidity")) {
         type = "temp";
     }
     if ((paramKey === "temp")) {
@@ -1583,7 +1583,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
     if ((paramKey === "Watts")) {
         type = "counter";
     }
-    logger.info(deviceId + PLine + type);
+    logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
     var range;
     if (duration <= 172800) {
         range = "day";
@@ -1609,22 +1609,23 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
             var params = [];
             var lastEu;
             //TODO: http://192.168.0.28:8080/json.htm?type=graph&sensor=humidity&idx=243&range=day
-            logger.info(data);
-            if (!data.result) {
+
+            if (!(data.result||null)) {
                 var feeds = {"date": startdate, "value": 0};
                 params.push(feeds);
                 var rest = {};
                 rest.values = params;
                 res.json(rest);
             }
+            logger.info(data.result);
             for (var i = 0; i < data.result.length; i++) {
-                //console.log(data.result[i].lux);
+                console.log(data.result[i].v);
                 if ((paramKey === "temp") && (data.result[i].te)) {
                     var value = data.result[i].te;
                     var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                     var feeds = {"date": dt, "value": value};
                     params.push(feeds);
-                } else if (((paramKey === "hygro") && (data.result[i].hu)) || (type === "Humidity")) {
+                } else if (((paramKey === "hygro") && (data.result[i].hu)) || (type === "humidity")) {
                     var value = data.result[i].hu;
                     var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                     var feeds = {"date": dt, "value": value};
@@ -1634,12 +1635,12 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                     var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                     var feeds = {"date": dt, "value": value};
                     params.push(feeds);
-                } else if (data.result[i].mm) {
+                } else if (data.result[i] && "mm" in data.result[i]) {
                     var value = data.result[i].mm;
                     var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                     var feeds = {"date": dt, "value": value};
                     params.push(feeds);
-                } else if ((data.result[i].lux) || (data.result[i].lux_max)) {
+                /*} else if ((data.result[i].lux) || (data.result[i].lux_max)) {
                     var value = (data.result[i].lux || (data.result[i].lux_max));
                     var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                     var feeds = {"date": dt, "value": value};
@@ -1648,7 +1649,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                     var value = data.result[i].uvi;
                     var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                     var feeds = {"date": dt, "value": value};
-                    params.push(feeds);
+                    params.push(feeds);*/
                 } else if (data.result[i].v) {
                     var value = data.result[i].v;
                     var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
