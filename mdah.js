@@ -629,9 +629,7 @@ function DevGenericSensorT(data) {
     var suffix = res[1];
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
     params = [];
-    params.push({"key": "Value", "value": value.toString()});
-    params.push({"key": "unit", "value": suffix.toString()});
-    params.push({"key": "graphable", "value": "true"});
+    params.push({"key": "Value", "value": value.toString(), "unit": suffix.toString(), "graphable": "true"});
     myfeed.params = params;
     return (myfeed);
 }
@@ -945,9 +943,7 @@ function DevTH(data) {
         case 'Temp':
             var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTemperature", "room": "Temp"};
             params = [];
-            params.push({"key": "Value", "value": data.Temp});
-            params.push({"key": "unit", "value": "°C"});
-            params.push({"key": "graphable", "value": "true"});
+            params.push({"key": "Value", "value": data.Temp, "unit": "°C","graphable": "true"});
             myfeed.params = params;
             return (myfeed);
         case 'Humidity':
@@ -1572,8 +1568,8 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
         type = "counter";
     }
     if ((ptype === "general")) {
-        //type = "Percentage";
-        type = "counter";
+        type = "Percentage";
+        //type = "counter";
     }
     if ((paramKey === "hygro")||(type === "humidity")) {
         type = "temp";
@@ -1632,10 +1628,11 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                         }
                     }
                 }
+                if (key === 'tm') {key='te';}
                 if (paramKey === 'temp') {
                     key = 'te';
                     for (var i = 0; i < data.result.length; i++) {
-                        var value = data.result[i][key];
+                        var value = parseFloat(data.result[i][key]);
                         var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                         var feeds = {"date": dt, "value": value};
                         params.push(feeds);
@@ -1699,6 +1696,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                         kmax = key + "_max";
                         kmin = key + "_min";
                     }
+                    //logger.info("KK"+kmin+" "+kmax);
                     for (var i = 0; i < data.result.length; i++) {
                         if ((range === 'month') || (range === 'year')) {
                             var value = (parseFloat(data.result[i][kmax]) + parseFloat(data.result[i][kmin])) / 2;
