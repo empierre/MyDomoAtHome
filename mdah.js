@@ -646,7 +646,7 @@ function DevElectricity(data) {
     if (data.UsageDeliv) {
         //Energy pannel
         //develectricity Usage/CounterToday
-        var myfeed1 = {"id": data.idx + "_1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+        var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
         var params = []
         var res = ptrn2.exec(data.Usage);
         var usage = 0;
@@ -664,7 +664,7 @@ function DevElectricity(data) {
         combo.push(myfeed1);
         //develectricity UsageDeliv/CounterDelivToday
         var params = [];
-        var myfeed2 = {"id": data.idx + "_2", "name": data.Name + "Deliv", "type": "DevElectricity", "room": "Utility"};
+        var myfeed2 = {"id": data.idx + "_L2", "name": data.Name + "Deliv", "type": "DevElectricity", "room": "Utility"};
         var res = ptrn2.exec(data.UsageDeliv);
         var usagedeliv = 0;
         if (res != null) {
@@ -682,7 +682,7 @@ function DevElectricity(data) {
         //devgeneric for Counter/CounterDeliv
         var params = [];
         var myfeed3 = {
-            "id": data.idx + "_3",
+            "id": data.idx + "_L3",
             "name": data.Name + " CounterToday",
             "type": "DevGenericSensor",
             "room": "Utility"
@@ -693,7 +693,7 @@ function DevElectricity(data) {
         combo.push(myfeed3);
         var params = [];
         var myfeed4 = {
-            "id": data.idx + "_4",
+            "id": data.idx + "_L4",
             "name": data.Name + " CounterDelivToday",
             "type": "DevGenericSensor",
             "room": "Utility"
@@ -1573,6 +1573,9 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
         curl = "&method=1";
     }
     if (type === "air quality") {
+        type = "counter";
+    }
+    if (type === "p1 smart meter") {
         type = "counter";
     }
     if ((ptype === "general")) {
