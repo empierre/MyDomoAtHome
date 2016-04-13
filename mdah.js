@@ -1964,7 +1964,7 @@ app.get("/devices", function (req, res) {
                                 result.push(DevCounterIncremental(data.result[i]));
                                 break;
                             case 'Custom Sensor':
-                                result.push(DevGenericSensor(data.result[i]));
+                                result.push(DevGenericSensorT(data.result[i]));
                                 break;
                             default:
                                 logger.warn("General Unknown " + data.result[i].Name + " " + data.result[i].SubType+" "+data.result[i].SwitchTypeVal);
