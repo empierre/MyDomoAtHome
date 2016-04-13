@@ -754,24 +754,21 @@ function DevElectricityMultiple(data) {
         usage = res[0];
         var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
         var params1 = [];
-        params.push({"key": "Watts", "value": usage.toString()});
-        params.push({"key": "unit", "value": "W"});
+        params1.push({"key": "Watts", "value": usage.toString(), "unit": "W","graphable": "true"});
         myfeed1.params = params1;
         combo.push(myfeed1);
         //L2
         usage = res[2];
         var myfeed2 = {"id": data.idx + "_L2", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
         var params2 = [];
-        params.push({"key": "Watts", "value": usage.toString()});
-        params.push({"key": "unit", "value": "W"});
+        params2.push({"key": "Watts", "value": usage.toString(),"unit": "W","graphable": "true"});
         myfeed2.params = params2;
         combo.push(myfeed2);
         //L3
         usage = res[4];
         var myfeed3 = {"id": data.idx + "_L3", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
         var params3 = [];
-        params.push({"key": "Watts", "value": usage.toString()});
-        params.push({"key": "unit", "value": "W"});
+        params3.push({"key": "Watts", "value": usage.toString(),"unit": "W", "graphable": "true"});
         myfeed3.params = params3;
         combo.push(myfeed3);
     }
@@ -1554,12 +1551,14 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
     var duration = (enddate - startdate) / 1000;
     logger.info("GET /devices/" + deviceId + "/"+paramKey+"/histo/" + startdate + "/" + enddate);
     var PLine = '';
-    if (deviceId.match(/L/)) {
+    if (deviceId.match(/_L/)) {
         var pid;
         pid = deviceId.match(/(\d+)_L(.)/);
-        deviceId = pid[0];
-        PLine = pid[1] || '';
+        logger.info(pid);
+        deviceId = pid[1];
+        PLine = pid[2] || '';
     }
+    logger.info(deviceId +"/"+PLine);
     var type = getDeviceType(deviceId).toLowerCase();
     var ptype = type;
     var curl = "&method=1";
@@ -1657,6 +1656,22 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                         var feeds = {"date": dt, "value": value};
                         params.push(feeds);
                     }
+                } else if (paramKey === 'Watts') {
+                        key = 'v'+PLine;
+                        var key2 ='v'+(parseInt(PLine)+3);
+                        for (var i = 0; i < data.result.length; i++) {
+                            if ((range === 'month') || (range === 'year')) {
+                                var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2])) / 2;
+                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                                var feeds = {"date": dt, "value": value};
+                                params.push(feeds);
+                            } else {
+                                var value = data.result[i][key];
+                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                                var feeds = {"date": dt, "value": value};
+                                params.push(feeds);
+                            }
+                        }
                 } else if (paramKey === 'speed') {
                     key = 'sp';
                     for (var i = 0; i < data.result.length; i++) {
