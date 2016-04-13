@@ -1138,6 +1138,14 @@ function getDeviceType(deviceId) {
     return (js.result[0].Type);
 };
 
+function getDeviceSubType(deviceId) {
+    var url = domo_path + "/json.htm?type=devices&rid=" + deviceId;
+    var res = requester('GET', url);
+    var js = JSON.parse(res.body.toString('utf-8'));
+    return (js.result[0].SubType);
+};
+
+
 var auth = function (req, res, next) {
     function unauthorized(res) {
         res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
@@ -1568,8 +1576,12 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
         type = "counter";
     }
     if ((ptype === "general")) {
-        type = "Percentage";
-        //type = "counter";
+        var st=getDeviceSubType(deviceId);
+        if ((st==='Current')||(st==='kWh')||(st==='Solar Radiation')||(st==='Visibility')) {
+            type = "counter";
+        } else {
+            type = "Percentage";
+        }
     }
     if ((paramKey === "hygro")||(type === "humidity")) {
         type = "temp";
