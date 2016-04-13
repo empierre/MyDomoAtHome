@@ -1075,7 +1075,9 @@ function DevWind(data) {
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": "Weather"};
     var params = [];
     params.push({"key": "Speed", "value": data.Speed, "unit": "km/h", "graphable": "true"});
-    params.push({"key": "Direction", "value": data.Direction.toString(), "unit": "°", "graphable": "true"});
+    if (typeof data.Direction !== 'undefined' && data.Direction !== null) {
+        params.push({"key": "Direction", "value": data.Direction.toString(), "unit": "°", "graphable": "true"});
+    }
     myfeed.params = params;
     return (myfeed);
 }
