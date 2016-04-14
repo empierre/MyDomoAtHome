@@ -177,6 +177,7 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
   
 # Testing the installation
   - Check in a browser it is running:
+
     http://gateway_ip:gateway_port/
   
   - From there you'll get the following links in the browser.
@@ -200,22 +201,22 @@ The best way is to setup the nginx for both domoticz and the gateway: http://www
 
 In the domoticz configuration add a section to redirect to the gateway such as this (change your ip below)
 
-  location /iss/ {
-    proxy_set_header X-Real-IP  $remote_addr;
-    proxy_set_header X-Forwarded-For $remote_addr;
-    proxy_set_header Host $host;
-    proxy_pass http://192.168.0.28:3002/;
-    auth_basic            "Access Restricted";
-    auth_basic_user_file  "/etc/nginx/.htpasswd";
-    access_log /var/log/nginx/mdah.access.log;
-    error_log /var/log/nginx/mdah.error.log;
-  }
+    location /iss/ {
+      proxy_set_header X-Real-IP  $remote_addr;
+      proxy_set_header X-Forwarded-For $remote_addr;
+      proxy_set_header Host $host;
+      proxy_pass http://192.168.0.28:3002/;
+      auth_basic            "Access Restricted";
+      auth_basic_user_file  "/etc/nginx/.htpasswd";
+      access_log /var/log/nginx/mdah.access.log;
+      error_log /var/log/nginx/mdah.error.log;
+    }
 
 
 and create a .htpasswd for both:
 
-  cd /etc/nginx
-  htpasswd -c .htaccess YOURusername YOURpasswd
+    cd /etc/nginx
+    htpasswd -c .htaccess YOURusername YOURpasswd
 
 # Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
