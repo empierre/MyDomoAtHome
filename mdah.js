@@ -644,7 +644,7 @@ function DevElectricity(data) {
     var params = [];
     var combo = [];
     if (data.UsageDeliv) {
-        //Energy pannel
+        //Energy panel
         //develectricity Usage/CounterToday
         var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
         var params = []
@@ -1661,12 +1661,31 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                         params.push(feeds);
                     }
                 } else if (paramKey === 'ConsoTotal') {
-                    key = 'v';
-                    for (var i = 0; i < data.result.length; i++) {
-                        var value = data.result[i][key];
-                        var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                        var feeds = {"date": dt, "value": value};
-                        params.push(feeds);
+                    if (ptype==='p1 smart meter') {
+                        key = 'c';
+                        var key2 ='c3');
+                        for (var i = 0; i < data.result.length; i++) {
+                            if ((range === 'month') || (range === 'year')) {
+                                var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2])) / 2;
+                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                                var feeds = {"date": dt, "value": value};
+                                params.push(feeds);
+                            } else {
+                                var value = data.result[i][key];
+                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                                var feeds = {"date": dt, "value": value};
+                                params.push(feeds);
+                            }
+                        }
+
+                    } else {
+                        key = 'v';
+                        for (var i = 0; i < data.result.length; i++) {
+                            var value = data.result[i][key];
+                            var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                            var feeds = {"date": dt, "value": value};
+                            params.push(feeds);
+                        }
                     }
                 } else if (paramKey === 'Watts') {
                         key = 'v'+PLine;

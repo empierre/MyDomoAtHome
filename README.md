@@ -52,7 +52,8 @@ M3 milestone will provide extended support to other platforms with Docker and Sy
   - [ ] raspbian hosted package
 - [ ] Support major type of sensors/feature of Domoticz
   - [ ] Devices following planID
-  - [ ] Graphs
+  - [X] Graphs
+  - [ ] Groupe switches with instant energy
 - TODO
   - [ ] Evohome (depending on Imperihome)
   - [ ] Alarm pannel (partial with ImperiHome)
@@ -187,6 +188,34 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
   - Check the MDAH returns the result from the hosting machine:
 
     curl http://gateway_ip:gateway_port/devices
+
+# Accessing the Gateway from the outide of your network
+The best way is to setup the nginx for both domoticz and the gateway: http://www.domoticz.com/wiki/Secure_Remote_Access
+
+  sudo apt-get install apache2-utils
+  sudo apt-get install nginx-full
+  sudo apt-get install openssl
+  sudo apt-get install haveged
+
+
+In the domoticz configuration add a section to redirect to the gateway such as this (change your ip below)
+
+  location /iss/ {
+    proxy_set_header X-Real-IP  $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header Host $host;
+    proxy_pass http://192.168.0.28:3002/;
+    auth_basic            "Access Restricted";
+    auth_basic_user_file  "/etc/nginx/.htpasswd";
+    access_log /var/log/nginx/mdah.access.log;
+    error_log /var/log/nginx/mdah.error.log;
+  }
+
+
+and create a .htpasswd for both:
+
+  cd /etc/nginx
+  htpasswd -c .htaccess YOURusername YOURpasswd
 
 # Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
