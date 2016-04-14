@@ -5,7 +5,7 @@
 // MyDomoAtHome is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 2 of the License, or
-//  (at your option) any later version.
+//  (at your option) any later version
 //
 //  MyDomoAtHome is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -688,7 +688,7 @@ function DevElectricity(data) {
             "room": "Utility"
         };
         CounterToday = Math.ceil(data.Counter);
-        params.push({"key": "Value", "value": CounterToday, "unit": "kWh", "graphable": "true"});
+        params.push({"key": "Value", "value": CounterToday, "unit": "kWh", "graphable": "false"});
         myfeed3.params = params;
         combo.push(myfeed3);
         var params = [];
