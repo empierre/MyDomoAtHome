@@ -1663,7 +1663,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                 } else if (paramKey === 'ConsoTotal') {
                     if (ptype==='p1 smart meter') {
                         key = 'c';
-                        var key2 ='c3');
+                        var key2 ='c3';
                         for (var i = 0; i < data.result.length; i++) {
                             if ((range === 'month') || (range === 'year')) {
                                 var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2])) / 2;
