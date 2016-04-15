@@ -5,7 +5,7 @@
 // MyDomoAtHome is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 2 of the License, or
-//  (at your option) any later version
+//  (at your option) any later version.
 //
 //  MyDomoAtHome is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -44,6 +44,7 @@ var last_version = getLastVersion();
 var ver = pjson.version;
 var device_tab = {};
 var room_tab = [];
+var domo_room_tab = [];
 var device = {MaxDimLevel: null, Action: null, graph: null, Selector: null};
 var app_name = "MyDomoAtHome";
 var domo_path = process.env.DOMO || "http://127.0.0.1:8080";
@@ -269,7 +270,7 @@ function devSt(data) {
 }
 
 function DevSwitch(data) {
-    room_tab.Switches = 1;
+
     var status = 0;
     switch (data.Status) {
         case 'On':
@@ -294,7 +295,14 @@ function DevSwitch(data) {
             status = 0;
             break;
     }
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
+
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     params.push({"key": "Status", "value": status.toString()});
     //TODO key Energy
@@ -304,14 +312,27 @@ function DevSwitch(data) {
 
 function DevMultiSwitch(data) {
     var ptrn4 = /[\s]+|/;
-    room_tab.Switches = 1;
+
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     var params = [];
     params.push({"key": "LastRun", "value": dt});
     var status;
     //console.log("L:"+data.Level);
     var res = data.LevelNames.split('|').join(',');
+	
+	if(data.LevelOffHidden) {
+		res = res.replace ("Off,","");
+	}
+	
     var ret = data.LevelNames.split('|');
     var mydev = {MaxDimLevel: null, Action: null, graph: null, Selector: ret};
     //console.log(mydev);
@@ -324,7 +345,7 @@ function DevMultiSwitch(data) {
 };
 
 function DevPush(data) {
-    room_tab.Switches = 1;
+
     var status = 0;
     switch (data.SwitchType) {
         case 'Push On Button':
@@ -339,7 +360,14 @@ function DevPush(data) {
     }
     /*var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
      myfeed.params={"key": "Status", "value": status};*/
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     //params.push({"key": "Status", "value": status.toString()});
     params.push({"key": "pulseable", "value": "1"});
@@ -349,7 +377,6 @@ function DevPush(data) {
 function DevRGBLight(data) {
     var status = 0;
     status = devSt(data);
-    room_tab.Switches = 1;
     switch (data.SwitchType) {
         case 'Push On Button':
             status = 1;
@@ -361,7 +388,14 @@ function DevRGBLight(data) {
             status = 0;
             break;
     }
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true')) {
         var mydev = {MaxDimLevel: null, Action: null, graph: null};
         if (device_tab[data.idx]) {
@@ -387,8 +421,14 @@ function DevRGBLight(data) {
 };
 function DevDimmer(data) {
     var status = 0;
-    room_tab.Switches = 1;
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     //console.log(data.Status);
     status = devSt(data);
     if (data.Status.match(/Set Level/)) {
@@ -412,7 +452,7 @@ function DevDimmer(data) {
 function DevShutterInverted(data) {
     var status = 0;
     status = devSt(data);
-    room_tab.Switches = 1;
+
     var lvl = 0;
     var stoppable = 0;
     var mydev = {MaxDimLevel: null, Action: null, graph: null};
@@ -445,6 +485,14 @@ function DevShutterInverted(data) {
         stoppable = 1;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     params.push({"key": "Status", "value": status});
     params.push({"key": "Level", "value": lvl.toString()});
@@ -457,7 +505,7 @@ function DevShutterInverted(data) {
 function DevShutter(data) {
     var status = 0;
     status = devSt(data);
-    room_tab.Switches = 1;
+
     var lvl = 0;
     var stoppable = 0;
     var mydev = {MaxDimLevel: null, Action: null, graph: null};
@@ -490,6 +538,14 @@ function DevShutter(data) {
         stoppable = 1;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     params.push({"key": "Status", "value": status});
     params.push({"key": "Level", "value": lvl.toString()});
@@ -500,9 +556,17 @@ function DevShutter(data) {
     return (myfeed);
 }
 function DevMotion(data) {
-    room_tab.Switches = 1;
+
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     var value = devSt(data);
     //console.log(data.Status+" "+value);
@@ -515,9 +579,17 @@ function DevMotion(data) {
     return (myfeed);
 }
 function DevDoor(data) {//TODO
-    room_tab.Switches = 1;
+
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     var value = devSt(data);
     params.push({"key": "armable", "value": "0"});
@@ -529,9 +601,16 @@ function DevDoor(data) {//TODO
     return (myfeed);
 }
 function DevLock(data) {
-    room_tab.Switches = 1;
+
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     var value = devSt(data);
     params.push({"key": "armable", "value": "0"});
@@ -543,13 +622,21 @@ function DevLock(data) {
     return (myfeed);
 }
 function DevSmoke(data) {
-    room_tab.Switches = 1;
+
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable = 0;
     if (data.Type == 'Security') {
         ackable = 1;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     var value = devSt(data);
     params.push({"key": "Armable", "value": "0"});
@@ -561,10 +648,18 @@ function DevSmoke(data) {
     return (myfeed);
 }
 function DevFlood(data) {
-    room_tab.Switches = 1;
+
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable = 0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevFlood", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevFlood", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevFlood", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     var value = devSt(data);
     params.push({"key": "armable", "value": "0"});
@@ -576,10 +671,18 @@ function DevFlood(data) {
     return (myfeed);
 }
 function DevCO2(data) {
-    room_tab.Switches = 1;
+
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable = 0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     var value = devSt(data);
     params.push({"key": "armable", "value": "0"});
@@ -591,10 +694,18 @@ function DevCO2(data) {
     return (myfeed);
 }
 function DevCO2Alert(data) {
-    room_tab.Switches = 1;
+
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable = 0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2Alert", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2Alert", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2Alert", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     params = [];
     var value = devSt(data);
     params.push({"key": "armable", "value": "0"});
@@ -607,8 +718,14 @@ function DevCO2Alert(data) {
 }
 
 function DevGenericSensor(data) {
-    room_tab.Utility = 1;
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
+		room_tab.Utility=1;
+	}
+	
     if (data.Status) {
         params = [];
         params.push({"key": "Value", "value": data.Status.toString()});
@@ -622,12 +739,20 @@ function DevGenericSensor(data) {
     return (myfeed);
 }
 function DevGenericSensorT(data) {
-    room_tab.Utility = 1;
+
     var ptrn = /([0-9]+(?:\.[0-9]+)?) ?(.+)/;
     var res = data.Data.match(ptrn).slice(1);
     var value = res[0];
     var suffix = res[1];
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
+		room_tab.Utility=1;
+	}
+	
     params = [];
     params.push({"key": "Value", "value": value.toString(), "unit": suffix.toString(), "graphable": "true"});
     myfeed.params = params;
@@ -644,9 +769,17 @@ function DevElectricity(data) {
     var params = [];
     var combo = [];
     if (data.UsageDeliv) {
-        //Energy panel
+        //Energy pannel
         //develectricity Usage/CounterToday
         var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+		
+		if(data.PlanIDs[0] > 0) {
+			var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+		} else {
+			var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+			room_tab.Utility=1;
+		}
+		
         var params = []
         var res = ptrn2.exec(data.Usage);
         var usage = 0;
@@ -664,7 +797,14 @@ function DevElectricity(data) {
         combo.push(myfeed1);
         //develectricity UsageDeliv/CounterDelivToday
         var params = [];
-        var myfeed2 = {"id": data.idx + "_L2", "name": data.Name + "Deliv", "type": "DevElectricity", "room": "Utility"};
+		
+		if(data.PlanIDs[0] > 0) {
+			var myfeed2 = {"id": data.idx + "_L2", "name": data.Name + "Deliv", "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+		} else {
+			var myfeed2 = {"id": data.idx + "_L2", "name": data.Name + "Deliv", "type": "DevElectricity", "room": "Utility"};
+			room_tab.Utility=1;
+		}
+		
         var res = ptrn2.exec(data.UsageDeliv);
         var usagedeliv = 0;
         if (res != null) {
@@ -688,7 +828,7 @@ function DevElectricity(data) {
             "room": "Utility"
         };
         CounterToday = Math.ceil(data.Counter);
-        params.push({"key": "Value", "value": CounterToday, "unit": "kWh", "graphable": "false"});
+        params.push({"key": "Value", "value": CounterToday, "unit": "kWh", "graphable": "true"});
         myfeed3.params = params;
         combo.push(myfeed3);
         var params = [];
@@ -706,7 +846,14 @@ function DevElectricity(data) {
         combo.push(myfeed4);
         return (combo);
     } else {
-        myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+		
+		if(data.PlanIDs[0] > 0) {
+			myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+		} else {
+			myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+			room_tab.Utility=1;
+		}
+		
         if (data.Usage) {
             var res = ptrn2.exec(data.Usage);
             var usage = 0;
@@ -739,7 +886,7 @@ function DevElectricity(data) {
     }
 }
 function DevElectricityMultiple(data) {
-    room_tab.Utility = 1;
+
     var ptrn1 = /(\d+) Watt/;
     var ptrn2 = /([0-9]+(?:\.[0-9]+)?)/;
     var ptrn3 = /[\s,]+/;
@@ -750,21 +897,42 @@ function DevElectricityMultiple(data) {
     if (res != null) {
         //L1
         usage = res[0];
-        var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+		
+		if(data.PlanIDs[0] > 0) {
+			var myfeed1 = {"id": data.idx+ "_L1", "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+		} else {
+			var myfeed1 = {"id": data.idx+ "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+			room_tab.Utility=1;
+		}
+		
         var params1 = [];
         params1.push({"key": "Watts", "value": usage.toString(), "unit": "W","graphable": "true"});
         myfeed1.params = params1;
         combo.push(myfeed1);
         //L2
         usage = res[2];
-        var myfeed2 = {"id": data.idx + "_L2", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+		
+		if(data.PlanIDs[0] > 0) {
+			var myfeed2 = {"id": data.idx+ "_L2", "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+		} else {
+			var myfeed2 = {"id": data.idx+ "_L2", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+			room_tab.Utility=1;
+		}
+		
         var params2 = [];
         params2.push({"key": "Watts", "value": usage.toString(),"unit": "W","graphable": "true"});
         myfeed2.params = params2;
         combo.push(myfeed2);
         //L3
         usage = res[4];
-        var myfeed3 = {"id": data.idx + "_L3", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+		
+		if(data.PlanIDs[0] > 0) {
+			var myfeed3 = {"id": data.idx+ "_L3", "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+		} else {
+			var myfeed3 = {"id": data.idx+ "_L3", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+			room_tab.Utility=1;
+		}
+		
         var params3 = [];
         params3.push({"key": "Watts", "value": usage.toString(),"unit": "W", "graphable": "true"});
         myfeed3.params = params3;
@@ -773,12 +941,17 @@ function DevElectricityMultiple(data) {
     return (combo);
 }
 function DevCounterIncremental(data) {
-    room_tab.Utility = 1;
     var ptrn1 = /(\d+) Watt/;
     var ptrn2 = /([0-9]+(?:\.[0-9]+)?) /;
     var ptrn3 = /[\s,]+/;
-
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+		room_tab.Utility=1;
+	}
+	
     var params = [];
     var unit;
     switch (data.SwitchTypeVal) {
@@ -842,12 +1015,17 @@ function DevCounterIncremental(data) {
     return (myfeed);
 }
 function DevGas(data) {
-    room_tab.Utility = 1;
     var ptrn1 = /([0-9]+(?:\.[0-9]+)?) m3/;
     var ptrn2 = /([0-9]+(?:\.[0-9]+)?)/;
     var ptrn3 = /[\s,]+/;
-
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+		room_tab.Utility=1;
+	}
+	
     var params = [];
     if (data.CounterToday) {
         var res = ptrn1.exec(data.CounterToday);
@@ -873,15 +1051,20 @@ function DevGas(data) {
     return (myfeed);
 }
 function DevWater(data) {
-    room_tab.Utility = 1;
     var ptrn1 = /(\d+) Liter/;
     var ptrn2 = /([0-9]+(?:\.[0-9]+)?) Liter/;
     var ptrn2b = /([0-9]+(?:\.[0-9]+)?) m3/;
     var ptrn3 = /[\s,]+/;
     var combo = [];
     var usage_l = 0;
-
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
+		room_tab.Utility=1;
+	}
+	
     var params = [];
     if (data.CounterToday) {
         var res = ptrn2.exec(data.CounterToday);
@@ -914,7 +1097,6 @@ function DevWater(data) {
     return (myfeed);
 }
 function DevFlow(data) {
-    room_tab.Utility = 1;
     var ptrn1 = /(\d+) Liter/;
     var ptrn2 = /([0-9]+(?:\.[0-9]+)?) Liter/;
     var ptrn2b = /([0-9]+(?:\.[0-9]+)?) m3/;
@@ -922,8 +1104,14 @@ function DevFlow(data) {
     var ptrn4 = /([0-9]+(?:\.[0-9]+)?) l\/min/;
     var combo = [];
     var usage_l = 0;
-
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
+		room_tab.Utility=1;
+	}
+	
     var params = [];
 
     var res = ptrn4.exec(data.Data);
@@ -937,23 +1125,44 @@ function DevFlow(data) {
     return (myfeed);
 }
 function DevTH(data) {
-    room_tab.Temp = 1;
+
     var status = 0;
     switch (data.Type) {
         case 'Temp':
-            var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTemperature", "room": "Temp"};
+			
+			if(data.PlanIDs[0] > 0) {
+				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTemperature", "room": domo_room_tab[data.PlanIDs[0]]};
+			} else {
+				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTemperature", "room": "Temp"};
+				room_tab.Temp=1;
+			}
+			
             params = [];
             params.push({"key": "Value", "value": data.Temp, "unit": "°C","graphable": "true"});
             myfeed.params = params;
             return (myfeed);
         case 'Humidity':
-            var myfeed = {"id": data.idx, "name": data.Name, "type": "DevHygrometry", "room": "Temp"};
+			
+			if(data.PlanIDs[0] > 0) {
+				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevHygrometry", "room": domo_room_tab[data.PlanIDs[0]]};
+			} else {
+				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevHygrometry", "room": "Temp"};
+				room_tab.Temp=1;
+			}
+			
             params = [];
             params.push({"key": "Value", "value": data.Humidity, "unit": "%", "graphable": "true"});
             myfeed.params = params;
             return (myfeed);
         case 'Temp + Humidity':
-            var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
+			
+			if(data.PlanIDs[0] > 0) {
+				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": domo_room_tab[data.PlanIDs[0]]};
+			} else {
+				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
+				room_tab.Temp=1;
+			}
+			
             var params = [];
             params.push({"key": "Hygro", "value": data.Humidity, "unit": "%", "graphable": "true"});
             params.push({"key": "Temp", "value": data.Temp, "unit": "°C", "graphable": "true"});
@@ -961,14 +1170,27 @@ function DevTH(data) {
             return (myfeed);
         case 'Temp + Humidity + Baro':
             var combo = [];
-            var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
+			
+			if(data.PlanIDs[0] > 0) {
+				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": domo_room_tab[data.PlanIDs[0]]};
+			} else {
+				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
+				room_tab.Temp=1;
+			}
+			
             var params = [];
             params.push({"key": "Hygro", "value": data.Humidity, "unit": "%", "graphable": "true"});
             params.push({"key": "Temp", "value": data.Temp, "unit": "°C", "graphable": "true"});
             myfeed.params = params;
             combo.push(myfeed);
-            room_tab.Weather = 1;
-            var myfeed = {"id": data.idx + "_1", "name": data.Name, "type": "DevPressure", "room": "Weather"};
+			
+			if(data.PlanIDs[0] > 0) {
+				var myfeed = {"id": data.idx+ "_1", "name": data.Name, "type": "DevPressure", "room": domo_room_tab[data.PlanIDs[0]]};
+			} else {
+				var myfeed = {"id": data.idx+ "_1", "name": data.Name, "type": "DevPressure", "room": "Weather"};
+				room_tab.Weather=1;
+			}
+			
             params = [];
             params.push({"key": "Value", "value": data.Barometer, "unit": "mbar", "graphable": "true"});
             myfeed.params = params;
@@ -982,7 +1204,14 @@ function DevTH(data) {
 }
 function DevPressure(data) {
     room_tab.Weather = 1;
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": "Weather"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": "Weather"};
+		room_tab.Weather=1;
+	}
+	
     params = [];
     if (data.SubType === "Pressure") {
         if (data.Pressure < 800) {
@@ -1006,8 +1235,14 @@ function DevPressure(data) {
 }
 function DevRain(data) {
     var status = 0;
-    room_tab.Weather = 1;
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": "Weather"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": "Weather"};
+		room_tab.Weather=1;
+	}
+	
     var params = [];
     params.push({"key": "Accumulation", "value": data.Rain.toString(), "unit": "mm", "graphable": "true"});
     params.push({"key": "Value", "value": data.RainRate.toString(), "unit": "mm/h", "graphable": "true"});
@@ -1016,56 +1251,87 @@ function DevRain(data) {
 }
 function DevUV(data) {
     var status = 0;
-    room_tab.Weather = 1;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevUV", "room": "Weather"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevUV", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevUV", "room": "Weather"};
+		room_tab.Weather=1;
+	}
+	
     params = [];
     params.push({"key": "Value", "value": data.UVI, "unit": "", "graphable": "true"});
     myfeed.params = params;
     return (myfeed);
 }
 function DevNoise(data) {
-    room_tab.Utility = 1;
     var ptrn = /([0-9]+(?:\.[0-9]+)?) ?(.+)/;
     var res = data.Data.match(ptrn).slice(1);
     var value = res[0];
     var suffix = res[1];
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": "Utility"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": "Utility"};
+		room_tab.Utility=1;
+	}
+	
     params = [];
     params.push({"key": "Value", "value": value, "unit": suffix.toString(), "graphable": "true"});
     myfeed.params = params;
     return (myfeed);
 }
 function DevLux(data) {
-    room_tab.Weather = 1;
     var ptrn1 = /(\d+) Lux/;
     var res = ptrn1.exec(data.Data);
     var usage = 0;
     if (res != null) {
         usage = res[1]
     }
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevLuminosity", "room": "Weather", params: []};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": domo_room_tab[data.PlanIDs[0]], params: []};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": "Weather", params: []};
+		room_tab.Weather=1;
+	}
+	
     params = [];
     params.push({"key": "Value", "value": usage, "unit": "lux", "graphable": "true"});
     myfeed.params = params;
     return (myfeed);
 }
 function DevGases(data) {
-    room_tab.Temp = 1;
     var ptrn1 = /(\d+) ppm/;
     var res = ptrn1.exec(data.Data);
     var usage = 0;
     if (res != null) {
         usage = Number(res[1]);
     }
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Temp", params: []};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": domo_room_tab[data.PlanIDs[0]], params: []};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Temp", params: []};
+		room_tab.Temp=1;
+	}
+	
     params = [];
     params.push({"key": "Value", value: usage.toString(), "unit": "ppm", "graphable": "true"});
     myfeed.params = params;
     return (myfeed);
 }
 function DevWind(data) {
-    room_tab.Weather = 1;
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": "Weather"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": "Weather"};
+		room_tab.Weather=1;
+	}
+	
     var params = [];
     params.push({"key": "Speed", "value": data.Speed, "unit": "km/h", "graphable": "true"});
     if (typeof data.Direction !== 'undefined' && data.Direction !== null) {
@@ -1075,8 +1341,14 @@ function DevWind(data) {
     return (myfeed);
 }
 function DevThermostat(data) {
-    room_tab.Utility = 1;
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Utility"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Utility"};
+		room_tab.Utility=1;
+	}
+	
     var params = [];
     params.push({"key": "cursetpoint", "value": data.SetPoint.toString()});
     params.push({"key": "curtemp", "value": data.SetPoint.toString()});
@@ -1087,18 +1359,30 @@ function DevThermostat(data) {
     return (myfeed);
 }
 function DevScene(data) {
-    room_tab.Scenes = 1;
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
-    var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevScene", "room": "Scenes"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevScene", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevScene", "room": "Scenes"};
+		room_tab.Scenes=1;
+	}
+	
     params = [];
     params.push({"key": "LastRun", "value": dt});
     myfeed.params = params;
     return (myfeed);
 }
 function DevSceneGroup(data) {
-    room_tab.Scenes = 1;
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
-    var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Scenes"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Scenes"};
+		room_tab.Scenes=1;
+	}
+	
     var params = [];
     params.push({"key": "LastRun", "value": dt});
     params.push({"key": "Value", "value": data.Status});
@@ -1109,9 +1393,15 @@ function DevSceneGroup(data) {
 
 function DevMultiSwitchHeating(data) {
     var ptrn4 = /[\s]+|/;
-    room_tab.Switches = 1;
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
-    var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
+	
+	if(data.PlanIDs[0] > 0) {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
+	} else {
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
+		room_tab.Switches=1;
+	}
+	
     var params = [];
     params.push({"key": "LastRun", "value": dt});
     var status;
@@ -1197,7 +1487,26 @@ app.get("/system", function (req, res) {
 
 app.get("/rooms", function (req, res) {
     //TODO: add hidden rooms
-    res.type('json');
+    res.type('json');    
+    var options = {
+    url: nconf.get('domo_path')+"/json.htm?type=plans&order=name&used=true",
+	  headers: {
+	  'User-Agent': 'request'
+          }
+    };
+	
+    request(options, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			var data=JSON.parse(body);
+			for(var i = 0; i < data.result.length; i++) {
+				if(data.result[i].Devices > 0) {
+					domo_room_tab[data.result[i].idx] = data.result[i].Name;
+					room_tab[data.result[i].Name] = data.result[i].Devices;
+				}
+			}
+		}
+	})
+	
     var room = [];
     for (property in room_tab) {
         room.push({id: property, name: property});
@@ -1661,31 +1970,12 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                         params.push(feeds);
                     }
                 } else if (paramKey === 'ConsoTotal') {
-                    if (ptype==='p1 smart meter') {
-                        key = 'c';
-                        var key2 ='c3';
-                        for (var i = 0; i < data.result.length; i++) {
-                            if ((range === 'month') || (range === 'year')) {
-                                var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2])) / 2;
-                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                                var feeds = {"date": dt, "value": value};
-                                params.push(feeds);
-                            } else {
-                                var value = data.result[i][key];
-                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                                var feeds = {"date": dt, "value": value};
-                                params.push(feeds);
-                            }
-                        }
-
-                    } else {
-                        key = 'v';
-                        for (var i = 0; i < data.result.length; i++) {
-                            var value = data.result[i][key];
-                            var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                            var feeds = {"date": dt, "value": value};
-                            params.push(feeds);
-                        }
+                    key = 'v';
+                    for (var i = 0; i < data.result.length; i++) {
+                        var value = data.result[i][key];
+                        var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                        var feeds = {"date": dt, "value": value};
+                        params.push(feeds);
                     }
                 } else if (paramKey === 'Watts') {
                         key = 'v'+PLine;
