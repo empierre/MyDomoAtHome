@@ -328,6 +328,11 @@ function DevMultiSwitch(data) {
     var status;
     //console.log("L:"+data.Level);
     var res = data.LevelNames.split('|').join(',');
+	
+	if(data.LevelOffHidden) {
+		res = res.replace ("Off,","");
+	}
+	
     var ret = data.LevelNames.split('|');
     var mydev = {MaxDimLevel: null, Action: null, graph: null, Selector: ret};
     //console.log(mydev);
