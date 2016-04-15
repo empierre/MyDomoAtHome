@@ -305,6 +305,9 @@ function DevSwitch(data) {
 	
     params = [];
     params.push({"key": "Status", "value": status.toString()});
+	if(data.Energy) {
+		params.push({"key": "Energy", "value": data.Energy});
+	}
     //TODO key Energy
     myfeed.params = params;
     return (myfeed);
@@ -408,6 +411,9 @@ function DevRGBLight(data) {
         params.push({"key": "Status", "value": "1"});//hyp: set level only when on
         params.push({"key": "dimmable", "value": "1"});
         params.push({"key": "Level", "value": data.Level.toString()});
+		if(data.Energy) {
+			params.push({"key": "Energy", "value": data.Energy});
+		}
         //TODO whitechannel
         //TODO color
         //TODO Energy value unit
@@ -450,7 +456,6 @@ function DevDimmer(data) {
 	}
     //TODO key Energy value unit
     myfeed.params = params;
-	logger.info("Domoticz server - dimmer: " + JSON.stringify(myfeed));
     return (myfeed);
 };
 function DevShutterInverted(data) {
@@ -2090,10 +2095,10 @@ app.get("/devices", function (req, res) {
 					domo_energy_devices[data.result[i].ID] = data.result[i].Data.replace(" Watt","");
 				}
 			}
+			logger.info("Domoticz server - energy devices: " + JSON.stringify(domo_energy_devices));
 		}
 	})
-	
-	logger.info("Domoticz server - energy devices: " + JSON.stringify(domo_energy_devices));
+
 	
     var options = {
         url: domo_path + "/json.htm?type=devices&filter=all&used=true&order=Name",
