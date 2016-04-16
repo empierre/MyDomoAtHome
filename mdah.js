@@ -450,11 +450,14 @@ function DevDimmer(data) {
     device_tab[data.idx] = mydev;
     params = [];
     params.push({"key": "Status", "value": status.toString()});
-    params.push({"key": "Level", "value": data.Level.toString()});
+	if(status == 0) {
+		params.push({"key": "Level", "value": "0"});
+	} else {
+		params.push({"key": "Level", "value": data.Level.toString()});
+	}
 	if(data.Energy) {
 		params.push({"key": "Energy", "value": data.Energy});
 	}
-    //TODO key Energy value unit
     myfeed.params = params;
     return (myfeed);
 };
@@ -1895,6 +1898,9 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
     }
     if (type === "p1 smart meter") {
         type = "counter";
+    }
+	if ((type === "temp + humidity")) {
+        type = "temp";
     }
     if ((ptype === "general")) {
         var st=getDeviceSubType(deviceId);
