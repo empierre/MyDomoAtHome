@@ -2125,6 +2125,7 @@ app.get("/devices", function (req, res) {
             result.push(myfeed);
             var rv = getLastVersion();
             //console.log(ver+" "+rv);
+
             if (versionCompare(ver, rv.substring(1)) < 0) {
                 var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
                 var params = [];
@@ -2134,10 +2135,12 @@ app.get("/devices", function (req, res) {
             }
             for (var i = 0; i < data.result.length; i++) {
                 //console.log(data.result[i].Type);
-				
-				if(domo_energy_devices[data.result[i].ID.substr(1-data.result[i].ID.length)]) {
-					data.result[i].Energy = domo_energy_devices[data.result[i].ID.substr(1-data.result[i].ID.length)];
-				}
+                if (typeof data.result[i].ID !== 'undefined' && data.result[i].ID !== null) {
+
+                    if (domo_energy_devices[data.result[i].ID.substr(1 - data.result[i].ID.length)]) {
+                        data.result[i].Energy = domo_energy_devices[data.result[i].ID.substr(1 - data.result[i].ID.length)];
+                    }
+                }
 				
                 switch (data.result[i].Type) {
                     case (data.result[i].Type.match(/Light/) || {}).input:
