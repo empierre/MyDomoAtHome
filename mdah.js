@@ -305,6 +305,9 @@ function DevSwitch(data) {
 	
     params = [];
     params.push({"key": "Status", "value": status.toString()});
+	if(data.Energy) {
+		params.push({"key": "Energy", "value": data.Energy});
+	}
     //TODO key Energy
     myfeed.params = params;
     return (myfeed);
@@ -408,6 +411,9 @@ function DevRGBLight(data) {
         params.push({"key": "Status", "value": "1"});//hyp: set level only when on
         params.push({"key": "dimmable", "value": "1"});
         params.push({"key": "Level", "value": data.Level.toString()});
+		if(data.Energy) {
+			params.push({"key": "Energy", "value": data.Energy});
+		}
         //TODO whitechannel
         //TODO color
         //TODO Energy value unit
@@ -444,8 +450,14 @@ function DevDimmer(data) {
     device_tab[data.idx] = mydev;
     params = [];
     params.push({"key": "Status", "value": status.toString()});
-    params.push({"key": "Level", "value": data.Level.toString()});
-    //TODO key Energy value unit
+	if(status == 0) {
+		params.push({"key": "Level", "value": "0"});
+	} else {
+		params.push({"key": "Level", "value": data.Level.toString()});
+	}
+	if(data.Energy) {
+		params.push({"key": "Energy", "value": data.Energy});
+	}
     myfeed.params = params;
     return (myfeed);
 };
@@ -1887,6 +1899,9 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
     if (type === "p1 smart meter") {
         type = "counter";
     }
+	if ((type === "temp + humidity")) {
+        type = "temp";
+    }
     if ((ptype === "general")) {
         var st=getDeviceSubType(deviceId);
         if ((st==='Current')||(st==='kWh')||(st==='Solar Radiation')||(st==='Visibility')) {
@@ -1994,7 +2009,8 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
 				var feeds = {"date": dt, "value": value};
 				params.push(feeds);
 			}
-                } else if (paramKey === 'Watts') {
+		}
+		} else if (paramKey === 'Watts') {
                         key = 'v'+PLine;
                         var key2 ='v'+(parseInt(PLine)+3);
                         for (var i = 0; i < data.result.length; i++) {
@@ -2067,6 +2083,29 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
 
 app.get("/devices", function (req, res) {
     res.type('json');
+	
+	var options = {
+		url: domo_path + "/json.htm?type=devices&filter=utility&order=Name",
+		headers: {
+			'User-Agent': 'request'
+		}
+    };
+	
+	var domo_energy_devices = {};
+	
+    request(options, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			var data=JSON.parse(body);
+			for(var i = 0; i < data.result.length; i++) {
+				if(data.result[i].SubType == "Electric") {
+					domo_energy_devices[data.result[i].ID] = data.result[i].Data.replace(" Watt","");
+				}
+			}
+			logger.info("Domoticz server - energy devices: " + JSON.stringify(domo_energy_devices));
+		}
+	})
+
+	
     var options = {
         url: domo_path + "/json.htm?type=devices&filter=all&used=true&order=Name",
         headers: {
@@ -2095,6 +2134,11 @@ app.get("/devices", function (req, res) {
             }
             for (var i = 0; i < data.result.length; i++) {
                 //console.log(data.result[i].Type);
+				
+				if(domo_energy_devices[data.result[i].ID.substr(1-data.result[i].ID.length)]) {
+					data.result[i].Energy = domo_energy_devices[data.result[i].ID.substr(1-data.result[i].ID.length)];
+				}
+				
                 switch (data.result[i].Type) {
                     case (data.result[i].Type.match(/Light/) || {}).input:
                         switch (data.result[i].SwitchType) {
