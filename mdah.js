@@ -1893,32 +1893,21 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
         type = "counter";
         curl = "&method=1";
     }
-    if (type === "air quality") {
+    if ((type === "air quality")||(type === "p1 smart meter")||(paramKey === "Watts")) {
         type = "counter";
-    }
-    if (type === "p1 smart meter") {
-        type = "counter";
-    }
-	if ((type === "temp + humidity")) {
-        type = "temp";
     }
     if ((ptype === "general")) {
         var st=getDeviceSubType(deviceId);
-        if ((st==='Current')||(st==='kWh')||(st==='Solar Radiation')||(st==='Visibility')) {
+        if ((st==='Current')||(st==='kWh')||(st==='Solar Radiation')||(st==='Visibility')||(st==='Pressure')) {
             type = "counter";
         } else {
             type = "Percentage";
         }
     }
-    if ((paramKey === "hygro")||(type === "humidity")) {
+    if ((paramKey === "temp")||(type === "temp + humidity")||(paramKey === "hygro")||(type === "humidity")) {
         type = "temp";
     }
-    if ((paramKey === "temp")) {
-        type = "temp";
-    }
-    if ((paramKey === "Watts")) {
-        type = "counter";
-    }
+
     logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
     var range;
     if (duration <= 172800) {
@@ -2425,7 +2414,6 @@ app.get("/devices", function (req, res) {
     })
 });
 
-//get '/devices/:deviceId/:paramKey/histo/:startdate/:enddate'
 
 // error handling middleware should be loaded after the loading the routes
 // all environments
