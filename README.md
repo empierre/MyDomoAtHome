@@ -44,16 +44,19 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
   - [X] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
   - [X] Push On buttons (depending on Imperihome)
 
-M3 milestone will provide extended support to other platforms with Docker and Synology 
+![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M3 Goal reached - full graphs, flexible room usage and UI improvements
+- [X] Support major type of sensors/feature of Domoticz
+  - [X] Devices following planID
+  - [X] Graphs
+  - [X] Groupe switches with instant energy
+  - [X] Security code managed
+
+M4 milestone will provide extended support to other platforms with Docker and Synology 
 - [ ] Synology
   - [ ] Synology hosted package
 - [ ] Debian package - noarch
   - [ ] debian hosted package - need a peer
   - [ ] raspbian hosted package
-- [ ] Support major type of sensors/feature of Domoticz
-  - [ ] Devices following planID
-  - [X] Graphs
-  - [ ] Groupe switches with instant energy
 - TODO
   - [ ] Evohome (depending on Imperihome)
   - [ ] Alarm pannel (partial with ImperiHome)
