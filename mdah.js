@@ -730,8 +730,8 @@ function DevCO2Alert(data) {
 }
 
 function DevGenericSensor(data) {
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs[0] !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
@@ -1357,7 +1357,7 @@ function DevThermostat(data) {
 	if(data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
-		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Utility"};
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Switches"};
 		room_tab.Utility=1;
 	}
 	
@@ -1734,7 +1734,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function (req, re
         case 'launchScene':
             res.type('json');
             var sc = deviceId.match(/^SC(\d+)/);
-            //console.log(sc[1]);
+            //logger.info(console.log(sc[1]));
             var options = {
                 url: domo_path + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=On&passcode=",
                 headers: {
