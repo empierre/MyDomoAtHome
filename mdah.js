@@ -1952,7 +1952,6 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                             if ((i.match(/_max/)) || (i.match(/_min/))) {
                                 var ptrn = /^([^_]*)_/;
                                 key = i.match(ptrn).slice(1);
-                                //key = i.match(ptrn);
                             } else {
                                 key = i;
                             }
@@ -1978,20 +1977,20 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
                     }
                 } else if (paramKey === 'ConsoTotal') {
                    if (ptype==='p1 smart meter') {
-                       key = 'c';
-                        var key2 ='c3';
+                       var key2;
+                       if (PLine==1) {
+                           key = 'r1';
+                           key2= 'r2';
+                       } else if (PLine ==2) {
+                           key = 'v';
+                           key2 = 'v2';
+                       }
+                       logger.info("P1 "+PLine+" "+key+" "+key2);
                         for (var i = 0; i < data.result.length; i++) {
-                            if ((range === 'month') || (range === 'year')) {
-                                var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2])) / 2;
-                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                                var feeds = {"date": dt, "value": value};
-                                params.push(feeds);
-                            } else {
-                                var value = data.result[i][key];
-                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                                var feeds = {"date": dt, "value": value};
-                                params.push(feeds);
-                            }
+                            var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2]));
+                            var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                            var feeds = {"date": dt, "value": value};
+                            params.push(feeds);
 			            }
                    } else {
                         key = 'v';
