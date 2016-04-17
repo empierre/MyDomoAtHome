@@ -296,7 +296,7 @@ function DevSwitch(data) {
             break;
     }
 
-	if(data.PlanIDs[0] > 0) {
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
@@ -318,8 +318,8 @@ function DevMultiSwitch(data) {
 
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
@@ -363,8 +363,8 @@ function DevPush(data) {
     }
     /*var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
      myfeed.params={"key": "Status", "value": status};*/
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
@@ -391,8 +391,8 @@ function DevRGBLight(data) {
             status = 0;
             break;
     }
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": "Switches"};
@@ -427,8 +427,8 @@ function DevRGBLight(data) {
 };
 function DevDimmer(data) {
     var status = 0;
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
@@ -497,8 +497,8 @@ function DevShutterInverted(data) {
         stoppable = 1;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
@@ -550,8 +550,8 @@ function DevShutter(data) {
         stoppable = 1;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
@@ -571,8 +571,8 @@ function DevMotion(data) {
 
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMotion", "room": "Switches"};
@@ -594,8 +594,8 @@ function DevDoor(data) {//TODO
 
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
@@ -615,8 +615,8 @@ function DevDoor(data) {//TODO
 function DevLock(data) {
 
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
@@ -641,8 +641,8 @@ function DevSmoke(data) {
         ackable = 1;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSmoke", "room": "Switches"};
@@ -664,8 +664,8 @@ function DevFlood(data) {
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable = 0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevFlood", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevFlood", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevFlood", "room": "Switches"};
@@ -687,8 +687,8 @@ function DevCO2(data) {
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable = 0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Switches"};
@@ -710,8 +710,8 @@ function DevCO2Alert(data) {
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var ackable = 0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2Alert", "room": "Switches"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2Alert", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2Alert", "room": "Switches"};
@@ -731,7 +731,7 @@ function DevCO2Alert(data) {
 
 function DevGenericSensor(data) {
 
-    if (typeof data.PlanIDs[0] !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
@@ -757,8 +757,8 @@ function DevGenericSensorT(data) {
     var value = res[0];
     var suffix = res[1];
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
@@ -784,8 +784,8 @@ function DevElectricity(data) {
         //Energy pannel
         //develectricity Usage/CounterToday
         var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
-		
-		if(data.PlanIDs[0] > 0) {
+
+        if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 			var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 		} else {
 			var myfeed1 = {"id": data.idx + "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -809,8 +809,8 @@ function DevElectricity(data) {
         combo.push(myfeed1);
         //develectricity UsageDeliv/CounterDelivToday
         var params = [];
-		
-		if(data.PlanIDs[0] > 0) {
+
+        if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 			var myfeed2 = {"id": data.idx + "_L2", "name": data.Name + "Deliv", "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 		} else {
 			var myfeed2 = {"id": data.idx + "_L2", "name": data.Name + "Deliv", "type": "DevElectricity", "room": "Utility"};
@@ -858,8 +858,8 @@ function DevElectricity(data) {
         combo.push(myfeed4);
         return (combo);
     } else {
-		
-		if(data.PlanIDs[0] > 0) {
+
+        if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 			myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 		} else {
 			myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -909,8 +909,8 @@ function DevElectricityMultiple(data) {
     if (res != null) {
         //L1
         usage = res[0];
-		
-		if(data.PlanIDs[0] > 0) {
+
+        if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 			var myfeed1 = {"id": data.idx+ "_L1", "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 		} else {
 			var myfeed1 = {"id": data.idx+ "_L1", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -923,8 +923,8 @@ function DevElectricityMultiple(data) {
         combo.push(myfeed1);
         //L2
         usage = res[2];
-		
-		if(data.PlanIDs[0] > 0) {
+
+        if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 			var myfeed2 = {"id": data.idx+ "_L2", "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 		} else {
 			var myfeed2 = {"id": data.idx+ "_L2", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -937,8 +937,8 @@ function DevElectricityMultiple(data) {
         combo.push(myfeed2);
         //L3
         usage = res[4];
-		
-		if(data.PlanIDs[0] > 0) {
+
+        if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 			var myfeed3 = {"id": data.idx+ "_L3", "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 		} else {
 			var myfeed3 = {"id": data.idx+ "_L3", "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -956,8 +956,8 @@ function DevCounterIncremental(data) {
     var ptrn1 = /(\d+) Watt/;
     var ptrn2 = /([0-9]+(?:\.[0-9]+)?) /;
     var ptrn3 = /[\s,]+/;
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -1030,8 +1030,8 @@ function DevGas(data) {
     var ptrn1 = /([0-9]+(?:\.[0-9]+)?) m3/;
     var ptrn2 = /([0-9]+(?:\.[0-9]+)?)/;
     var ptrn3 = /[\s,]+/;
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -1069,8 +1069,8 @@ function DevWater(data) {
     var ptrn3 = /[\s,]+/;
     var combo = [];
     var usage_l = 0;
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevElectricity", "room": "Utility"};
@@ -1116,8 +1116,8 @@ function DevFlow(data) {
     var ptrn4 = /([0-9]+(?:\.[0-9]+)?) l\/min/;
     var combo = [];
     var usage_l = 0;
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevGenericSensor", "room": "Utility"};
@@ -1141,8 +1141,8 @@ function DevTH(data) {
     var status = 0;
     switch (data.Type) {
         case 'Temp':
-			
-			if(data.PlanIDs[0] > 0) {
+
+            if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTemperature", "room": domo_room_tab[data.PlanIDs[0]]};
 			} else {
 				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTemperature", "room": "Temp"};
@@ -1154,8 +1154,8 @@ function DevTH(data) {
             myfeed.params = params;
             return (myfeed);
         case 'Humidity':
-			
-			if(data.PlanIDs[0] > 0) {
+
+            if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevHygrometry", "room": domo_room_tab[data.PlanIDs[0]]};
 			} else {
 				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevHygrometry", "room": "Temp"};
@@ -1167,8 +1167,8 @@ function DevTH(data) {
             myfeed.params = params;
             return (myfeed);
         case 'Temp + Humidity':
-			
-			if(data.PlanIDs[0] > 0) {
+
+            if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": domo_room_tab[data.PlanIDs[0]]};
 			} else {
 				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
@@ -1182,8 +1182,8 @@ function DevTH(data) {
             return (myfeed);
         case 'Temp + Humidity + Baro':
             var combo = [];
-			
-			if(data.PlanIDs[0] > 0) {
+
+            if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": domo_room_tab[data.PlanIDs[0]]};
 			} else {
 				var myfeed = {"id": data.idx, "name": data.Name, "type": "DevTempHygro", "room": "Temp"};
@@ -1195,8 +1195,8 @@ function DevTH(data) {
             params.push({"key": "Temp", "value": data.Temp, "unit": "°C", "graphable": "true"});
             myfeed.params = params;
             combo.push(myfeed);
-			
-			if(data.PlanIDs[0] > 0) {
+
+            if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 				var myfeed = {"id": data.idx+ "_1", "name": data.Name, "type": "DevPressure", "room": domo_room_tab[data.PlanIDs[0]]};
 			} else {
 				var myfeed = {"id": data.idx+ "_1", "name": data.Name, "type": "DevPressure", "room": "Weather"};
@@ -1216,8 +1216,8 @@ function DevTH(data) {
 }
 function DevPressure(data) {
     room_tab.Weather = 1;
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevPressure", "room": "Weather"};
@@ -1247,8 +1247,8 @@ function DevPressure(data) {
 }
 function DevRain(data) {
     var status = 0;
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRain", "room": "Weather"};
@@ -1264,8 +1264,8 @@ function DevRain(data) {
 function DevUV(data) {
     var status = 0;
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevUV", "room": "Weather"};
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevUV", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevUV", "room": "Weather"};
@@ -1282,8 +1282,8 @@ function DevNoise(data) {
     var res = data.Data.match(ptrn).slice(1);
     var value = res[0];
     var suffix = res[1];
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": "Utility"};
@@ -1302,8 +1302,7 @@ function DevLux(data) {
     if (res != null) {
         usage = res[1]
     }
-	
-	if(data.PlanIDs[0] > 0) {
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevLuminosity", "room": domo_room_tab[data.PlanIDs[0]], params: []};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevLuminosity", "room": "Weather", params: []};
@@ -1322,8 +1321,8 @@ function DevGases(data) {
     if (res != null) {
         usage = Number(res[1]);
     }
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": domo_room_tab[data.PlanIDs[0]], params: []};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevCO2", "room": "Temp", params: []};
@@ -1336,8 +1335,8 @@ function DevGases(data) {
     return (myfeed);
 }
 function DevWind(data) {
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevWind", "room": "Weather"};
@@ -1353,8 +1352,8 @@ function DevWind(data) {
     return (myfeed);
 }
 function DevThermostat(data) {
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevThermostat", "room": "Switches"};
@@ -1372,8 +1371,8 @@ function DevThermostat(data) {
 }
 function DevScene(data) {
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevScene", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevScene", "room": "Scenes"};
@@ -1387,8 +1386,8 @@ function DevScene(data) {
 }
 function DevSceneGroup(data) {
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": "SC" + data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Scenes"};
@@ -1406,8 +1405,8 @@ function DevSceneGroup(data) {
 function DevMultiSwitchHeating(data) {
     var ptrn4 = /[\s]+|/;
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
-	
-	if(data.PlanIDs[0] > 0) {
+
+    if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
