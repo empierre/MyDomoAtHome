@@ -45,7 +45,7 @@ var ver = pjson.version;
 var device_tab = {};
 var room_tab = [];
 var domo_room_tab = [];
-var device = {MaxDimLevel: null, Action: null, graph: null, Selector: null};
+var device = {MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected:null};
 var app_name = "MyDomoAtHome";
 var domo_path = process.env.DOMO || "http://127.0.0.1:8080";
 var port = process.env.PORT || '3002';
@@ -274,27 +274,25 @@ function DevSwitch(data) {
     var status = 0;
     switch (data.Status) {
         case 'On':
-            status = 1;
-            break;
-        case 'Off':
-            status = 0;
-            break;
         case 'Open':
-            status = 1;
-            break;
-        case 'Closed':
-            status = 0;
-            break;
         case 'Panic':
             status = 1;
             break;
         case 'Normal':
+        case 'Off':
+        case 'Closed':
             status = 0;
             break;
         default:
             status = 0;
             break;
     }
+    //Protected device
+    var mydev = device_tab[data.idx]||{MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected: null};
+    if (! mydev && (data.Protected === 'true')) {
+            mydev.Protected = 1;
+        }
+    device_tab[data.idx] = mydev;
 
     if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
@@ -318,6 +316,13 @@ function DevMultiSwitch(data) {
 
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": "Switches"};
+
+    //Protected device
+    var mydev = device_tab[data.idx]||{MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected: null};
+    if (! mydev && (data.Protected === 'true')) {
+        mydev.Protected = 1;
+    }
+    device_tab[data.idx] = mydev;
 
     if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevMultiSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
@@ -361,8 +366,13 @@ function DevPush(data) {
             status = 0;
             break;
     }
-    /*var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": "Switches"};
-     myfeed.params={"key": "Status", "value": status};*/
+
+    //Protected device
+    var mydev = device_tab[data.idx]||{MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected: null};
+    if (! mydev && (data.Protected === 'true')) {
+        mydev.Protected = 1;
+    }
+    device_tab[data.idx] = mydev;
 
     if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevSwitch", "room": domo_room_tab[data.PlanIDs[0]]};
@@ -391,6 +401,13 @@ function DevRGBLight(data) {
             status = 0;
             break;
     }
+
+    //Protected device
+    var mydev = device_tab[data.idx]||{MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected: null};
+    if (! mydev && (data.Protected === 'true')) {
+        mydev.Protected = 1;
+    }
+    device_tab[data.idx] = mydev;
 
     if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevRGBLight", "room": domo_room_tab[data.PlanIDs[0]]};
@@ -434,8 +451,14 @@ function DevDimmer(data) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
 		room_tab.Switches=1;
 	}
-	
-    //console.log(data.Status);
+
+    //Protected device
+    var mydev = device_tab[data.idx]||{MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected: null};
+    if (! mydev && (data.Protected === 'true')) {
+        mydev.Protected = 1;
+    }
+    device_tab[data.idx] = mydev;
+
     status = devSt(data);
     if (data.Status.match(/Set Level/)) {
         status = 1;
@@ -464,6 +487,13 @@ function DevDimmer(data) {
 function DevShutterInverted(data) {
     var status = 0;
     status = devSt(data);
+
+    //Protected device
+    var mydev = device_tab[data.idx]||{MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected: null};
+    if (! mydev && (data.Protected === 'true')) {
+        mydev.Protected = 1;
+    }
+    device_tab[data.idx] = mydev;
 
     var lvl = 0;
     var stoppable = 0;
@@ -517,6 +547,13 @@ function DevShutterInverted(data) {
 function DevShutter(data) {
     var status = 0;
     status = devSt(data);
+
+    //Protected device
+    var mydev = device_tab[data.idx]||{MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected: null};
+    if (! mydev && (data.Protected === 'true')) {
+        mydev.Protected = 1;
+    }
+    device_tab[data.idx] = mydev;
 
     var lvl = 0;
     var stoppable = 0;
