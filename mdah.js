@@ -1440,12 +1440,26 @@ function getDeviceType(deviceId) {
 };
 
 function getDeviceSubType(deviceId) {
-    var url = domo_path + "/json.htm?type=devices&rid=" + deviceId;
+    var url = domo_path + "/json.htm?type=cameras&rid=" + deviceId;
     var res = requester('GET', url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].SubType);
 };
 
+function DevCamera() {
+    var url = domo_path + "/json.htm?type=cameras&rid=";
+    var res = requester('GET', url);
+    var data = JSON.parse(res.body.toString('utf-8'));
+    var combo = [];
+    for (var i = 0; i < data.result.length; i++) {
+        var myfeed = {"id": "C"+i, "name": data.result[i].Name, "type": "DevCamera", "room": "Switches"};
+        var params = [];
+        params.push({"key": "localjpegurl", "value": data.result[i].ImageURL});
+        myfeed.params = params;
+        combo.push(myfeed);
+    }
+    return (combo);
+};
 
 var auth = function (req, res, next) {
     function unauthorized(res) {
@@ -2081,9 +2095,9 @@ app.get("/devices", function (req, res) {
 			'User-Agent': 'request'
 		}
     };
-	
+
 	var domo_energy_devices = {};
-	
+
     request(options, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			var data=JSON.parse(body);
@@ -2096,14 +2110,12 @@ app.get("/devices", function (req, res) {
 		}
 	})
 
-	
     var options = {
         url: domo_path + "/json.htm?type=devices&filter=all&used=true&order=Name",
         headers: {
             'User-Agent': 'request'
         }
     };
-    //console.log(options.url);
     request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var data = JSON.parse(body);
@@ -2392,6 +2404,11 @@ app.get("/devices", function (req, res) {
                         logger.warn("Unknown SwitchType " + data.result[i].Type+ " "+data.result[i].SwitchTypeVal);
                         break;
                 }
+            }
+
+            var rt = DevCamera();
+            for (var ii = 0; ii < rt.length; ii++) {
+                result.push(rt[ii]);
             }
             var rest = {};
             rest.devices = result;
