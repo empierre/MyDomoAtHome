@@ -1397,7 +1397,7 @@ function DevSceneGroup(data) {
     var params = [];
     params.push({"key": "LastRun", "value": dt});
     params.push({"key": "Value", "value": data.Status});
-    params.push({"key": "Choices", "value": "Mixed,On,Off"});
+    params.push({"key": "Choices", "value": "On,Off"});
     myfeed.params = params;
     return (myfeed);
 }
