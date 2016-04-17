@@ -1614,7 +1614,12 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function (req, re
             var my_url;
             var lsetLevel;
             logger.info(device_tab[deviceId]);
-            switch (device_tab[deviceId].Action) {
+            res.type('json');
+            if (typeof device_tab[deviceId] === 'undefined' || device_tab[deviceId].Action === null) {
+                res.status(500).send({success: false, errormsg: 'error'});
+                break;
+            }
+                switch (device_tab[deviceId].Action) {
                 case 1: //on/off
                     if (actionParam == 1) {
                         my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode=";
@@ -1662,7 +1667,6 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function (req, re
                     my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode=";
                     break;
             }
-            res.type('json');
             var options = {
                 url: domo_path + my_url,
                 headers: {
