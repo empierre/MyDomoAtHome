@@ -1304,9 +1304,9 @@ function DevLux(data) {
     }
 	
 	if(data.PlanIDs[0] > 0) {
-		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": domo_room_tab[data.PlanIDs[0]], params: []};
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevLuminosity", "room": domo_room_tab[data.PlanIDs[0]], params: []};
 	} else {
-		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevNoise", "room": "Weather", params: []};
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevLuminosity", "room": "Weather", params: []};
 		room_tab.Weather=1;
 	}
 	
