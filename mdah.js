@@ -1477,7 +1477,7 @@ function getDeviceType(deviceId) {
 };
 
 function getDeviceSubType(deviceId) {
-    var url = domo_path + "/json.htm?type=cameras&rid=" + deviceId;
+    var url = domo_path + "/json.htm?type=devices&rid=" + deviceId;
     var res = requester('GET', url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].SubType);
@@ -1952,6 +1952,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
     }
     if ((ptype === "general")) {
         var st=getDeviceSubType(deviceId);
+        logger.info(st);
         if ((st==='Current')||(st==='kWh')||(st==='Solar Radiation')||(st==='Visibility')||(st==='Pressure')) {
             type = "counter";
         } else {
