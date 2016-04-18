@@ -98,6 +98,12 @@ if (!nconf.get('domo_path')) {
     app_name = nconf.get('app_name') || "MyDomoAtHome";
     passcode = nconf.get('passcode') || passcode;
 }
+if (nconf.get("debug") === true)
+    app.use(logger('dev'));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 function fileExists(filePath) {
     try {
