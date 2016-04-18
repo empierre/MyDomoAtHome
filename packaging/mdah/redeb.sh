@@ -22,6 +22,7 @@ cp ../../../MyDomoAtHome/package.json ${SYSROOT}/usr/share/mydomoathome/app/
 #cp ../../../MyDomoAtHome/npm-shrinkwrap.json ${SYSROOT}/usr/share/mydomoathome/app/
 cp ../../../MyDomoAtHome/README.md ${SYSROOT}/usr/share/mydomoathome/app/
 rsync -a ../../../MyDomoAtHome/public/ ${SYSROOT}/usr/share/mydomoathome/public/ --delete
+rsync -a ../../../MyDomoAtHome/routes/ ${SYSROOT}/usr/share/mydomoathome/routes/ --delete
 
 find ${SRC}/ -type d -exec chmod 0755 {} \;
 find ${SRC}/ -type f -exec chmod go-w {} \;
