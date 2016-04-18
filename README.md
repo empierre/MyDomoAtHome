@@ -135,7 +135,7 @@ And check again
         "path": "/",
         "auth": null,
       },
-      "port": 3002,
+      "port": "3002",
       "passcode": ""
     }
 

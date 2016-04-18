@@ -46,19 +46,23 @@ Le but de ce projet est de fournir une interface API REST API entre Domoticz et 
   - [X] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
   - [X] Push On buttons (depending on Imperihome)
 
-M3 milestone will provide extended support to other platforms with Docker and Synology 
+![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M3 atteint - tous les graphiques, gestion dynamique des pièces et améliorations de présentation
+- [X] Support major type of sensors/feature of Domoticz
+  - [X] Devices following planID
+  - [X] Graphs
+  - [X] Groupement des interrupteurs avec leur énergie
+  - [X] Gestion des devices protégés
+
+M4 milestone fournira un support d'autres plates-formes dont Synology
 - [ ] Synology
   - [ ] Synology hosted package
 - [ ] Debian package - noarch
   - [ ] debian hosted package - need a peer
   - [ ] raspbian hosted package
-- [ ] Support major type of sensors/feature of Domoticz
-  - [ ] Devices following planID
-  - [ ] Graphs
 - TODO
   - [ ] Evohome (depending on Imperihome)
   - [ ] Alarm pannel (partial with ImperiHome)
-  - [ ] End to end authentificaton
+  - [X] End to end authentificaton
   - [ ] Auto updatable through button
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
@@ -120,6 +124,38 @@ Et on vérifie à nouveau:
   editez /etc/mydomoathome/config.json avec vos paramètres
   
      sudo service mydomoathome restart
+### config.json
+
+  Cela fontionne en mode "clef":"valeur". Les valeurs par défaut sont:
+
+    {
+      "app_name": "MyDomoAtHome",
+      "auth": null,
+       "domoticz": {
+        "ssl": false,
+        "host": "127.0.0.1",
+        "port": "8080",
+        "path": "/",
+        "auth": null,
+      },
+      "port": "3002",
+      "passcode": ""
+    }
+
+  - multi-instances: champs app_name différent entre les instances
+  - changer le port de MDAH: changer le port basic (haut niveau)  (ici 3002)
+  - code des protected devices: changer the passcode ci-dessus
+  - acceder à domoticz en mode ssl: changer domoticz:port et mettre ssl à true
+  - changer host ou port de domoticz: changer domoticz:host et domoticz.port
+  - ajouter un login/pass pour accéder à MDAH: changer le champs "auth": null de haut niveau vers
+
+    "auth": {
+        "username": "admin",
+        "password": "admin"
+    },
+
+  - gérer les login/pass de domoticz, faire de même pour domoticz:path
+
   
 ### Si vous restez sur une version pre 0.1.x et ne pouvez pas mettre à jour
 
