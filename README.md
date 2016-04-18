@@ -60,7 +60,7 @@ M4 milestone will provide extended support to other platforms with Docker and Sy
 - TODO
   - [ ] Evohome (depending on Imperihome)
   - [ ] Alarm pannel (partial with ImperiHome)
-  - [ ] End to end authentificaton
+  - [X] End to end authentificaton
   - [ ] Auto updatable through button
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
@@ -120,6 +120,37 @@ And check again
   edit /etc/mydomoathome/config.json with your values
   
      sudo service mydomoathome restart
+
+### config.json
+
+  It works in a "key":"value" mode. Basic value is:
+
+    {
+      "app_name": "MyDomoAtHome",
+      "auth": null,
+       "domoticz": {
+        "ssl": false,
+        "host": "127.0.0.1",
+        "port": "8080",
+        "path": "/",
+        "auth": null,
+      },
+      "port": 3002,
+      "passcode": ""
+    }
+
+  - multi-instances: just change the app_name tag between instances
+  - change the MDAH port: change the basic (top level) port (here 3002)
+  - protected device code: change the passcode above
+  - access domoticz in ssl mode: change domoticz:port and ssl to true
+  - change domoticz host or port: do it on domoticz:host and domoticz.port
+  - add a login/pass to access MDAH:change top-level "auth": null to 
+    "auth": {
+        "username": "admin",
+        "password": "admin"
+    },
+  - manage login/pass on domoticz, do the same in domoticz:path
+
   
 ### Stuck on a pre 0.1.x version
 
