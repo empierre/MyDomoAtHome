@@ -166,7 +166,7 @@ function getURL() {
   var protocole = nconf.get('domoticz:ssl') === true ? 'https' : 'http';
   var host = nconf.get('domoticz:host')||'127.0.0.1';
   var port = nconf.get('domoticz:port')||'8080';
-  var path = nconf.get('domoticz:path');
+  var path = nconf.get('domoticz:path')||'/';
   var cmd = "json.htm";
 
   // In case of AUTH Basic authentication
@@ -1506,21 +1506,21 @@ function DevMultiSwitchHeating(data) {
 }
 
 function getDeviceType(deviceId) {
-    var url = getURL() +  "/json.htm?type=devices&rid=" + deviceId;
+    var url = getURL() +  "?type=devices&rid=" + deviceId;
     var res = requester('GET', url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].Type);
 };
 
 function getDeviceSubType(deviceId) {
-    var url = getURL() + "/json.htm?type=devices&rid=" + deviceId;
+    var url = getURL() + "?type=devices&rid=" + deviceId;
     var res = requester('GET', url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].SubType);
 };
 
 function DevCamera() {
-    var url = getURL() + "/json.htm?type=cameras&rid=";
+    var url = getURL() + "?type=cameras&rid=";
     var res = requester('GET', url);
     var data = JSON.parse(res.body.toString('utf-8'));
     var combo = [];
@@ -1538,7 +1538,7 @@ function DevCamera() {
 
 var auth = function (req, res, next) {
     if (!nconf.get("auth") || nconf.get("auth") === null) {
-        console.log("No authentication provided");
+        //logger.info("No authentication provided");
         next();
         return;
     }
@@ -1593,7 +1593,7 @@ app.get("/rooms", auth, function (req, res) {
     //TODO: add hidden rooms
     res.type('json');    
     var options = {
-    url: getURL()+"/json.htm?type=plans&order=name&used=true",
+    url: getURL()+"?type=plans&order=name&used=true",
 	  headers: {
 	  'User-Agent': 'request'
           }
@@ -1631,7 +1631,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'pulse':
             res.type('json');
             var options = {
-                url: getURL() + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=0&passcode="+passcode,
+                url: getURL() + "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=0&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1659,7 +1659,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
             }
             res.type('json');
             var options = {
-                url: getURL() + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=" + action + "&passcode="+passcode,
+                url: getURL() + "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=" + action + "&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1684,7 +1684,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setAck':
             res.type('json');
             var options = {
-                url: getURL() + "/json.htm?type=command&param=resetsecuritystatus&idx=" + deviceId + "&switchcmd=Normal&passcode="+passcode,
+                url: getURL() + "?type=command&param=resetsecuritystatus&idx=" + deviceId + "&switchcmd=Normal&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1715,9 +1715,9 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                 switch (device_tab[deviceId].Action) {
                 case 1: //on/off
                     if (actionParam == 1) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode="+passcode;
                     } else if (actionParam == 0) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
                     } else {
                         logger.error("Should not happen" + device_tab[deviceId]);
                     }
@@ -1725,39 +1725,39 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                 case 2: //blinds
                 case 3: //security
                     if (actionParam == 100) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
                     } else if (actionParam == 0) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode="+passcode;
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode="+passcode;
                     }
                     break;
                 case 5:
                     //Blinds inverted
                     if (actionParam == 0) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode="+passcode;
                     } else if (actionParam == 100) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
                         logger.info(actionParam + " " + lsetLevel);
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode="+passcode;
                     }
                     break;
                 case 6:
                     //Blinds -> On for Closed, Off for Open
                     if (actionParam == 100) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Off&passcode="+passcode;
                     } else if (actionParam == 0) {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
                     } else {
-                        my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + actionParam + "&passcode="+passcode;
+                        my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + actionParam + "&passcode="+passcode;
                     }
                     break;
                 default:
                     lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
-                    my_url = "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode="+passcode;
+                    my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode="+passcode;
                     break;
             }
             var options = {
@@ -1783,7 +1783,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'stopShutter':
             res.type('json');
             var options = {
-                url: getURL() + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Stop&level=0&passcode="+passcode,
+                url: getURL() + "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Stop&level=0&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1808,7 +1808,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setSetPoint':
             res.type('json');
             var options = {
-                url: getURL() + "/json.htm?type=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam +"&passcode="+passcode,
+                url: getURL() + "?type=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam +"&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1832,7 +1832,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
             var sc = deviceId.match(/^SC(\d+)/);
             //logger.info(console.log(sc[1]));
             var options = {
-                url: getURL() + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=On&passcode="+passcode,
+                url: getURL() + "?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=On&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1854,7 +1854,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setColor':
             res.type('json');
             var options = {
-                url: getURL() + "/json.htm?type=command&param=setcolbrightnessvalue&idx=" + deviceId + "&hex=" + actionParam.substr(2, 6).toUpperCase()+"&passcode="+passcode,
+                url: getURL() + "?type=command&param=setcolbrightnessvalue&idx=" + deviceId + "&hex=" + actionParam.substr(2, 6).toUpperCase()+"&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1878,7 +1878,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                 var sc = deviceId.match(/^SC(\d+)/);
                 res.type('json');
                 var options = {
-                    url: getURL() + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=" + actionParam + "&passcode="+passcode,
+                    url: getURL() + "?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=" + actionParam + "&passcode="+passcode,
                     headers: {
                         'User-Agent': 'request'
                     }
@@ -1905,7 +1905,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                 level = device_tab[deviceId].Selector.indexOf(actionParam) * 10;
                 //console.log("level="+level);
                 var options = {
-                    url: getURL() + "/json.htm?type=command&param=switchmodal&idx=" + deviceId + "&status=" + actionParam + "&action=1&passcode="+passcode,
+                    url: getURL() + "?type=command&param=switchmodal&idx=" + deviceId + "&status=" + actionParam + "&action=1&passcode="+passcode,
                     headers: {
                         'User-Agent': 'request'
                     }
@@ -1932,7 +1932,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                 level = device_tab[deviceId].Selector.indexOf(actionParam) * 10;
                 //console.log("level="+level);
                 var options = {
-                    url: getURL() + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + level + "&passcode="+passcode,
+                    url: getURL() + "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + level + "&passcode="+passcode,
                     headers: {
                         'User-Agent': 'request'
                     }
@@ -2017,7 +2017,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     }
     res.type('json');
     var options = {
-        url: getURL() + "/json.htm?type=graph&sensor=" + type + curl + "&idx=" + deviceId + "&range=" + range,
+        url: getURL() + "?type=graph&sensor=" + type + curl + "&idx=" + deviceId + "&range=" + range,
         headers: {
             'User-Agent': 'request'
         }
@@ -2169,12 +2169,12 @@ app.get("/devices", auth, function (req, res) {
     res.type('json');
 	
 	var options = {
-		url: getURL() + "/json.htm?type=devices&filter=utility&order=Name",
+		url: getURL() + "?type=devices&filter=utility&order=Name",
 		headers: {
 			'User-Agent': 'request'
 		}
     };
-
+logger.info(options);
 	var domo_energy_devices = {};
 
     request(options, function (error, response, body) {
@@ -2190,7 +2190,7 @@ app.get("/devices", auth, function (req, res) {
 	})
 
     var options = {
-        url: getURL() + "/json.htm?type=devices&filter=all&used=true&order=Name",
+        url: getURL() + "?type=devices&filter=all&used=true&order=Name",
         headers: {
             'User-Agent': 'request'
         }
