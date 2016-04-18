@@ -40,6 +40,10 @@
     "type": "git",
     "url": "git+https://github.com/empierre/MyDomoAtHome.git"
   },
+  "directories": {
+    "bin": "./bin",
+    "routes": "./routes"
+  },
   "author": "Emmanuel PIERRE",
   "license": "GPL-2.0",
   "bugs": {
@@ -51,14 +55,18 @@
     "test": "grunt",
     "start": "nodejs mdah.js"
   },
+  "bin": {
+    "mydomoathome": "./bin/mydomoathome"
+  },
   "node_deb": {
     "start_command": "nodejs mdah.js"
   },
   "keywords": [
     "Imperihome",
     "Domoticz",
-    "ISS",
+    "ISS API",
     "DSM",
+    "IoT",
     "Synology"
   ],
   "jshintConfig": {
