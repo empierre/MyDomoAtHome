@@ -47,7 +47,6 @@ var room_tab = [];
 var domo_room_tab = [];
 var device = {MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected:null};
 var app_name = "MyDomoAtHome";
-var domo_path = process.env.DOMO || "http://127.0.0.1:8080";
 var port = process.env.PORT || '3002';
 var passcode=process.env.SEC||'';
 
@@ -90,14 +89,17 @@ nconf.load(function (err) {
         return;
     }
 });
-if (!nconf.get('domo_path')) {
-    logger.warn('/etc/mydomoathome/config.json not found, defaulting')
+if (!(nconf.get('port')||(nconf.get('app_name')))) {
+    logger.warn('basic configuration not found in /etc/mydomoathome/config.json, defaulting')
 } else {
-    domo_path = process.env.DOMO || nconf.get('domo_path');
     app.set('port', process.env.PORT || nconf.get('port'));
     app_name = nconf.get('app_name') || "MyDomoAtHome";
     passcode = nconf.get('passcode') || passcode;
 }
+if (!(nconf.get('domoticz:host')||(nconf.get('domoticz:port')))) {
+    logger.warn('domoticz access configuration not found in /etc/mydomoathome/config.json, defaulting')
+}
+
 if (nconf.get("debug") === true)
     app.use(logger('dev'));
     app.use(bodyParser.json());
@@ -160,6 +162,30 @@ function versionCompare(v1, v2, options) {
 
     return 0;
 }
+function getURL() {
+  var protocole = nconf.get('domoticz:ssl') === true ? 'https' : 'http';
+  var host = nconf.get('domoticz:host')||'127.0.0.1';
+  var port = nconf.get('domoticz:port')||'8080';
+  var path = nconf.get('domoticz:path');
+  var cmd = "json.htm";
+
+  // In case of AUTH Basic authentication
+  var secure = false;
+  if (nconf.get('domoticz:auth') && nconf.get('domoticz:auth:username') && nconf.get('domoticz:auth:password')) {
+    var secure = nconf.get('domoticz:auth:username') + ":" + nconf.get('domoticz:auth:password') + "@";
+  }
+
+  if (secure) {
+    var url = protocole + '://' + secure + host + ':' + port + path + cmd;
+  } else {
+    var url = protocole + '://' + host + ':' + port + path + cmd;
+  }
+  if (process.env.DOMO) {
+  	return process.env.DOMO
+  } else {
+  	return url;
+  }
+};
 function getLastVersion() {
     var now = moment();
     if ((last_version_dt) && (last_version_dt.isBefore(moment().add(2, 'h')))) {
@@ -1480,21 +1506,21 @@ function DevMultiSwitchHeating(data) {
 }
 
 function getDeviceType(deviceId) {
-    var url = domo_path + "/json.htm?type=devices&rid=" + deviceId;
+    var url = getURL() +  "/json.htm?type=devices&rid=" + deviceId;
     var res = requester('GET', url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].Type);
 };
 
 function getDeviceSubType(deviceId) {
-    var url = domo_path + "/json.htm?type=devices&rid=" + deviceId;
+    var url = getURL() + "/json.htm?type=devices&rid=" + deviceId;
     var res = requester('GET', url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].SubType);
 };
 
 function DevCamera() {
-    var url = domo_path + "/json.htm?type=cameras&rid=";
+    var url = getURL() + "/json.htm?type=cameras&rid=";
     var res = requester('GET', url);
     var data = JSON.parse(res.body.toString('utf-8'));
     var combo = [];
@@ -1546,7 +1572,7 @@ app.get('/', auth, function (req, res) {
     res.render('index', {
         node_version: process.version,
         app_name: app_name,
-        domo_path: domo_path,
+        domo_path: getURL(),
         mdah_ver: ver,
         my_ip: my_ip,
         my_port: app.get('port')
@@ -1565,7 +1591,7 @@ app.get("/rooms", auth, function (req, res) {
     //TODO: add hidden rooms
     res.type('json');    
     var options = {
-    url: nconf.get('domo_path')+"/json.htm?type=plans&order=name&used=true",
+    url: getURL()+"/json.htm?type=plans&order=name&used=true",
 	  headers: {
 	  'User-Agent': 'request'
           }
@@ -1603,7 +1629,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'pulse':
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=0&passcode="+passcode,
+                url: getURL() + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&level=0&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1631,7 +1657,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
             }
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=" + action + "&passcode="+passcode,
+                url: getURL() + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=" + action + "&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1656,7 +1682,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setAck':
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=resetsecuritystatus&idx=" + deviceId + "&switchcmd=Normal&passcode="+passcode,
+                url: getURL() + "/json.htm?type=command&param=resetsecuritystatus&idx=" + deviceId + "&switchcmd=Normal&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1733,7 +1759,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                     break;
             }
             var options = {
-                url: domo_path + my_url,
+                url: getURL() + my_url,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1755,7 +1781,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'stopShutter':
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Stop&level=0&passcode="+passcode,
+                url: getURL() + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Stop&level=0&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1780,7 +1806,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setSetPoint':
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam +"&passcode="+passcode,
+                url: getURL() + "/json.htm?type=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam +"&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1804,7 +1830,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
             var sc = deviceId.match(/^SC(\d+)/);
             //logger.info(console.log(sc[1]));
             var options = {
-                url: domo_path + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=On&passcode="+passcode,
+                url: getURL() + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=On&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1826,7 +1852,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setColor':
             res.type('json');
             var options = {
-                url: domo_path + "/json.htm?type=command&param=setcolbrightnessvalue&idx=" + deviceId + "&hex=" + actionParam.substr(2, 6).toUpperCase()+"&passcode="+passcode,
+                url: getURL() + "/json.htm?type=command&param=setcolbrightnessvalue&idx=" + deviceId + "&hex=" + actionParam.substr(2, 6).toUpperCase()+"&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -1850,7 +1876,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                 var sc = deviceId.match(/^SC(\d+)/);
                 res.type('json');
                 var options = {
-                    url: domo_path + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=" + actionParam + "&passcode="+passcode,
+                    url: getURL() + "/json.htm?type=command&param=switchscene&idx=" + sc[1] + "&switchcmd=" + actionParam + "&passcode="+passcode,
                     headers: {
                         'User-Agent': 'request'
                     }
@@ -1877,7 +1903,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                 level = device_tab[deviceId].Selector.indexOf(actionParam) * 10;
                 //console.log("level="+level);
                 var options = {
-                    url: domo_path + "/json.htm?type=command&param=switchmodal&idx=" + deviceId + "&status=" + actionParam + "&action=1&passcode="+passcode,
+                    url: getURL() + "/json.htm?type=command&param=switchmodal&idx=" + deviceId + "&status=" + actionParam + "&action=1&passcode="+passcode,
                     headers: {
                         'User-Agent': 'request'
                     }
@@ -1904,7 +1930,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                 level = device_tab[deviceId].Selector.indexOf(actionParam) * 10;
                 //console.log("level="+level);
                 var options = {
-                    url: domo_path + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + level + "&passcode="+passcode,
+                    url: getURL() + "/json.htm?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + level + "&passcode="+passcode,
                     headers: {
                         'User-Agent': 'request'
                     }
@@ -1989,7 +2015,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     }
     res.type('json');
     var options = {
-        url: domo_path + "/json.htm?type=graph&sensor=" + type + curl + "&idx=" + deviceId + "&range=" + range,
+        url: getURL() + "/json.htm?type=graph&sensor=" + type + curl + "&idx=" + deviceId + "&range=" + range,
         headers: {
             'User-Agent': 'request'
         }
@@ -2141,7 +2167,7 @@ app.get("/devices", auth, function (req, res) {
     res.type('json');
 	
 	var options = {
-		url: domo_path + "/json.htm?type=devices&filter=utility&order=Name",
+		url: getURL() + "/json.htm?type=devices&filter=utility&order=Name",
 		headers: {
 			'User-Agent': 'request'
 		}
@@ -2162,7 +2188,7 @@ app.get("/devices", auth, function (req, res) {
 	})
 
     var options = {
-        url: domo_path + "/json.htm?type=devices&filter=all&used=true&order=Name",
+        url: getURL() + "/json.htm?type=devices&filter=all&used=true&order=Name",
         headers: {
             'User-Agent': 'request'
         }
@@ -2469,7 +2495,7 @@ app.get("/devices", auth, function (req, res) {
             result.push(DevGenericSensor({
                 idx: 'S00',
                 Name: "Unable to connect to Domoticz",
-                "Data": nconf.get('domo_path')
+                "Data": getURL()
             }))
             result.push(DevGenericSensor({
                 idx: 'S01',
@@ -2505,7 +2531,7 @@ app.use(function (err, req, res, next) {
 });
 
 
-logger.info("Domoticz server: " + domo_path);
+logger.info("Domoticz server: " + getURL());
 logger.info("Node version: " + process.versions.node);
 logger.info("MDAH version: " + app_name + " " + ver);
 logger.info("OS version: " + os.type() + " " + os.platform() + " " + os.release());
