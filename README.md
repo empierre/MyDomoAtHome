@@ -145,10 +145,12 @@ And check again
   - access domoticz in ssl mode: change domoticz:port and ssl to true
   - change domoticz host or port: do it on domoticz:host and domoticz.port
   - add a login/pass to access MDAH:change top-level "auth": null to 
+
     "auth": {
         "username": "admin",
         "password": "admin"
     },
+
   - manage login/pass on domoticz, do the same in domoticz:path
 
   
