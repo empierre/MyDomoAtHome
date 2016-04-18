@@ -1524,12 +1524,14 @@ function DevCamera() {
     var res = requester('GET', url);
     var data = JSON.parse(res.body.toString('utf-8'));
     var combo = [];
+    if (typeof data.result !== 'undefined' && data.result !== null) {
     for (var i = 0; i < data.result.length; i++) {
         var myfeed = {"id": "C"+i, "name": data.result[i].Name, "type": "DevCamera", "room": "Switches"};
         var params = [];
         params.push({"key": "localjpegurl", "value": data.result[i].ImageURL});
         myfeed.params = params;
         combo.push(myfeed);
+    }
     }
     return (combo);
 };
