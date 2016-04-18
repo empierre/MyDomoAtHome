@@ -23,7 +23,7 @@ RSSLCERT=""
 
 start_daemon ()
 {
-    su - ${USER} -c "${MDAH} -www ${PORT} -wwwroot ${WWWROOT} -sslwww ${RSSLPORT} -sslcert ${RSSLCERT} -approot ${INSTALL_DIR}/ -userdata ${INSTALL_DIR}/var/  &> $LOGFILE & echo \$! > ${PID_FILE}"
+    su - ${USER} -c "${MDAH} -approot ${INSTALL_DIR}/ -userdata ${INSTALL_DIR}/var/  &> $LOGFILE & echo \$! > ${PID_FILE}"
 }
 
 stop_daemon ()
