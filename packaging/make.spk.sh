@@ -5,6 +5,11 @@ if [ $# -eq 0 ]
 fi
 ver=$1
 cd synology/
+cp ../../MyDomoAtHome/mdah.js app/
+cp ../../MyDomoAtHome/package.json app/
+cp ../../MyDomoAtHome/README.md app/
+rsync -a ../../MyDomoAtHome/public/ public/ --delete
+rsync -a ../../MyDomoAtHome/routes/ routes/ --delete
 tar cvzf package.tgz .
 perl -pi -e "s/version=.*/version="${ver}"/" INFO
 md5=($(md5sum packages.tgz))
