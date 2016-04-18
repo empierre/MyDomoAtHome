@@ -1509,25 +1509,29 @@ function DevCamera() {
 };
 
 var auth = function (req, res, next) {
-    function unauthorized(res) {
-        res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-        return res.sendStatus(401);
-    };
+    if (!nconf.get("auth") || nconf.get("auth") === null) {
+        console.log("No authentication provided");
+        next();
+        return;
+    }
+
+    var username = nconf.get("auth:username");
+    var password = nconf.get("auth:password");
 
     var user = basicAuth(req);
-
     if (!user || !user.name || !user.pass) {
-        return unauthorized(res);
+        res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+        res.sendStatus(401);
+        return;
     }
-    ;
-
-    if (user.name === 'foo' && user.pass === 'bar') {
-        return next();
+    if (user.name === username && user.pass === password) {
+        next();
     } else {
-        return unauthorized(res);
+        res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+        res.sendStatus(401);
+        return;
     }
-    ;
-};
+}
 
 //routes
 /*app.get('/a', auth, function (req, res) {
@@ -1536,7 +1540,7 @@ var auth = function (req, res, next) {
 
  });*/
 
-app.get('/', function (req, res) {
+app.get('/', auth, function (req, res) {
 
     // ejs render automatically looks in the views folder
     res.render('index', {
@@ -1549,7 +1553,7 @@ app.get('/', function (req, res) {
     });
 });
 
-app.get("/system", function (req, res) {
+app.get("/system", auth, function (req, res) {
     var version = app_name;
     res.type('json');
     var latest = getLastVersion();
@@ -1557,7 +1561,7 @@ app.get("/system", function (req, res) {
         {"id": version, "apiversion": 1});
 });
 
-app.get("/rooms", function (req, res) {
+app.get("/rooms", auth, function (req, res) {
     //TODO: add hidden rooms
     res.type('json');    
     var options = {
@@ -1589,7 +1593,7 @@ app.get("/rooms", function (req, res) {
 });
 
 //get '/devices/:deviceId/action/:actionName/?:actionParam?'
-app.get("/devices/:deviceId/action/:actionName/:actionParam?", function (req, res) {
+app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (req, res) {
     res.type('json');
     var deviceId = req.params.deviceId;
     var actionName = req.params.actionName;
@@ -1931,7 +1935,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", function (req, re
 
 });
 
-app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req, res) {
+app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function (req, res) {
     res.type('json');
     var deviceId = req.params.deviceId;
     var paramKey = req.params.paramKey;
@@ -2133,7 +2137,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", function (req,
     });
 })
 
-app.get("/devices", function (req, res) {
+app.get("/devices", auth, function (req, res) {
     res.type('json');
 	
 	var options = {
@@ -2480,9 +2484,25 @@ app.get("/devices", function (req, res) {
     })
 });
 
-
 // error handling middleware should be loaded after the loading the routes
 // all environments
+
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    var err = new Error('Not found');
+    err.status = 404;
+    next(err);
+});
+
+// error handlers
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    res.send({
+        message: err.message,
+        error: err
+    });
+});
 
 
 logger.info("Domoticz server: " + domo_path);
