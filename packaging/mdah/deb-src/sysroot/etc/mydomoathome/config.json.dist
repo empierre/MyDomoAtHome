@@ -1,5 +1,13 @@
 {
   "app_name": "MyDomoAtHome",
-  "domo_path": "http://127.0.0.1:8080",
-  "port": "3002"
+   "auth": null,
+   "domoticz": {
+        "ssl": false,
+        "host": "127.0.0.1",
+        "port": 8080,
+	"path": "/",
+   	"auth": null,
+   },
+  "port": 3002,
+  "passcode": ""
 }

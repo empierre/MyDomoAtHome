@@ -167,6 +167,7 @@ function getURL() {
   var host = nconf.get('domoticz:host')||'127.0.0.1';
   var port = nconf.get('domoticz:port')||'8080';
   var path = nconf.get('domoticz:path')||'/';
+  var oldpath = nconf.get('domo_path');
   var cmd = "json.htm";
 
   // In case of AUTH Basic authentication
@@ -181,9 +182,11 @@ function getURL() {
     var url = protocole + '://' + host + ':' + port + path + cmd;
   }
   if (process.env.DOMO) {
-  	return process.env.DOMO
+      return process.env.DOMO
+  } else if (oldpath) {
+      return oldpath+"/json.htm";
   } else {
-  	return url;
+      return url;
   }
 };
 function getLastVersion() {
