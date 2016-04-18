@@ -1,5 +1,3 @@
 #!/bin/sh
-/usr/syno/bin/servicetool --install-configure-file --package /var/packages/SYNOPKG/target/mydomoathome.sc
-
 . `dirname $0`/installer
 `basename $0` > $SYNOPKG_TEMP_LOGFILE
