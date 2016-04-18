@@ -45,6 +45,15 @@
     "routes": "./routes"
   },
   "author": "Emmanuel PIERRE",
+  "contributors": [
+    {
+      "name": "Emmanuel PIERRE",
+      "email": "domoticz@e-nef.com"
+    },
+    {
+      "name": "jonferreira",
+    }
+  ],
   "license": "GPL-2.0",
   "bugs": {
     "url": "https://github.com/empierre/MyDomoAtHome/issues"
