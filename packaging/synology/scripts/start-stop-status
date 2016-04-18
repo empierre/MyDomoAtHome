@@ -14,7 +14,7 @@ WWWROOT="${INSTALL_DIR}/public/"
 PID_FILE="${INSTALL_DIR}/var/mydomoathome.pid"
 LOGFILE="${INSTALL_DIR}/var/mydomoathome.log"
 #DB_FILE="${INSTALL_DIR}/var/domo.db"
-PORT="3001"
+PORT="3002"
 # SSL PORT - should be different than above
 RSSLPORT=""
 # SSL pem file route, should include decrypted private key and certificate
