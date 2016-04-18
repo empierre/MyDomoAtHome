@@ -1,5 +1,7 @@
 # MyDomoAtHome nodeJS
-Interface RESTentre Domoticz et Imperihome ISS
+Imperihome http://www.evertygo.com/imperihome est une application mobile (Android/iOS) qui s'interface à de nombreuses solutions domotiques et autres objets connectés. Cette application est multi-instances, permet une gestion fine et belle des éléments, et a une très belle gestion des graphes. 
+
+L'application MyDomoAtHome fait l'interface entre Imperihome et Domoticz. C'est un serveur appelé passerelle(gateway en anglais) qui transforme et expose les fonctionalités domoticz au client Imperihome.
 
 [![NPM Version][npm-image]][npm-url]
 ![NPM](https://img.shields.io/npm/dm/node-mydomoathome.svg)
