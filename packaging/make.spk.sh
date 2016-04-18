@@ -4,7 +4,7 @@ if [ $# -eq 0 ]
     echo "No arguments supplied"
 fi
 ver=$1
-cd packaging/synology/
+cd synology/
 tar cvzf package.tgz .
 perl -pi -e "s/version=.*/version="${ver}"/" INFO
 md5=($(md5sum packages.tgz))
