@@ -17,7 +17,7 @@ checksum="fe6c82bd729f07a393525f05674cf578"
 checkport="yes"
 startable="yes"
 helpurl="https://github.com/empierre/MyDomoAtHome/"
-install_dep_packages="Node_js_v4"
+install_dep_packages="Node.js_v4"
 dsmappname="SYNO.SDS.MDAH"
 
 

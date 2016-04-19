@@ -2211,7 +2211,7 @@ logger.info(options);
             var rv = getLastVersion();
             //console.log(ver+" "+rv);
 
-            if (versionCompare(ver, rv.substring(1)) < 0) {
+            if ((typeof rv !== 'undefined' && rv !== null) &&(versionCompare(ver, rv.substring(1)) < 0)) {
                 var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};
                 var params = [];
                 params.push({"key": "Value", "value": last_version, "unit": "", "graphable": "false"});
