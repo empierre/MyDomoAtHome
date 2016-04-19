@@ -1605,12 +1605,15 @@ app.get("/rooms", auth, function (req, res) {
     request(options, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			var data=JSON.parse(body);
-			for(var i = 0; i < data.result.length; i++) {
-				if(data.result[i].Devices > 0) {
-					domo_room_tab[data.result[i].idx] = data.result[i].Name;
-					room_tab[data.result[i].Name] = data.result[i].Devices;
-				}
-			}
+            if (typeof  data.result !== 'undefined' &&  data.result !== null) {
+                for (var i = 0; i < data.result.length; i++) {
+                    //if ((typeof  data.result[i] !== 'undefined' && data.result[i] !== null) && data.result[i].Devices > 0) {
+                    if (data.result[i].Devices > 0) {
+                        domo_room_tab[data.result[i].idx] = data.result[i].Name;
+                        room_tab[data.result[i].Name] = data.result[i].Devices;
+                    }
+                }
+            }
 		}
 	})
 	
