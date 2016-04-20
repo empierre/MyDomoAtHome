@@ -1332,8 +1332,12 @@ function DevRain(data) {
 	}
 	
     var params = [];
-    params.push({"key": "Accumulation", "value": data.Rain.toString(), "unit": "mm", "graphable": "true"});
-    params.push({"key": "Value", "value": data.RainRate.toString(), "unit": "mm/h", "graphable": "true"});
+    if (typeof data.Rain !== 'undefined' && data.Rain !== null) {
+    	params.push({"key": "Accumulation", "value": data.Rain.toString(), "unit": "mm", "graphable": "true"});
+    }
+    if (typeof data.RainRate !== 'undefined' && data.RainRate !== null) {
+    	params.push({"key": "Value", "value": data.RainRate.toString(), "unit": "mm/h", "graphable": "true"});
+    }
     myfeed.params = params;
     return (myfeed);
 }
