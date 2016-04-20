@@ -14,10 +14,13 @@ npm version $1
 ./git-release.sh $1
 git push origin --tags
 git push
+#Go to packaging
+cd packaging 
 #Synology package
-cd packaging && ./make.spk.sh $1
+./make.spk.sh $1
 #Debian package
-cd packaging && ./make.deb.sh $1
+./make.deb.sh $1
+cd ..
 #Publish Packages
 cd binary
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-$1.deb
