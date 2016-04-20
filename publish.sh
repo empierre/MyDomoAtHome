@@ -5,9 +5,10 @@ if [ $# -eq 0 ]
 fi
 #git tag -a "v$1" -m "Release of version $1"
 ver=$1
-perl -pi -e "s/Version: .*/Version: ${ver}/" packaging/mdah/deb-src/DEBIAN/control
+#Docker automatic build
 perl -pi -e "s/^RUN wget.*/RUN wget http:\/\/www.e-nef.com\/domoticz\/mdah\/node-mydomoathome-${ver}.deb/" Dockerfile
 perl -pi -e "s/RUN dpkg -i node-mydomoathome.*/RUN dpkg -i node-mydomoathome-${ver}.deb/" Dockerfile
+#Github update
 git commit -a
 npm version $1
 ./git-release.sh $1
@@ -16,12 +17,8 @@ git push
 #Synology package
 cd packaging && ./make.spk.sh $1
 #Debian package
-cd ./packaging/mdah/ && sudo bash ./redeb.sh
-cd ../..
-sudo chown in.in ./packaging/mdah/node-mydomoathome-1.deb
-mv -f ./packaging/mdah/node-mydomoathome-1.deb ./binary/
-cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-latest.deb
-mv -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-$1.deb
+cd packaging && ./make.deb.sh $1
+#Publish Packages
 cd binary
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-$1.deb
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-latest.deb
