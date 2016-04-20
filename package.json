@@ -64,9 +64,6 @@
     "test": "grunt",
     "start": "nodejs mdah.js"
   },
-  "bin": {
-    "mydomoathome": "./bin/mydomoathome"
-  },
   "node_deb": {
     "start_command": "nodejs mdah.js"
   },
