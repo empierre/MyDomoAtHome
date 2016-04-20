@@ -133,7 +133,7 @@ And check again
         "host": "127.0.0.1",
         "port": "8080",
         "path": "/",
-        "auth": null,
+        "auth": null
       },
       "port": "3002",
       "passcode": ""
