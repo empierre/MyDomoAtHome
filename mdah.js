@@ -62,43 +62,66 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 logger.add(winston.transports.File, {filename: '/var/log/mydomoathome/usage.log'});
 
-// load conf file
-if (fileExists('./config.json')) {
-    nconf.use('file', {file: './config.json'}, function (err) {
-        if (err) {
-            //logger.info("No local conf:" + err.message);
-            return;
-        }
-    });
-} else {
-    //logger.info("No local conf");
+function onError(error) {
+    if (error) {
+        logger.warn("No global conf in /etc/mydomoathome:" + err.message);
+    }
 }
-if (fileExists('/etc/mydomoathome/config.json')) {
-    nconf.use('file', {file: '/etc/mydomoathome/config.json'}, function (err) {
-        if (err) {
-            logger.warn("No global conf in /etc/mydomoathome:" + err.message);
-            return;
-        }
-    });
-} else {
-    logger.warn("No global conf in /etc/mydomoathome");
+function loadLocalConf() {
+    // load conf file
+    if (fileExists('./config.json')) {
+        nconf.use('file', {file: './config.json'}, function (err) {
+            if (err) {
+                //logger.info("No local conf:" + err.message);
+                return;
+            }
+        });
+    } else {
+        //logger.info("No local conf");
+    }
 }
-nconf.load(function (err) {
-    if (err) {
-        logger.warn("Conf load error:" + err.message);
+function loadGlobalConf() {
+    try {
+        nconf.use('file', {file: '/etc/mydomoathome/config.json'}, onError);
+    } catch (err) {
+        // This will not catch the throw!
+        logger.error("Global conf parsing issue !");
+        logger.error(err);
         return;
     }
-});
-if (!(nconf.get('port')||(nconf.get('app_name')))) {
-    logger.warn('basic configuration not found in /etc/mydomoathome/config.json, defaulting')
-} else {
-    app.set('port', process.env.PORT || nconf.get('port'));
-    app_name = nconf.get('app_name') || "MyDomoAtHome";
-    passcode = nconf.get('passcode') || passcode;
 }
-if (!(nconf.get('domoticz:host')||(nconf.get('domoticz:port')))) {
-    logger.warn('domoticz access configuration not found in /etc/mydomoathome/config.json, defaulting')
+function loadConf() {
+    try {
+        nconf.load(function (err) {
+            if (err) {
+                logger.warn("Conf load error:" + err.message);
+                return;
+            }
+        });
+    } catch (err) {
+        // This will not catch the throw!
+        logger.error("Global conf load issue !");
+        logger.error(err);
+        return;
+    }
 }
+function getConf(){
+    if (!(nconf.get('port') || (nconf.get('app_name')))) {
+        logger.warn('basic configuration not found in /etc/mydomoathome/config.json, defaulting')
+    } else {
+        app.set('port', process.env.PORT || nconf.get('port'));
+        app_name = nconf.get('app_name') || "MyDomoAtHome";
+        passcode = nconf.get('passcode') || passcode;
+    }
+    if (!(nconf.get('domoticz:host') || (nconf.get('domoticz:port')))) {
+        logger.warn('domoticz access configuration not found in /etc/mydomoathome/config.json, defaulting')
+    }
+}
+loadLocalConf();
+loadGlobalConf();
+loadConf();
+getConf();
+
 
 if (nconf.get("debug") === true)
     app.use(logger('dev'));
