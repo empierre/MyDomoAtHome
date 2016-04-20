@@ -2180,18 +2180,20 @@ app.get("/devices", auth, function (req, res) {
 			'User-Agent': 'request'
 		}
     };
-logger.info(options);
-	var domo_energy_devices = {};
+    logger.info(options);
+    var domo_energy_devices = {};
 
     request(options, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			var data=JSON.parse(body);
-			for(var i = 0; i < data.result.length; i++) {
-				if(data.result[i].SubType == "Electric") {
-					domo_energy_devices[data.result[i].ID] = data.result[i].Data.replace(" Watt","");
+			if (typeof  data.result !== 'undefined' &&  data.result !== null) {
+				for(var i = 0; i < data.result.length; i++) {
+					if(data.result[i].SubType == "Electric") {
+						domo_energy_devices[data.result[i].ID] = data.result[i].Data.replace(" Watt","");
+					}
 				}
+				logger.info("Domoticz server - energy devices: " + JSON.stringify(domo_energy_devices));
 			}
-			logger.info("Domoticz server - energy devices: " + JSON.stringify(domo_energy_devices));
 		}
 	})
 
