@@ -1,0 +1,4 @@
+etc/mydomoathome/config.json
+etc/init/mydomoathome.conf
+etc/init.d/mydomoathome
+etc/systemd/system/mydomoathome.service

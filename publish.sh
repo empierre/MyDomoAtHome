@@ -13,6 +13,9 @@ npm version $1
 ./git-release.sh $1
 git push origin --tags
 git push
+#Synology package
+cd packaging && ./make.spk.sh $1
+#Debian package
 cd ./packaging/mdah/ && sudo bash ./redeb.sh
 cd ../..
 sudo chown in.in ./packaging/mdah/node-mydomoathome-1.deb
@@ -30,7 +33,7 @@ gpg --clearsign -o InRelease Release
 gpg -abs -o Release.gpg Release
 sitecopy -u mdah
 cd ..
+#NPM repository
 npm publish 
 curl -X POST --data-urlencode 'payload={"channel": "#general", "username": "webhookbot", "text": "New package version '"$1"' available at <http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb|node-mydomoathome-'"$1"'.deb>", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
 #./make.docker.sh
-./packaging/make.spk.sh

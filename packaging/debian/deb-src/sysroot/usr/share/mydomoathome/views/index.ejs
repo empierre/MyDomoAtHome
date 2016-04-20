@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MDAH App</title>
+
+	<!-- CSS -->
+	<!-- load bootstrap and our own personal stylesheet -->
+	<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/superhero/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+<div class="container">
+	
+<div id="page">
+      <div id="sidebar">
+        <ul id="sidebar-items">
+          <li>
+            <h3>Join the community</h3>
+            <ul class="links">
+
+              <li><a href="http://www.domoticz.com/wiki/ImperiHome">Installation Wiki</a></li>
+              <li><a href="http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713">Support on the forum</a></li>
+              <li><a href="http://github.com/empierre/MyDomoAtHome">GitHub Community</a></li>
+            </ul>
+          </li>
+          
+          <li>
+            <h3>Your application's environment</h3>
+
+            <ul>
+                <li>AppName:    <%= app_name %></li>
+                <li>MDAH:    	http://<%= my_ip %>:<%= my_port %></li>
+                <li>Domoticz:   <%= domo_path %></li>
+                <li>NodeJS:     <%= node_version %></li>
+                <li>Webmanager: EJS</li>
+                <li>Renderer:   Express</li>
+            </ul>
+
+          </li>
+        </ul>
+
+      </div>
+
+      <div id="content">
+        <div id="header">
+          <h1>MyDomoAtHome</h1>
+          <h2>Your ISS Gateway to Domoticz!</h2>
+        </div>
+	<img src="images/logo-MyDomoAtHome-w.png" style="width:70px;position:absolute;top:20px;"/>
+
+        <div id="getting-started">
+          <h1>Getting started</h1>
+          <h2>Here&rsquo;s how to get funking:</h2>
+                    
+
+    <script type="text/javascript">
+    $('#about_env_link').click(function() {
+        $('#about-content').slideToggle('fast', function() {
+            // ok
+        });
+        return( false );
+    });
+    </script>
+
+
+          <ol>          
+            <li>
+              <h2>A quick introduction</h2>
+              <p>
+		This is a three parties installation:</p>
+		<ul>
+			<li>ImperiHome Application on Android</li>
+			<li>MyDomoAtHome Gateway</li>
+			<li>Domoticz</li>
+		</ul>
+		<p>So a request from the first will go to the second that will go to the third, and the answers will take the opposite path. <br/><br/>
+
+		<img src="images/imperihome.png" style="width:450px;position:relative;"/>
+		   Always remember that you will need to tell the Gateway (this program) how to access your Domoticz, and if there is a password on it, please define it as on the local network 127.0.0.1
+              </p>
+            </li>
+            <li>
+              <h2>How to test your first installation</h2>
+              <p>
+		Verify you can see your domoticz devices : <% settings.domo_path %>/json.htm?type=devices <br/><br/>
+		Then check this page so the gateway process is running:	<a href="http://<%= my_ip %>:<%= my_port %>/">http://<%= my_ip %>:<%= my_port %>/ </a><br/><br/>
+		And finally check that the devices you have in Domoticz are well found by the Gateway:	<a href="http://<%= my_ip %>:<%= my_port %>/devices">http://<%= my_ip %>:<%= my_port %>/devices</a> <br/><br/>
+		If that last list is empty, then you must use the 127.0.0.1 (if on the same machine) for the gateway configuration to access Domoticz and check again.
+
+              </p>
+            </li>
+            <li>
+              <h2>Getting support</h2>
+              <p>
+		Please submit all support request on <a href="http://www.domoticz.com/forum/viewtopic.php?f=5&t=2713">Domoticz Forum</a>
+              </p>
+            </li>
+            <li>
+              <h2>Looking for Enhancements</h2>
+              <p>
+		Please submit all enhancements into <a href="https://github.com/empierre/MyDomoAtHome/labels/enhancement">GitHub Enhancement</a>
+              </p>
+            </li>
+            <li>
+              <h2>Submitting a bug</h2>
+              <p>
+		Please submit all bugs into <a href="https://github.com/empierre/MyDomoAtHome/issues">GitHub Issues</a>
+              </p>
+            </li>
+	    <li>
+            <h2>Securing both access to MyDomoAtHome and Domoticz</h2>
+              <p>
+		Please see the <a href="http://www.domoticz.com/wiki/Secure_Remote_Access">Secure Remote Access Wiki</a>
+	      </p>
+            </li>
+
+          </ol>
+        </div>
+      </div>
+    </div>
+    	</div>
+</div>
+	
+</body>
+</html>
