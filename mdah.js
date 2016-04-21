@@ -70,14 +70,14 @@ function onError(error) {
 function loadLocalConf() {
     // load conf file
     if (fileExists('./config.json')) {
-        nconf.use('file', {file: './config.json'}, function (err) {
-            if (err) {
-                //logger.info("No local conf:" + err.message);
-                return;
-            }
-        });
-    } else {
-        //logger.info("No local conf");
+        try {
+            nconf.use('file', {file: './config.json'}, onError);
+        } catch (err) {
+            // This will not catch the throw!
+            logger.error("Global conf parsing issue !");
+            logger.error(err);
+            return;
+        }
     }
 }
 function loadGlobalConf() {
