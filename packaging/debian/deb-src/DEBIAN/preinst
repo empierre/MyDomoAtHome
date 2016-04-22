@@ -9,7 +9,10 @@ case "$1" in
 		sudo chown -R www-data ~$SUDO_USER/.npm
 	fi
 	if [ -d ~/.npm ]; then
-		sudo chown -R www-data ~/.npm
+		chown -R www-data ~/.npm
+	else
+		mkdir ~/.npm
+		chown -R www-data ~/.npm
 	fi
 	if [ -d /root/.npm ]; then
 		sudo -u root chown -R www-data ~/.npm
