@@ -205,7 +205,7 @@ function getURL() {
     var url = protocole + '://' + host + ':' + port + path + cmd;
   }
   if (process.env.DOMO) {
-      return process.env.DOMO
+      return process.env.DOMO+"/json.htm";
   } else if (oldpath) {
       return oldpath+"/json.htm";
   } else {
