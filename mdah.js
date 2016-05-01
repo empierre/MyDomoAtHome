@@ -2387,8 +2387,7 @@ app.get("/devices", auth, function (req, res) {
                         }
                         break;
                     case 'Energy':
-                        result.push(DevElectricity(data.result[i]));
-                        break;
+                    case 'Power':
                     case 'Usage':
                         result.push(DevElectricity(data.result[i]));
                         break;
