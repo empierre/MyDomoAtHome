@@ -2328,6 +2328,9 @@ app.get("/devices", auth, function (req, res) {
                                 break;
                         }
                         break;
+                    case 'Chime':
+                        result.push(DevDimmer(data.result[i]));
+                        break;
                     case 'Blinds':
                     case 'RFY':
                         switch (data.result[i].SwitchType) {
