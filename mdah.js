@@ -2276,6 +2276,9 @@ app.get("/devices", auth, function (req, res) {
                             case 'Push Off Button':
                                 result.push(DevPush(data.result[i]));
                                 break;
+                            case 'Switch':
+                                result.push(DevSwitch(data.result[i]));
+                                break;
                             case 'Dimmer':
                                 if (data.result[i].SubType == 'RGB') {
                                     //console.log("OK"+data.result[i].SubType);
