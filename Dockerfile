@@ -32,6 +32,7 @@ ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM xterm
+ENV CONTAINER yes
 
 ##################################################
 # Install MDAH                                   #

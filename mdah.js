@@ -2571,6 +2571,9 @@ logger.info("Domoticz server: " + getURL());
 logger.info("Node version: " + process.versions.node);
 logger.info("MDAH version: " + app_name + " " + ver);
 logger.info("OS version: " + os.type() + " " + os.platform() + " " + os.release());
+if (process.env.CONTAINER) {
+    logger.info("Microservice: yes");
+}
 var interfaces = os.networkInterfaces();
 var addresses = [];
 var my_ip;

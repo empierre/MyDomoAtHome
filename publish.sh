@@ -10,7 +10,8 @@ perl -pi -e "s/^RUN wget.*/RUN wget http:\/\/www.e-nef.com\/domoticz\/mdah\/node
 perl -pi -e "s/RUN dpkg -i node-mydomoathome.*/RUN dpkg -i node-mydomoathome-${ver}.deb/" Dockerfile
 #Github update
 git commit -a
-npm version $1
+#npm version $1
+npm run release $1
 ./git-release.sh $1
 git push origin --tags
 git push
