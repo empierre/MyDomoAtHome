@@ -229,7 +229,6 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
 # Accessing the Gateway from the outide of your network
 The best way is to setup the nginx for both domoticz and the gateway: http://www.domoticz.com/wiki/Secure_Remote_Access
 
-  sudo apt-get install apache2-utils
   sudo apt-get install nginx-full
   sudo apt-get install openssl
   sudo apt-get install haveged
@@ -242,17 +241,15 @@ In the domoticz configuration add a section to redirect to the gateway such as t
       proxy_set_header X-Forwarded-For $remote_addr;
       proxy_set_header Host $host;
       proxy_pass http://192.168.0.28:3002/;
-      auth_basic            "Access Restricted";
-      auth_basic_user_file  "/etc/nginx/.htpasswd";
       access_log /var/log/nginx/mdah.access.log;
       error_log /var/log/nginx/mdah.error.log;
     }
 
+# Advanced support: 
 
-and create a .htpasswd for both:
+  - For an unsupported device or any issue with a particular device, please report with it the JSON from Domoticz with this URL:
 
-    cd /etc/nginx
-    htpasswd -c .htaccess YOURusername YOURpasswd
+		http://domoticz_ip:8080/json.htm?type=devices&filter=all&used=true&order=Name
 
 # Support: 
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
