@@ -212,24 +212,24 @@ Remember to change the IP below and authorize in Domoticz the docker IP range
     docker stop mdah 
   
 # Testing the installation
-  - Check in a browser it is running:
+
+  - Check in a browser it is running
 
     http://gateway_ip:gateway_port/
   
   - From there you'll get the following links in the browser.
 
-  - Check the domoticz is accessible from the hosting machine:
+  - Check the domoticz is accessible from the hosting machine
 
-    curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
+		curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
 
-  - Check the MDAH returns the result from the hosting machine:
+  - Check the MDAH returns the result from the hosting machine
 
-    curl http://gateway_ip:gateway_port/devices
+		curl http://gateway_ip:gateway_port/devices
 
 # Accessing the Gateway from the outide of your network
 The best way is to setup the nginx for both domoticz and the gateway: http://www.domoticz.com/wiki/Secure_Remote_Access
 
-  sudo apt-get install apache2-utils
   sudo apt-get install nginx-full
   sudo apt-get install openssl
   sudo apt-get install haveged
@@ -242,19 +242,17 @@ In the domoticz configuration add a section to redirect to the gateway such as t
       proxy_set_header X-Forwarded-For $remote_addr;
       proxy_set_header Host $host;
       proxy_pass http://192.168.0.28:3002/;
-      auth_basic            "Access Restricted";
-      auth_basic_user_file  "/etc/nginx/.htpasswd";
       access_log /var/log/nginx/mdah.access.log;
       error_log /var/log/nginx/mdah.error.log;
     }
 
+# Advanced support
 
-and create a .htpasswd for both:
+  For an unsupported device or any issue with a particular device, please report with it the JSON from Domoticz with this URL:
 
-    cd /etc/nginx
-    htpasswd -c .htaccess YOURusername YOURpasswd
+		http://domoticz_ip:8080/json.htm?type=devices&filter=all&used=true&order=Name
 
-# Support: 
+# Support
   - Tracking: https://github.com/empierre/MyDomoAtHome/issues
   - English : http://www.domoticz.com/forum/viewtopic.php?f=21&t=6882
   - French  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
