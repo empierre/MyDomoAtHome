@@ -214,7 +214,7 @@ function getURL() {
 };
 function getLastVersion() {
     var now = moment();
-    if ((last_version_dt) && (last_version_dt.isBefore(moment().add(2, 'h')))) {
+ if (typeof last_version_dt !== 'undefined' && last_version_dt !== null  && (last_version_dt.isBefore(moment().add(2, 'h')))) {
         return (last_version);
     } else {
         var options = {
