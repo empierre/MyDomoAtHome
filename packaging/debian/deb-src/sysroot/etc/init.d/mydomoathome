@@ -100,7 +100,7 @@ stop() {
     if [ -f $PIDFILE ]; then
         echo "Shutting down $NAME"
         # Tell Forever to stop the process.
-        cd APPLICATION_DIR
+        cd $APPLICATION_DIR
         sudo -u $USER forever stop $APPLICATION_PATH 2>&1 > /dev/null
         # Get rid of the pidfile, since Forever won't do that.
         rm -f $PIDFILE
