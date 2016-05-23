@@ -214,7 +214,9 @@ function getURL() {
 };
 function getLastVersion() {
     var now = moment();
-    if ((last_version_dt) && (last_version_dt.isBefore(moment().add(2, 'h')))) {
+    logger.info(last_version_dt);
+    logger.info(moment().add(2,'h'));
+    if ((last_version_dt) && (last_version_dt.isBefore(moment().add(2,'h')))) {
         return (last_version);
     } else {
         var options = {
@@ -2241,7 +2243,7 @@ app.get("/devices", auth, function (req, res) {
             myfeed.params = params;
             result.push(myfeed);
             var rv = getLastVersion();
-            //console.log(ver+" "+rv);
+            //logger.info(ver+" "+rv);
 
             if ((typeof rv !== 'undefined' && rv !== null) &&(versionCompare(ver, rv.substring(1)) < 0)) {
                 var myfeed = {"id": "S1", "name": "New version found", "type": "DevGenericSensor"};

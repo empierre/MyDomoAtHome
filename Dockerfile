@@ -1,8 +1,7 @@
 # DOCKER-VERSION 0.3.4
-#FROM ubuntu:14.10
-#FROM node:4-slim
+FROM node:4-slim
 #FROM google/nodejs
-FROM node:4.4-wheezy
+#FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
 LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="1.0"
