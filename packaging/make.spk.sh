@@ -1,4 +1,4 @@
-#!/bin/sh -x 
+#!/bin/bash -x 
 if [ $# -eq 0 ]
   then
     echo "No arguments supplied"

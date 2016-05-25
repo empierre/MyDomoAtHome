@@ -195,7 +195,7 @@ function versionCompare(v1, v2, options) {
 function getURL() {
   var protocole = nconf.get('domoticz:ssl') === true ? 'https' : 'http';
   var host = nconf.get('domoticz:host')||'127.0.0.1';
-  var port = nconf.get('domoticz:port')||'8080';
+  var port = nconf.get('domoticz:port')||process.env.DOMO_PORT||'8080';
   var path = nconf.get('domoticz:path')||'/';
   var oldpath = nconf.get('domo_path');
   var cmd = "json.htm";

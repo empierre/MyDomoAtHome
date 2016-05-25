@@ -25,7 +25,7 @@ start_daemon ()
 {
     cd  ${INSTALL_DIR}
     #su ${USER} -c "${MDAH} -approot ${INSTALL_DIR}/ -userdata ${INSTALL_DIR}/var/  &> $LOGFILE & echo \$! > ${PID_FILE}"
-    su - ${USER} -c "export MDAH_HOME=${INSTALL_DIR};${MDAH} &> $LOGFILE & echo \$! > ${PID_FILE}"
+    su - ${USER} -c "export MDAH_HOME=${INSTALL_DIR};export DOMO_PORT=8084;${MDAH} &> $LOGFILE & echo \$! > ${PID_FILE}"
 }
 
 stop_daemon ()
