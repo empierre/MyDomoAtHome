@@ -54,13 +54,20 @@ var passcode=process.env.SEC||'';
 app.set('port', port);
 app.set('view engine', 'ejs');
 var home = process.env.MDAH_HOME || path.resolve(__dirname + "/..");
-app.use(express.static(path.join(__dirname + '/public')));
-app.set('views', path.resolve(__dirname + '/views'));
 app.use(morgan('combined'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-logger.add(winston.transports.File, {filename: '/var/log/mydomoathome/usage.log'});
+if (process.env.MDAH_HOME) {
+    app.use(express.static(path.join(process.env.MDAH_HOME + '/public')));
+    app.set('views', path.resolve(process.env.MDAH_HOME + '/views'));
+    logger.add(winston.transports.File, {filename: process.env.MDAH_HOME+'/var/usage.log'});
+} else {
+    app.use(express.static(path.join(__dirname + '/public')));
+    app.set('views', path.resolve(__dirname + '/views'));
+    logger.add(winston.transports.File, {filename: '/var/log/mydomoathome/usage.log'});
+
+}
 
 function onError(error) {
     if (error) {
@@ -2596,7 +2603,7 @@ for (var k in interfaces) {
 if (versionCompare(process.versions.node, '1.0.0') < 0) {
     logger.info("Hostname: " + os.hostname() + " " + my_ip);
 } else {
-    logger.info("Hostname: " + os.hostname() + " " + my_ip + " in " + os.homedir());
+    logger.info("Hostname: " + os.hostname() + " " + my_ip + " in " + os.homedir() + " " + home);
 }
 /*nconf.save(function (err) {
  if (err) {
