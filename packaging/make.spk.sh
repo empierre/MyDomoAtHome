@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/bin/sh -x 
 if [ $# -eq 0 ]
   then
     echo "No arguments supplied"
+    exit
 fi
 ver=$1
 cd synology/

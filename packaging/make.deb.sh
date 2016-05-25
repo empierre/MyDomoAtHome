@@ -1,7 +1,8 @@
-#!/bin/sh -x 
+#!/bin/sh 
 if [ $# -eq 0 ]
   then
     echo "No arguments supplied"
+    exit
 fi
 #git tag -a "v$1" -m "Release of version $1"
 ver=$1
