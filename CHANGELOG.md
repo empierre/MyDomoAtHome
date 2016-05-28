@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="Unreleased"></a>
+# [Unreleased](https://github.com/empierre/MyDomoAtHome/compare/v0.1.39...26d04fc) (2016-05-28)
+
+
+### Bug Fixes
+
+* **spk:** add app path+logs on startu ([fb8f5e1](https://github.com/empierre/MyDomoAtHome/commit/fb8f5e1))
+* **spk:** addind 8084 as default port sor synology ([26d04fc](https://github.com/empierre/MyDomoAtHome/commit/26d04fc))
+* **spk:** spk builder ([83bd00d](https://github.com/empierre/MyDomoAtHome/commit/83bd00d))
+
+
+
 <a name="0.1.39"></a>
 ## [0.1.39](https://github.com/empierre/MyDomoAtHome/compare/v0.1.38...v0.1.39) (2016-05-02)
 
