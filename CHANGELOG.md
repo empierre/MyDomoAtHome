@@ -6,60 +6,6 @@ All notable changes to this project will be documented in this file. See [standa
 ## [0.1.49](https://github.com/empierre/MyDomoAtHome/compare/v0.1.48...v0.1.49) (2016-05-28)
 
 
-
-
-<a name="0.1.48"></a>
-## [0.1.48](https://github.com/empierre/MyDomoAtHome/compare/v0.1.47...v0.1.48) (2016-05-28)
-
-
-
-
-<a name="0.1.47"></a>
-## [0.1.47](https://github.com/empierre/MyDomoAtHome/compare/v0.1.46...v0.1.47) (2016-05-28)
-
-
-
-
-<a name="0.1.46"></a>
-## [0.1.46](https://github.com/empierre/MyDomoAtHome/compare/v0.1.45...v0.1.46) (2016-05-28)
-
-
-
-
-<a name="0.1.45"></a>
-## [0.1.45](https://github.com/empierre/MyDomoAtHome/compare/v0.1.44...v0.1.45) (2016-05-28)
-
-
-
-
-<a name="0.1.44"></a>
-## [0.1.44](https://github.com/empierre/MyDomoAtHome/compare/v0.1.43...v0.1.44) (2016-05-28)
-
-
-
-
-<a name="0.1.43"></a>
-## [0.1.43](https://github.com/empierre/MyDomoAtHome/compare/v0.1.42...v0.1.43) (2016-05-28)
-
-
-
-
-<a name="0.1.42"></a>
-## [0.1.42](https://github.com/empierre/MyDomoAtHome/compare/v0.1.41...v0.1.42) (2016-05-28)
-
-
-
-
-<a name="0.1.41"></a>
-## [0.1.41](https://github.com/empierre/MyDomoAtHome/compare/v0.1.40...v0.1.41) (2016-05-28)
-
-
-
-
-<a name="0.1.40"></a>
-## [0.1.40](https://github.com/empierre/MyDomoAtHome/compare/v0.1.39...v0.1.40) (2016-05-28)
-
-
 ### Bug Fixes
 
 * **spk:** add app path+logs on startu ([fb8f5e1](https://github.com/empierre/MyDomoAtHome/commit/fb8f5e1))
