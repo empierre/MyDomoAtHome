@@ -1,7 +1,7 @@
 {
   "name": "node-mydomoathome",
   "description": "Imperihome ISS API gateway to Domoticz",
-  "version": "0.1.42",
+  "version": "0.1.43",
   "dependencies": {
     "basic-auth": "1.0.3",
     "body-parser": "^1.5.2",
