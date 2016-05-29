@@ -984,7 +984,7 @@ function DevElectricity(data) {
             }
             params.push({"key": "Watts", "value": usage, "unit": "W"});
             if (data.Data) {
-                var res = ptrn2.exec(data.Data);
+                var res = ptrn4.exec(data.Data);
                 var total = 0;
                 if (res != null) {
                     total = Math.ceil(Number(res[1]));
