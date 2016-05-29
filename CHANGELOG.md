@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.51"></a>
+## [0.1.51](https://github.com/empierre/MyDomoAtHome/compare/v0.1.50...v0.1.51) (2016-05-29)
+
+
+### Bug Fixes
+
+* **general/kWh:** fixed parsing of cumulated value, thanks to Toutazimuth ([d743dd6](https://github.com/empierre/MyDomoAtHome/commit/d743dd6))
+
+
+
 <a name="0.1.50"></a>
 ## [0.1.50](https://github.com/empierre/MyDomoAtHome/compare/v0.1.49...v0.1.50) (2016-05-28)
 
