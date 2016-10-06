@@ -2345,6 +2345,9 @@ app.get("/devices", auth, function (req, res) {
                             case 'Blinds Percentage Inverted':
                                 result.push(DevShutterInverted(data.result[i]));
                                 break;
+			    case 'On/Off':
+                                result.push(DevSwitch(data.result[i]));
+                                break;
                             case 'Blinds Percentage':
                             case 'Blinds':
                             case 'RFY':
