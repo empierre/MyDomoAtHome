@@ -124,10 +124,13 @@ And check again
 ### Installing the software on Windows
 
   download and install nodejs here: https://nodejs.org/en/download/current/
+  
   download zip here: https://github.com/empierre/MyDomoAtHome (green clone or download button right)
+  
   unzip locally
-  click window touch+R
-  type in 'cmd' and enter
+  
+  click window touch+R, type in 'cmd' and enter
+  
   go in the unzipped repository
   
     nmp install
