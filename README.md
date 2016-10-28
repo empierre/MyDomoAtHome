@@ -121,6 +121,18 @@ And check again
   
      sudo service mydomoathome restart
 
+### Installing the software on Windows
+
+  download and install nodejs here: https://nodejs.org/en/download/current/
+  download zip here: https://github.com/empierre/MyDomoAtHome (green clone or download button right)
+  unzip locally
+  click window touch+R
+  type in 'cmd' and enter
+  go in the unzipped repository
+  
+    nmp install
+    node mdah.js
+
 ### config.json
 
   It works in a "key":"value" mode. Basic value is:
