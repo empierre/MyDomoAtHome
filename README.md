@@ -136,6 +136,10 @@ And check again
     nmp install
     node mdah.js
 
+  to launch do from a cmd window:
+
+    node mdah.js 
+
 ### config.json
 
   It works in a "key":"value" mode. Basic value is:
