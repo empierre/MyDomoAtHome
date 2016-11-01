@@ -29,11 +29,12 @@
     "grunt-simple-mocha": "^0.4.0",
     "gulp": "^3.9.1",
     "gulp-jshint": "^2.0.0",
-    "jshint": "^2.9.1",
     "istanbul": "^0.3.14",
+    "jshint": "^2.9.1",
     "mocha": "^2.2.5",
     "should": "^6.0.3",
     "superagent": "^1.2.0",
+    "webpack": "^1.13.2",
     "xunit-file": "0.0.6"
   },
   "repository": {

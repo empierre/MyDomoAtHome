@@ -27,7 +27,7 @@ before_install:
   - npm install
   - mkdir domoticz
   - cd domoticz
-  - wget http://www.domoticz.com/releases/release/domoticz_linux_x86_64.tgz
+  - wget https://releases.domoticz.com/releases/beta/domoticz_linux_x86_64.tgz
   - tar xvzf domoticz_linux_x86_64.tgz
   - wget http://www.e-nef.com/domoticz/mdah/domoticz.db
   - cd ..
