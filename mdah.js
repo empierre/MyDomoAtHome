@@ -991,6 +991,25 @@ function DevElectricity(data) {
                 }
                 params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "kWh", "graphable": "true"});
             }
+        } else if (data.CounterToday) {
+            var res = ptrn4.exec(data.CounterToday);
+            var usage = 0;
+            if (res != null) {
+                usage = res[1]
+            }
+
+            if (!usage) {
+                usage = 0;
+            }
+            params.push({"key": "Watts", "value": usage, "unit": "kWh"});
+            if (data.Counter) {
+                var res = ptrn4.exec(data.Counter);
+                var total = 0;
+                if (res != null) {
+                    total = Math.ceil(Number(res[1]));
+                }
+                params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "kWh", "graphable": "true"});
+            }
         } else {
             var res = ptrn2.exec(data.Data);
             var total = 0;
@@ -2445,6 +2464,9 @@ app.get("/devices", auth, function (req, res) {
                         break;
                     case 'RFXMeter':
                         switch (data.result[i].SwitchTypeVal) {
+                            case 0:
+                                result.push(DevGas(data.result[i]));
+                                break;
                             case 1:
                                 result.push(DevGas(data.result[i]));
                                 break;
