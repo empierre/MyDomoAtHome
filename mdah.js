@@ -54,7 +54,7 @@ var passcode=process.env.SEC||'';
 app.set('port', port);
 app.set('view engine', 'ejs');
 var home = process.env.MDAH_HOME || path.resolve(__dirname + "/..");
-app.use(morgan('combined'));
+//app.use(morgan('combined'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -1685,7 +1685,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
     var deviceId = req.params.deviceId;
     var actionName = req.params.actionName;
     var actionParam = req.params.actionParam;
-    logger.info("GET /devices/" + deviceId + "/action/" + actionName + "/" + actionParam);
+    //logger.info("GET /devices/" + deviceId + "/action/" + actionName + "/" + actionParam);
     switch (actionName) {
         case 'pulse':
             res.type('json');
@@ -1695,7 +1695,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                     'User-Agent': 'request'
                 }
             };
-            logger.info(options.url);
+            //logger.info(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -1723,7 +1723,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                     'User-Agent': 'request'
                 }
             };
-            logger.info(options.url);
+            //logger.info(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -1765,7 +1765,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setLevel':
             var my_url;
             var lsetLevel;
-            logger.info(device_tab[deviceId]);
+            //logger.info(device_tab[deviceId]);
             res.type('json');
             if (typeof device_tab[deviceId] === 'undefined' || device_tab[deviceId].Action === null) {
                 res.status(500).send({success: false, errormsg: 'error'});
@@ -1800,7 +1800,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                         my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=On&passcode="+passcode;
                     } else {
                         lsetLevel = Math.ceil(actionParam * (device_tab[deviceId].MaxDimLevel) / 100);
-                        logger.info(actionParam + " " + lsetLevel);
+                        //logger.info(actionParam + " " + lsetLevel);
                         my_url = "?type=command&param=switchlight&idx=" + deviceId + "&switchcmd=Set%20Level&level=" + lsetLevel + "&passcode="+passcode;
                     }
                     break;
@@ -1825,7 +1825,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                     'User-Agent': 'request'
                 }
             };
-            logger.info(options.url);
+            //logger.info(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -1918,7 +1918,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                     'User-Agent': 'request'
                 }
             };
-            logger.info(options.url);
+            //logger.info(options.url);
             request(options, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -1969,7 +1969,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                         'User-Agent': 'request'
                     }
                 };
-                logger.info(options.url);
+                //logger.info(options.url);
                 request(options, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         var data = JSON.parse(body);
@@ -1996,7 +1996,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
                         'User-Agent': 'request'
                     }
                 };
-                logger.info(options.url);
+                //logger.info(options.url);
                 request(options, function (error, response, body) {
                     if (!error && response.statusCode == 200) {
                         var data = JSON.parse(body);
@@ -2015,7 +2015,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
             res.status(403).send({success: false, errormsg: 'not implemented'});
             break;
         default:
-            logger.warn("unknown action: " + deviceId + " " + actionName + " " + actionParam);
+            //logger.warn("unknown action: " + deviceId + " " + actionName + " " + actionParam);
             res.status(403).send({success: false, errormsg: 'not implemented'});
             break;
     }
@@ -2029,16 +2029,16 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     var startdate = req.params.startdate;
     var enddate = req.params.enddate;
     var duration = (enddate - startdate) / 1000;
-    logger.info("GET /devices/" + deviceId + "/"+paramKey+"/histo/" + startdate + "/" + enddate);
+    //logger.info("GET /devices/" + deviceId + "/"+paramKey+"/histo/" + startdate + "/" + enddate);
     var PLine = '';
     if (deviceId.match(/_L/)) {
         var pid;
         pid = deviceId.match(/(\d+)_L(.)/);
-        logger.info(pid);
+        //logger.info(pid);
         deviceId = pid[1];
         PLine = pid[2] || '';
     }
-    logger.info(deviceId +"/"+PLine);
+    //logger.info(deviceId +"/"+PLine);
     var type = getDeviceType(deviceId).toLowerCase();
     var ptype = type;
     var curl = "&method=1";
@@ -2063,7 +2063,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
         type = "temp";
     }
 
-    logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
+    //logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
     var range;
     if (duration <= 172800) {
         range = "day";
@@ -2081,7 +2081,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
             'User-Agent': 'request'
         }
     };
-    logger.info(options.url);
+    //logger.info(options.url);
     request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var data = JSON.parse(body);
@@ -2137,7 +2137,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                            key = 'v';
                            key2 = 'v2';
                        }
-                       logger.info("P1 "+PLine+" "+key+" "+key2);
+                       //logger.info("P1 "+PLine+" "+key+" "+key2);
                         for (var i = 0; i < data.result.length; i++) {
                             var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2]));
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
@@ -2233,7 +2233,7 @@ app.get("/devices", auth, function (req, res) {
 			'User-Agent': 'request'
 		}
     };
-    logger.info(options);
+    //logger.info(options);
     var domo_energy_devices = {};
 
     request(options, function (error, response, body) {
@@ -2245,7 +2245,7 @@ app.get("/devices", auth, function (req, res) {
 						domo_energy_devices[data.result[i].ID] = data.result[i].Data.replace(" Watt","");
 					}
 				}
-				logger.info("Domoticz server - energy devices: " + JSON.stringify(domo_energy_devices));
+				//logger.info("Domoticz server - energy devices: " + JSON.stringify(domo_energy_devices));
 			}
 		}
 	})
@@ -2350,7 +2350,7 @@ app.get("/devices", auth, function (req, res) {
                                 //TODO
                                 break;
                             default:
-                                logger.warn("UNK Sw " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
+                                //logger.warn("UNK Sw " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
                                 break;
                         }
                         break;
@@ -2376,7 +2376,7 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevShutter(data.result[i]));
                                 break;
                             default:
-                                logger.warn("UNK Blind " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
+                                //logger.warn("UNK Blind " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
                                 break;
                         }
                         break;
@@ -2389,7 +2389,7 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevGenericSensor(data.result[i]));
                                 break;
                             default:
-                                logger.warn("UNK Sec " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
+                                //logger.warn("UNK Sec " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
                                 break;
                         }
                         break;
@@ -2417,7 +2417,7 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevElectricity(data.result[i]));
                                 break;
                             default:
-                                logger.warn("UNK Sec " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
+                                //logger.warn("UNK Sec " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
                                 break;
                         }
                         break;
@@ -2481,7 +2481,7 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevCounterIncremental(data.result[i]));
                                 break;
                             default:
-                                logger.warn("RFX Unknown " + data.result[i].Name + " " + data.result[i].SwitchTypeVal+" "+data.result[i].SubType);
+                                //logger.warn("RFX Unknown " + data.result[i].Name + " " + data.result[i].SwitchTypeVal+" "+data.result[i].SubType);
                         }
                         break;
                     case 'General':
@@ -2509,7 +2509,7 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevGenericSensor(data.result[i]));
                                 break;
                             case 'Unknown':
-                                logger.warn("Unknown general " + data.result[i].Name + " " + data.result[i].SwitchTypeVal + " "+ data.result[i].SubType);
+                                //logger.warn("Unknown general " + data.result[i].Name + " " + data.result[i].SwitchTypeVal + " "+ data.result[i].SubType);
                                 break;
                             case 'Waterflow':
                                 result.push(DevFlow(data.result[i]));
@@ -2524,7 +2524,7 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevGenericSensorT(data.result[i]));
                                 break;
                             default:
-                                logger.warn("General Unknown " + data.result[i].Name + " " + data.result[i].SubType+" "+data.result[i].SwitchTypeVal);
+                                //logger.warn("General Unknown " + data.result[i].Name + " " + data.result[i].SubType+" "+data.result[i].SwitchTypeVal);
                                 break;
                         }
                         break;
@@ -2538,7 +2538,7 @@ app.get("/devices", auth, function (req, res) {
                              case 'Hot Water':
                              break;*/
                             default:
-                                logger.warn("General Unknown " + data.result[i].Name + " " + data.result[i].SubType);
+                                //logger.warn("General Unknown " + data.result[i].Name + " " + data.result[i].SubType);
                                 break;
                         }
                         break;
@@ -2552,7 +2552,7 @@ app.get("/devices", auth, function (req, res) {
                         result.push(DevSceneGroup(data.result[i]));
                         break;
                     default:
-                        logger.warn("Unknown SwitchType " + data.result[i].Type+ " "+data.result[i].SwitchTypeVal);
+                        //logger.warn("Unknown SwitchType " + data.result[i].Type+ " "+data.result[i].SwitchTypeVal);
                         break;
                 }
             }
