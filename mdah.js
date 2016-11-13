@@ -88,13 +88,15 @@ function loadLocalConf() {
     }
 }
 function loadGlobalConf() {
-    try {
-        nconf.use('file', {file: '/etc/mydomoathome/config.json'}, onError);
-    } catch (err) {
-        // This will not catch the throw!
-        logger.error("Global conf parsing issue !");
-        logger.error(err);
-        return;
+    if (fileExists('/etc/mydomoathome/config.json')) {
+	    try {
+		nconf.use('file', {file: '/etc/mydomoathome/config.json'}, onError);
+	    } catch (err) {
+		// This will not catch the throw!
+		logger.error("Global conf parsing issue !");
+		logger.error(err);
+		return;
+	}
     }
 }
 function loadConf() {
