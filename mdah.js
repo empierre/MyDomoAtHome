@@ -1176,7 +1176,7 @@ function DevGas(data) {
         if (!usage) {
             usage = 0;
         }
-        params.push({"key": "Watts", "value": usage.toString(), "unit": "m3"});
+        params.push({"key": "Watts", "value": usage.toString(), "unit": "m3", "graphable": "true"});
     }
     if (data.Data) {
         var res = ptrn2.exec(data.Counter);
@@ -1184,7 +1184,7 @@ function DevGas(data) {
         if (res != null) {
             total = Math.ceil(res[1]);
         }
-        params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "m3"});
+        params.push({"key": "ConsoTotal", "value": total.toString(), "unit": "m3", "graphable": "true"});
     }
     myfeed.params = params;
     return (myfeed);
