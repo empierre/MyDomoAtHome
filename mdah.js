@@ -2031,7 +2031,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     var startdate = req.params.startdate;
     var enddate = req.params.enddate;
     var duration = (enddate - startdate) / 1000;
-    //logger.info("GET /devices/" + deviceId + "/"+paramKey+"/histo/" + startdate + "/" + enddate);
+    logger.info("GET /devices/" + deviceId + "/"+paramKey+"/histo/" + startdate + "/" + enddate);
     var PLine = '';
     if (deviceId.match(/_L/)) {
         var pid;
@@ -2040,13 +2040,13 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
         deviceId = pid[1];
         PLine = pid[2] || '';
     }
-    //logger.info(deviceId +"/"+PLine);
+    logger.info(deviceId +"/"+PLine+" "+type+" "+ptype);
     var type = getDeviceType(deviceId).toLowerCase();
     var ptype = type;
     var curl = "&method=1";
 
 
-    if ((type === "lux") || (type === "energy")) {
+    if ((type === "lux") || (type === "energy") || (type == "rfxmeter")) {
         type = "counter";
         curl = "&method=1";
     }
@@ -2065,7 +2065,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
         type = "temp";
     }
 
-    //logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
+    logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
     var range;
     if (duration <= 172800) {
         range = "day";
@@ -2083,7 +2083,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
             'User-Agent': 'request'
         }
     };
-    //logger.info(options.url);
+    logger.info(options.url);
     request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var data = JSON.parse(body);
@@ -2221,9 +2221,10 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
             }
         } else {
             //TODO
+    	    logger.info(response);
             res.status(403).send({success: false, errormsg: 'not implemented'});
-        }
-    });
+	}
+    } );
 })
 
 app.get("/devices", auth, function (req, res) {
