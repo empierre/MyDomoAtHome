@@ -2040,7 +2040,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
         deviceId = pid[1];
         PLine = pid[2] || '';
     }
-    logger.info(deviceId +"/"+PLine+" "+type+" "+ptype);
+    //logger.info(deviceId +"/"+PLine+" "+type+" "+ptype);
     var type = getDeviceType(deviceId).toLowerCase();
     var ptype = type;
     var curl = "&method=1";
@@ -2065,7 +2065,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
         type = "temp";
     }
 
-    logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
+    //logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
     var range;
     if (duration <= 172800) {
         range = "day";
@@ -2102,7 +2102,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                 for (var i = 0; i < data.result.length; i++) {
                     var key;
                     for (var i in data.result[i]) {
-                        if (!(i === 'd')) {
+                        if (!(i == 'd')) {
                             if ((i.match(/_max/)) || (i.match(/_min/))) {
                                 var ptrn = /^([^_]*)_/;
                                 key = i.match(ptrn).slice(1);
@@ -2145,7 +2145,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                             var feeds = {"date": dt, "value": value};
                             params.push(feeds);
-			            }
+			}
                    } else {
                         key = 'v';
                         for (var i = 0; i < data.result.length; i++) {
@@ -2155,24 +2155,45 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                             params.push(feeds);
                         }
                     }
-		        } else if (paramKey === 'Watts') {
-                        key = 'v'+PLine;
-                        var key2 ='v'+(parseInt(PLine)+3);
-                        for (var i = 0; i < data.result.length; i++) {
-                            if ((range === 'month') || (range === 'year')) {
-                                var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2])) / 2;
-                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                                var feeds = {"date": dt, "value": value};
-                                params.push(feeds);
-                            } else {
-                                var value = data.result[i][key];
-                                var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                                var feeds = {"date": dt, "value": value};
-                                params.push(feeds);
-                            }
-                        }
-                } else if (paramKey === 'speed') {
-                    key = 'sp';
+		} else if (paramKey === 'Watts') {
+			if (PLine) {
+				key = 'v'+PLine;
+				var key2 ='v'+(parseInt(PLine)+3);
+				for (var i = 0; i < data.result.length; i++) {
+				    if ((range === 'month') || (range === 'year')) {
+					var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2])) / 2;
+					var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+					var feeds = {"date": dt, "value": value};
+			    //logger.info("dt"+dt+" "+value);
+					params.push(feeds);
+				    } else {
+					var value = data.result[i][key];
+					var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+					var feeds = {"date": dt, "value": value};
+			    //logger.info("dt"+dt+" "+value);
+					params.push(feeds);
+				    }
+				}
+			} else {
+				for (var i = 0; i < data.result.length; i++) {
+				    if ((range === 'month') || (range === 'year')) {
+					var value = (parseFloat(data.result[i]['u_max']) + parseFloat(data.result[i]['u_min'])) / 2;
+					var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+					var feeds = {"date": dt, "value": value};
+			    //logger.info("dt"+dt+" "+value);
+					params.push(feeds);
+				    } else {
+					if (range === 'day'){ key='u'} else {key='v'};
+					var value = data.result[i][key];
+					var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+					var feeds = {"date": dt, "value": value};
+			    //logger.info("dt"+dt+" "+value);
+					params.push(feeds);
+				    }
+				}
+			}
+		} else if (paramKey === 'speed') {
+		    key = 'sp';
                     for (var i = 0; i < data.result.length; i++) {
                         var value = data.result[i][key];
                         var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
@@ -2203,12 +2224,15 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                         if ((range === 'month') || (range === 'year')) {
                             var value = (parseFloat(data.result[i][kmax]) + parseFloat(data.result[i][kmin])) / 2;
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
+                    //logger.info("dt"+dt+" "+value);
+                            params.push(feeds);
                             var feeds = {"date": dt, "value": value};
                             params.push(feeds);
                         } else {
                             var value = data.result[i][key];
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                             var feeds = {"date": dt, "value": value};
+                    //logger.info("dt"+dt+" "+value);
                             params.push(feeds);
                         }
                     }
