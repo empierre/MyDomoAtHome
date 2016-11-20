@@ -1566,6 +1566,7 @@ function DevMultiSwitchHeating(data) {
 function getDeviceType(deviceId) {
     var url = getURL() +  "?type=devices&rid=" + deviceId;
     var res = requester('GET', url);
+    logger.info(url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].Type);
 };
@@ -2033,14 +2034,22 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     var duration = (enddate - startdate) / 1000;
     logger.info("GET /devices/" + deviceId + "/"+paramKey+"/histo/" + startdate + "/" + enddate);
     var PLine = '';
-    if (deviceId.match(/_L/)) {
+    if ((deviceId)&&((deviceId.match(/_L/)))) {
         var pid;
         pid = deviceId.match(/(\d+)_L(.)/);
-        //logger.info(pid);
         deviceId = pid[1];
         PLine = pid[2] || '';
     }
-    var type = getDeviceType(deviceId).toLowerCase();
+    var type;var key;
+    if ((deviceId)&&((deviceId.match(/_1/)))) {
+        var pid;
+        pid = deviceId.match(/(\d+)_1/);
+        //deviceId=pid[1];
+	type='temp';
+	key='ba';
+    } else {
+	type =getDeviceType(deviceId).toLowerCase();
+    }
     var ptype = type;
     var curl = "&method=1";
     logger.info(deviceId +"/"+PLine+" "+type+" "+ptype);
@@ -2112,7 +2121,10 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                         }
                     }
                 }
-                logger.info('rawkey='+key+" "+type+" "+ptype);
+    		if ((deviceId)&&((deviceId.match(/_1/)))) {
+			key='ba';
+		}
+                //logger.info('rawkey='+key+" "+type+" "+ptype);
                 if (key === 'tm') {key='te';}
                 if (paramKey === 'temp') {
                     key = 'te';
@@ -2216,6 +2228,9 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                     } else if (key === 'hu') {
                         kmax = 'hu';
                         kmin = 'hu';
+                    } else if (key === 'ba') {
+                        kmax = 'ba';
+                        kmin = 'ba';
                     } else if (key === 'mm') {
                         kmax = 'mm';
                         kmin = 'mm';
@@ -2229,7 +2244,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                         kmax = key + "_max";
                         kmin = key + "_min";
                     }
-                    //logger.info("KK"+range+"="+kmin+" "+kmax);
+                    logger.info("KK"+key+" "+range+"="+kmin+" "+kmax);
                     for (var i = 0; i < data.result.length; i++) {
                         if ((range === 'month') || (range === 'year')) {
                             var value = (parseFloat(data.result[i][kmax]) + parseFloat(data.result[i][kmin])) / 2;
