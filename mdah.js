@@ -2040,10 +2040,10 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
         deviceId = pid[1];
         PLine = pid[2] || '';
     }
-    //logger.info(deviceId +"/"+PLine+" "+type+" "+ptype);
     var type = getDeviceType(deviceId).toLowerCase();
     var ptype = type;
     var curl = "&method=1";
+    logger.info(deviceId +"/"+PLine+" "+type+" "+ptype);
 
 
     if ((type === "lux") || (type === "energy") || (type == "rfxmeter")) {
@@ -2065,7 +2065,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
         type = "temp";
     }
 
-    //logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
+    logger.info(deviceId + " "+PLine + " "+type + " " +paramKey);
     var range;
     if (duration <= 172800) {
         range = "day";
@@ -2112,6 +2112,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                         }
                     }
                 }
+                logger.info('rawkey='+key+" "+type+" "+ptype);
                 if (key === 'tm') {key='te';}
                 if (paramKey === 'temp') {
                     key = 'te';
@@ -2139,7 +2140,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                            key = 'v';
                            key2 = 'v2';
                        }
-                       //logger.info("P1 "+PLine+" "+key+" "+key2);
+                       logger.info("P1 "+PLine+" "+key+" "+key2);
                         for (var i = 0; i < data.result.length; i++) {
                             var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2]));
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
@@ -2177,17 +2178,23 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
 			} else {
 				for (var i = 0; i < data.result.length; i++) {
 				    if ((range === 'month') || (range === 'year')) {
-					var value = (parseFloat(data.result[i]['u_max']) + parseFloat(data.result[i]['u_min'])) / 2;
+					var value;
+					if (data.result[i]['u_max']) {
+						value = (parseFloat(data.result[i]['u_max']) + parseFloat(data.result[i]['u_min'])) / 2;
+					} else {
+						value = (parseFloat(data.result[i]['c']));
+
+					}
 					var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
 					var feeds = {"date": dt, "value": value};
-			    //logger.info("dt"+dt+" "+value);
+			    //logger.info("dt1 "+dt+" "+value);
 					params.push(feeds);
 				    } else {
-					if (range === 'day'){ key='u'} else {key='v'};
-					var value = data.result[i][key];
+					//if (range === 'day'){ key='u'} else {key='v'};
+					var value = data.result[i]['v']||data.result[i]['u'];
 					var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
 					var feeds = {"date": dt, "value": value};
-			    //logger.info("dt"+dt+" "+value);
+			    //logger.info("dt2 "+dt+" "+value);
 					params.push(feeds);
 				    }
 				}
@@ -2215,24 +2222,26 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                     } else if (key === 'uvi') {
                         kmax = 'uvi';
                         kmin = 'uvi';
+                    } else if (key === 'lux') {
+                        kmax = 'lux';
+                        kmin = 'lux';
                     } else {
                         kmax = key + "_max";
                         kmin = key + "_min";
                     }
-                    //logger.info("KK"+kmin+" "+kmax);
+                    //logger.info("KK"+range+"="+kmin+" "+kmax);
                     for (var i = 0; i < data.result.length; i++) {
                         if ((range === 'month') || (range === 'year')) {
                             var value = (parseFloat(data.result[i][kmax]) + parseFloat(data.result[i][kmin])) / 2;
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
-                    //logger.info("dt"+dt+" "+value);
-                            params.push(feeds);
+                    //logger.info("dt "+dt+" "+value);
                             var feeds = {"date": dt, "value": value};
                             params.push(feeds);
                         } else {
                             var value = data.result[i][key];
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                             var feeds = {"date": dt, "value": value};
-                    //logger.info("dt"+dt+" "+value);
+                    //logger.info("dt "+dt+" "+value);
                             params.push(feeds);
                         }
                     }
