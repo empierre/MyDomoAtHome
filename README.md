@@ -52,15 +52,15 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
   - [X] Security code managed
 
 M4 milestone will provide extended support to other platforms with Docker and Synology 
-- [ ] Synology
-  - [ ] Synology hosted package
-- [ ] Debian package - noarch
+- [X] End to end authentificaton
+- [ X Synology
+  - [X] Synology hosted package
+- [X] Debian package - noarch
   - [ ] debian hosted package - need a peer
   - [ ] raspbian hosted package
 - TODO
   - [ ] Evohome (depending on Imperihome)
   - [ ] Alarm pannel (partial with ImperiHome)
-  - [X] End to end authentificaton
   - [ ] Auto updatable through button
 
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
@@ -120,6 +120,16 @@ And check again
   edit /etc/mydomoathome/config.json with your values
   
      sudo service mydomoathome restart
+
+### Installing the software on Synology
+
+  Add http://www.jadahl.com/domoticz_beta_6/ to your Synology NAS Package Center sources !
+
+  The package is node-mydomoathome
+
+  Domoticz will run on port 8084 and MDAH on 3002. 
+
+  Remember to set in Domoticz Settings/Local Networks 127.0.0.1
 
 ### Installing the software on Windows
 
