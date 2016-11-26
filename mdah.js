@@ -245,6 +245,13 @@ function getLastVersion() {
         });
     }
 }
+function getSettingsSecPassword() {
+        var url = getURL() +  "?type=settings";
+        var res = requester('GET', url);
+        logger.info(url);
+        var js = JSON.parse(res.body.toString('utf-8'));
+        return (js.result[0].SecPassword);
+}
 function devSt(data) {
     var rbl;
     var dimmable;
@@ -2145,13 +2152,13 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                 } else if (paramKey === 'ConsoTotal') {
                    if (ptype==='p1 smart meter') {
                        var key2;
-                       if (PLine==1) {
+                       /*if (PLine==1) {
                            key = 'r1';
                            key2= 'r2';
-                       } else if (PLine ==2) {
+                       } else if (PLine ==2) {*/
                            key = 'v';
                            key2 = 'v2';
-                       }
+                       //}
                        logger.info("P1 "+PLine+" "+key+" "+key2);
                         for (var i = 0; i < data.result.length; i++) {
                             var value = (parseFloat(data.result[i][key]) + parseFloat(data.result[i][key2]));
@@ -2244,7 +2251,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                         kmax = key + "_max";
                         kmin = key + "_min";
                     }
-                    logger.info("KK"+key+" "+range+"="+kmin+" "+kmax);
+                    logger.info("KK "+key+" "+range+"="+kmin+" "+kmax);
                     for (var i = 0; i < data.result.length; i++) {
                         if ((range === 'month') || (range === 'year')) {
                             var value = (parseFloat(data.result[i][kmax]) + parseFloat(data.result[i][kmin])) / 2;
@@ -2253,7 +2260,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                             var feeds = {"date": dt, "value": value};
                             params.push(feeds);
                         } else {
-                            var value = data.result[i][key];
+                            var value = data.result[i][key]|| data.result[i]['v'];
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                             var feeds = {"date": dt, "value": value};
                     //logger.info("dt "+dt+" "+value);
