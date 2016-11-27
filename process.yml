@@ -1,0 +1,7 @@
+apps:
+  - script   : ./mdah.js
+    name     : 'MDAH'
+    instances: 1
+    watch    : true
+    autorestart : true
+    max_restarts : 10

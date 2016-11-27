@@ -53,7 +53,7 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 
 M4 milestone will provide extended support to other platforms with Docker and Synology 
 - [X] End to end authentificaton
-- [ X Synology
+- [X] Synology
   - [X] Synology hosted package
 - [X] Debian package - noarch
   - [ ] debian hosted package - need a peer
@@ -66,6 +66,8 @@ M4 milestone will provide extended support to other platforms with Docker and Sy
 [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 # Standalone installation (PI, cubie, odroid, intel...)
+[![NPM](https://nodei.co/npm/node-mydomoathome.png?downloads=true&downloadRank=true)](https://nodei.co/npm/node-mydomoathome/)
+
 
 ## Install procedure
 
@@ -219,7 +221,7 @@ The default port is now 3002.
 
     sudo service mydomoathome reload
 
-## Docker installation (only for those using this form: big synologies, Xpenologies...)
+## Docker installation (only for those using this form: big Synologies, Xpenologies...)
 Docker image is automatically build based on latest verion.
 Configuration can be passed through command line (see below) /etc/mydomoathome is also mounted
 
