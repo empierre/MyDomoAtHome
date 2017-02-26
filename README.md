@@ -145,12 +145,14 @@ And check again
   
   go in the unzipped repository
   
-    nmp install
+    npm install
     node mdah.js
 
   to launch do from a cmd window:
 
     node mdah.js 
+    
+  configuration "config.json" must be in the same directory as the file mdah.js
 
 ### config.json
 
