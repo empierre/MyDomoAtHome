@@ -18,6 +18,7 @@ case "$1" in
 		sudo -u root chown -R www-data ~/.npm
 	fi
         npm install -g forever
+        npm install -g pm2
         ;;
 
     upgrade|abort-upgrade)
