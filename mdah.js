@@ -729,25 +729,36 @@ function DevDoor(data) {//TODO
 }
 function DevLock(data) {
 
-    var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
+var status = 0;
+    switch (data.Status) {
+        case 'Locked':
+            status = 1;
+            break;
+        case 'Unlocked':
+            status = 0;
+            break;
+        default:
+            status = 0;
+            break;
+    }
+    //Protected device
+    var mydev = device_tab[data.idx]||{MaxDimLevel: null, Action: null, graph: null, Selector: null, Protected: null};
+    if (! mydev && (data.Protected === 'true')) {
+            mydev.Protected = 1;
+        }
+    device_tab[data.idx] = mydev;
 
     if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
-		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": domo_room_tab[data.PlanIDs[0]]};
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevLock", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
-		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDoor", "room": "Switches"};
+		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevLock", "room": "Switches"};
 		room_tab.Switches=1;
 	}
 	
     params = [];
-    var value = devSt(data);
-    params.push({"key": "armable", "value": "0"});
-    params.push({"key": "Ackable", "value": "0"});
-    params.push({"key": "Armed", "value": "1"});
-    params.push({"key": "Tripped", "value": value.toString()});
-    params.push({"key": "lasttrip", "value": dt.toString()});
+    params.push({"key": "Status", "value": status.toString()});
     myfeed.params = params;
-    return (myfeed);
-}
+    return (myfeed);}
 function DevSmoke(data) {
 
     var dt = moment(data.LastUpdate, 'YYYY-MM-DD HH:mm:ss').valueOf();
@@ -2392,6 +2403,8 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevMotion(data.result[i]));
                                 break;
                             case 'Door Lock':
+								result.push(DevLock(data.result[i]));
+								break;
                             case 'Door Contact':
                             case 'Contact':
                                 result.push(DevDoor(data.result[i]));
