@@ -117,9 +117,11 @@ And check again
     sudo apt-get update
     sudo apt-get install MyDomoAtHome 
 
-  Important remark: do not install as roos, but sudo as an unprivilegied user
+  Important remark: do not install as root, but sudo as an unprivilegied user.
 
-  edit /etc/mydomoathome/config.json with your values
+  Edit the configuration file with your values:
+  
+     sudo nano /etc/mydomoathome/config.json
   
      sudo service mydomoathome restart
 
