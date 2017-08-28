@@ -20,11 +20,11 @@ Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs
 # Important update
 Our repository has moved to https, so if you have an update message, please do the following:
 
-sudo nano /etc/apt/sources.list
+  sudo nano /etc/apt/sources.list
 
 Add modify to https the line to have this :
 
-deb https://www.e-nef.com/domoticz/mdah/ /
+  deb https://www.e-nef.com/domoticz/mdah/ /
 
 # Features and goals
 The initial goal is to provide a REST API to ImperiHome ISS that would only allow to see the current state of sensors and interact with them in case of an actuator. 
