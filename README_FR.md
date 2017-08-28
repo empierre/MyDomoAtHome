@@ -107,12 +107,12 @@ Et on vérifie à nouveau:
 
 ### Installation du package Debian .deb
 
-    wget -qO - http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
+    wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
     sudo nano /etc/apt/sources.list
    
   Ajoutez la ligne:
   
-    deb http://www.e-nef.com/domoticz/mdah/ /
+    deb https://www.e-nef.com/domoticz/mdah/ /
 
   Puis:
 
