@@ -110,7 +110,7 @@ And check again
    
   Add the line:
   
-    deb http://www.e-nef.com/domoticz/mdah/ /
+    deb https://www.e-nef.com/domoticz/mdah/ /
 
   Then:
 
