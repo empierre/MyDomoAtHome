@@ -661,7 +661,7 @@ function DevShutter(data) {
     }
 
     //console.log(data.idx+" "+status+" "+lvl);
-    if ((data.SwitchType === 'Venetian Blinds EU') || (data.SwitchType === 'Venetian Blinds US') || (data.SwitchType === 'RollerTrol, Hasta new')) {
+    if ((data.SwitchType === 'Venetian Blinds EU') || (data.SwitchType === 'Venetian Blinds US') || (data.SwitchType === 'RollerTrol, Hasta new')|| (data.SwitchType === 'Blinds')) {
         stoppable = 1;
     }
     var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
