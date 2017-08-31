@@ -1,6 +1,6 @@
 //##############################################################################
 //  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
-//      Copyright (C) 2014-2016 Emmanuel PIERRE (domoticz@e-nef.com)
+//      Copyright (C) 2014-2017 Emmanuel PIERRE (domoticz@e-nef.com)
 //
 // MyDomoAtHome is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -494,7 +494,7 @@ function DevRGBLight(data) {
 		room_tab.Switches=1;
 	}
 	
-    if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true')) {
+    if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
         var mydev = {MaxDimLevel: null, Action: null, graph: null};
         if (device_tab[data.idx]) {
             mydev = device_tab[data.idx];
