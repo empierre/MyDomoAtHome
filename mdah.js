@@ -494,7 +494,7 @@ function DevRGBLight(data) {
 		room_tab.Switches=1;
 	}
 	
-    if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
+    if (data.Status.match(/Set Level/) || (data.HaveDimmer === true)) {
         var mydev = {MaxDimLevel: null, Action: null, graph: null};
         if (device_tab[data.idx]) {
             mydev = device_tab[data.idx];
@@ -522,11 +522,12 @@ function DevRGBLight(data) {
 };
 function DevDimmer(data) {
     var status = 0;
+    var myfeed = '';
 
     if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
-		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": domo_room_tab[data.PlanIDs[0]]};
+		myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": domo_room_tab[data.PlanIDs[0]]};
 	} else {
-		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
+		myfeed = {"id": data.idx, "name": data.Name, "type": "DevDimmer", "room": "Switches"};
 		room_tab.Switches=1;
 	}
 
