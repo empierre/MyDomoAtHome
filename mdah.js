@@ -587,7 +587,7 @@ function DevShutterInverted(data) {
     if (data.Status === 'Open') {
         lvl = data.Level || 100;
         status = 1;
-    } else if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true')) {
+    } else if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
         lvl = data.Level;
         //console.log(data.status+" "+lvl);
         if (lvl > 0) {
@@ -647,7 +647,7 @@ function DevShutter(data) {
     if (data.Status == 'Open') {
         lvl = 100 || data.Level;
         status = 1;
-    } else if ((data.Status.match(/Set Level/) || (data.HaveDimmer === 'true') )) {
+    } else if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true')|| (data.HaveDimmer === true) ) {
         lvl = data.Level;
         //console.log(data.status+" "+lvl);
         if (lvl > 0) {
