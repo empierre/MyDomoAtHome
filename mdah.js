@@ -475,6 +475,9 @@ function DevRGBLight(data) {
         case 'Push Off Button':
             status = 0;
             break;
+	case 'On/Off':
+	    if (data.Status == 'On') {status=1};
+	    if (data.Status == 'Off') {status=0};
         default:
             status = 0;
             break;
@@ -505,7 +508,11 @@ function DevRGBLight(data) {
         params = [];
         params.push({"key": "Status", "value": "1"});//hyp: set level only when on
         params.push({"key": "dimmable", "value": "1"});
-        params.push({"key": "Level", "value": data.Level.toString()});
+        if ((data.Level==0)&&(data.LevelInt>0)) {
+        	params.push({"key": "Level", "value": data.LevelInt.toString()});
+	} else {
+        	params.push({"key": "Level", "value": data.Level.toString()});
+	}
 		if(data.Energy) {
 			params.push({"key": "Energy", "value": data.Energy});
 		}
@@ -515,7 +522,10 @@ function DevRGBLight(data) {
         myfeed.params = params;
     } else {
         params = [];
-        params.push({"key": "Status", "value": status});
+    	if (data.HaveDimmer === true) {
+	        params.push({"key": "Status", "value": status});
+	}
+        params.push({"key": "dimmable", "value": "1"});
         myfeed.params = params;
     }
     return (myfeed);
@@ -676,7 +686,13 @@ function DevShutter(data) {
 	
     params = [];
     //params.push({"key": "Status", "value": status});
-    params.push({"key": "Level", "value": lvl.toString()});
+    if ((data.Status='Closed')&&(data.Level==100)) {
+	    params.push({"key": "Level", "value": 0});
+    } else if ((data.Status='Open')&&(data.Level==0)) {
+	    params.push({"key": "Level", "value": 100});
+    } else {
+	    params.push({"key": "Level", "value": lvl.toString()});
+    }
     params.push({"key": "stopable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "0"});
 
