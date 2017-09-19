@@ -497,7 +497,7 @@ function DevRGBLight(data) {
 		room_tab.Switches=1;
 	}
 	
-    if (data.Status.match(/Set Level/) || (data.HaveDimmer === true)) {
+    if (data.Status.match(/Set Level/) || (data.HaveDimmer === true) ||  (data.HaveDimmer === 'true')) {
         var mydev = {MaxDimLevel: null, Action: null, graph: null};
         if (device_tab[data.idx]) {
             mydev = device_tab[data.idx];
@@ -506,7 +506,11 @@ function DevRGBLight(data) {
         mydev.Action = 0;
         device_tab[data.idx] = mydev;
         params = [];
-        params.push({"key": "Status", "value": "1"});//hyp: set level only when on
+        if (data.Status == 'Off') {
+		params.push({"key": "Status", "value": "0"});
+	} else {
+		params.push({"key": "Status", "value": "1"});//hyp: set level only when on
+	}
         params.push({"key": "dimmable", "value": "1"});
         if ((data.Level==0)&&(data.LevelInt>0)) {
         	params.push({"key": "Level", "value": data.LevelInt.toString()});
