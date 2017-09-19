@@ -608,13 +608,11 @@ function DevShutterInverted(data) {
             status = 1
         } else {
             status = 0
-        }
-        ;
+        } ;
     } else {
         lvl = data.Level || 0;
         status = 0;
-    }
-    ;
+    } ;
     //console.log(data.idx+" "+status+" "+lvl);
     if ((data.SwitchType === 'Venetian Blinds EU') || (data.SwitchType === 'Venetian Blinds US') || (data.SwitchType === 'RollerTrol, Hasta new')) {
         stoppable = 1;
@@ -632,7 +630,7 @@ function DevShutterInverted(data) {
     //params.push({"key": "Status", "value": status});
     params.push({"key": "Level", "value": lvl.toString()});
     params.push({"key": "stopable", "value": stoppable.toString()});
-    params.push({"key": "pulsable", "value": "0"});
+    params.push({"key": "pulsable", "value": "1"});
     myfeed.params = params;
     //console.log(params);
     return (myfeed);
@@ -2440,7 +2438,8 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevMultiSwitch(data.result[i]));
                                 break;
                             case 'Media Player':
-                                //TODO
+                                result.push(DevSwitch(data.result[i]));
+                                break;
                                 break;
                             default:
                                 //logger.warn("UNK Sw " + data.result[i].Name+"SwitchType:"+data.result[i].SwitchType);
