@@ -73,7 +73,7 @@ M4 milestone fournira un support d'autres plates-formes dont Synology
 
 ## Procéure d'installation
 
-### Vérification de la version de node J - obligatoire sur le PI !
+### Vérification de la version de nodeJS - obligatoire sur le PI !
 
     sudo dpkg --list |grep nodejs // should return version 4.x or above
 
@@ -217,6 +217,7 @@ N'oubliez pas de changer l'IP et d'autoriser dans Domoticz la plage d'adresse de
 # Test de l'installation
 
   - Vérification dans un navigateur que le process fonctionne:
+
     http://gateway_ip:gateway_port/
   
   - Depuis cette page, vous pourrez tester les autres URL dans un navigateur sinon vérifiez les logs dans /var/log/mydomoathome/
@@ -224,15 +225,19 @@ N'oubliez pas de changer l'IP et d'autoriser dans Domoticz la plage d'adresse de
   - Vérification que le process est accessible depuis la machine faisant tourner Domoticz:
 
     curl http://domoticz_ip:domoticz_port/json.htm?type=devices&filter=all&used=true&order=Name
-    
 
   - Vérification que MyDomoAtHome récupère bien les informations depuis Domoticz:
 
     curl http://gateway_ip:gateway_port/devices
+
+## Advanced support
+
+Pour un device non ou mal supporté, merci de communiquer le JSON de Domoticz sur la base de cette  URL:
+
+    http://domoticz_ip:8080/json.htm?type=devices&filter=all&used=true&order=Name
     
-  
 # Support: 
-  - Fonctinalités et Bug report: https://github.com/empierre/MyDomoAtHome/issues
+  - Fonctionalités et Bug report: https://github.com/empierre/MyDomoAtHome/issues
   - English : http://www.domoticz.com/forum/viewtopic.php?f=21&t=6882
   - Français  : http://easydomoticz.com/forum/viewtopic.php?f=12&t=573
   - Si vous avez un device manquant, envoyez votre domoticz.db à: domoticz at e-nef.com
