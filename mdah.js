@@ -628,7 +628,7 @@ function DevShutterInverted(data) {
 	
     params = [];
     //params.push({"key": "Status", "value": status});
-    if (data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
+    if ((data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
     	params.push({"key": "Level", "value": lvl.toString()});
     }
     params.push({"key": "stopable", "value": stoppable.toString()});
