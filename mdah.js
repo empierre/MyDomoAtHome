@@ -694,9 +694,9 @@ function DevShutter(data) {
 	
     params = [];
     //params.push({"key": "Status", "value": status});
-    if ((data.Status='Closed')||(data.Level==0)) {
+    if ((data.Status === 'Closed')&&(data.Level === 0)) {
 	    params.push({"key": "Level", "value": 0});
-    } else if ((data.Status='Open')||(data.Level==100)) {
+    } else if ((data.Status === 'Open')||(data.Level === 100)) {
 	    params.push({"key": "Level", "value": 100});
     } else {
 	    params.push({"key": "Level", "value": lvl.toString()});
