@@ -599,11 +599,7 @@ function DevShutterInverted(data) {
     device_tab[data.idx] = mydev;
     //console.log(data.Status+" "+data.Level);
     if (data.Status === 'Open') {
-	if ((data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
-        	lvl = data.Level || 100;
-	} else {
-        	lvl = 100;
-	}
+        lvl = 100;
         status = 1;
     } else if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
         lvl = data.Level;
@@ -630,6 +626,7 @@ function DevShutterInverted(data) {
 		room_tab.Switches=1;
     }
 	
+    //console.log(data.idx+" "+status+" "+lvl);
     params = [];
     params.push({"key": "Level", "value": lvl.toString()});
     params.push({"key": "stopable", "value": stoppable.toString()});
@@ -659,13 +656,15 @@ function DevShutter(data) {
     mydev.MaxDimLevel = data.MaxDimLevel;
     device_tab[data.idx] = mydev;
     //console.log(data.Status+" "+data.Level);
+    //console.log(data.idx+" "+data.Status+" "+status+" "+lvl);
     if (data.Status == 'Open') {
-	if ((data.HaveDimmer === 'true')|| (data.HaveDimmer === true)) {
-        	lvl = 100 || data.Level;
-	} else {
-        	lvl = 100;
-	}
+    //console.log("Open"+data.idx+" "+data.Status+" "+status+" "+lvl);
+        lvl = 100;
         status = 1;
+    } else if (data.Status == 'Closed') {
+	lvl =  0;
+        status = 0;
+    //console.log("aClosed "+data.idx+" "+data.Status+" "+status+" "+lvl);
     } else if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true')|| (data.HaveDimmer === true) ) {
         lvl = data.Level;
         //console.log(data.status+" "+lvl);
@@ -674,10 +673,7 @@ function DevShutter(data) {
         } else {
             status = 0
         }
-
-    } else {
-        lvl = data.Level || 0;
-        status = 0;
+    //console.log("mixed: "+data.idx+" "+data.Status+" "+status+" "+lvl);
     }
 
     //console.log(data.idx+" "+status+" "+lvl);
@@ -695,13 +691,14 @@ function DevShutter(data) {
 	
     params = [];
     //params.push({"key": "Status", "value": status});
-    if ((data.Status === 'Closed')&&(data.Level === 0)) {
+    if (data.Status === 'Closed') {
 	    params.push({"key": "Level", "value": 0});
-    } else if ((data.Status === 'Open')||(data.Level === 100)) {
+    } else if (data.Status === 'Open') {
 	    params.push({"key": "Level", "value": 100});
     } else {
 	    params.push({"key": "Level", "value": lvl.toString()});
     }
+    console.log(data.idx+" "+data.Status+" "+status+" "+lvl);
     params.push({"key": "stopable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "0"});
 
