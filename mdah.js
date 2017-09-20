@@ -599,7 +599,11 @@ function DevShutterInverted(data) {
     device_tab[data.idx] = mydev;
     //console.log(data.Status+" "+data.Level);
     if (data.Status === 'Open') {
-        lvl = data.Level || 100;
+	if ((data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
+        	lvl = data.Level || 100;
+	} else {
+        	lvl = 100;
+	}
         status = 1;
     } else if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
         lvl = data.Level;
@@ -621,16 +625,13 @@ function DevShutterInverted(data) {
 
     if (typeof data.PlanIDs !== 'undefined' && data.PlanIDs[0] !== null && data.PlanIDs[0] > 0) {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": domo_room_tab[data.PlanIDs[0]]};
-	} else {
+    } else {
 		var myfeed = {"id": data.idx, "name": data.Name, "type": "DevShutter", "room": "Switches"};
 		room_tab.Switches=1;
-	}
+    }
 	
     params = [];
-    //params.push({"key": "Status", "value": status});
-    if ((data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
-    	params.push({"key": "Level", "value": lvl.toString()});
-    }
+    params.push({"key": "Level", "value": lvl.toString()});
     params.push({"key": "stopable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "1"});
     myfeed.params = params;
