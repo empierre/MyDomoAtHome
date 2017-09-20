@@ -628,7 +628,9 @@ function DevShutterInverted(data) {
 	
     params = [];
     //params.push({"key": "Status", "value": status});
-    params.push({"key": "Level", "value": lvl.toString()});
+    if (data.HaveDimmer === 'true') || (data.HaveDimmer === true)) {
+    	params.push({"key": "Level", "value": lvl.toString()});
+    }
     params.push({"key": "stopable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "1"});
     myfeed.params = params;
@@ -688,9 +690,9 @@ function DevShutter(data) {
 	
     params = [];
     //params.push({"key": "Status", "value": status});
-    if ((data.Status='Closed')&&(data.Level==100)) {
+    if ((data.Status='Closed')||(data.Level==0)) {
 	    params.push({"key": "Level", "value": 0});
-    } else if ((data.Status='Open')&&(data.Level==0)) {
+    } else if ((data.Status='Open')||(data.Level==100)) {
 	    params.push({"key": "Level", "value": 100});
     } else {
 	    params.push({"key": "Level", "value": lvl.toString()});
