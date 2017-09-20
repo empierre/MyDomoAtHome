@@ -659,7 +659,11 @@ function DevShutter(data) {
     device_tab[data.idx] = mydev;
     //console.log(data.Status+" "+data.Level);
     if (data.Status == 'Open') {
-        lvl = 100 || data.Level;
+	if ((data.HaveDimmer === 'true')|| (data.HaveDimmer === true)) {
+        	lvl = 100 || data.Level;
+	} else {
+        	lvl = 100;
+	}
         status = 1;
     } else if (data.Status.match(/Set Level/) || (data.HaveDimmer === 'true')|| (data.HaveDimmer === true) ) {
         lvl = data.Level;
