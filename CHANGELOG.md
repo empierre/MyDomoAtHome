@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.2.25"></a>
+## [0.2.25](https://github.com/empierre/MyDomoAtHome/compare/v0.2.24...v0.2.25) (2017-09-20)
+
+
+
+
 <a name="0.2.24"></a>
 ## [0.2.24](https://github.com/empierre/MyDomoAtHome/compare/v0.2.23...v0.2.24) (2017-09-20)
 
