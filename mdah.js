@@ -18,6 +18,7 @@
 
 // dependencies
 var http = require("http");
+var https = require('https');
 var express = require("express");
 var _ = require("underscore");
 var path = require('path');
@@ -50,10 +51,10 @@ var app_name = "MyDomoAtHome";
 var port = process.env.PORT || '3002';
 var passcode=process.env.SEC||'';
 
-//configuration
 app.set('port', port);
 app.set('view engine', 'ejs');
-var home = process.env.MDAH_HOME || path.resolve(__dirname + "/..");
+//var home = process.env.MDAH_HOME || path.resolve(__dirname + "/..");
+var home = process.cwd();
 //app.use(morgan('combined'));
 app.use(methodOverride());
 app.use(bodyParser.json());
@@ -131,18 +132,6 @@ function getConf(){
         logger.warn('domoticz access configuration not found in /etc/mydomoathome/config.json, defaulting')
     }
 }
-loadLocalConf();
-loadGlobalConf();
-loadConf();
-getConf();
-
-
-if (nconf.get("debug") === true)
-    app.use(logger('dev'));
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({
-    extended: false
-}));
 
 function fileExists(filePath) {
     try {
@@ -2705,6 +2694,20 @@ app.use(function (err, req, res, next) {
     });
 });
 
+//Main block
+
+loadLocalConf();
+loadGlobalConf();
+loadConf();
+getConf();
+
+
+if (nconf.get("debug") === true)
+    app.use(logger('dev'));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
+    extended: false
+}));
 
 logger.info("Domoticz server: " + getURL());
 logger.info("Node version: " + process.versions.node);
@@ -2765,10 +2768,22 @@ var gracefulShutdown = function () {
     }, 2 * 1000);
 }
 //start server
-var server = http.createServer(app);
-server.listen(app.get('port'), function () {
+var server ;
+if (nconf.get('https') == true) {
+	//configuration
+	var options = {
+		key: fs.readFileSync(nconf.get('key')),
+		cert: fs.readFileSync(nconf.get('cert'))
+	};
+ 	server = https.createServer(options,app);
+	logger.info("MDAH https: " + nconf.get('key') + " "+nconf.get('cert'));
+} else {
+ 	server = http.createServer(app);
+}
+/*{
     logger.info('MDAH port: ' + app.get('port'));
-});
+});*/
+server.listen(port);
 
 server.on('error', function (e) {
     if (e.code == 'EADDRINUSE') {
