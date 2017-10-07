@@ -200,27 +200,29 @@ And check again
 
   - manage login/pass on domoticz, do the same in domoticz:path
 
-  - start in https mode
-
-    openssl genrsa 1024 > key.pem
-    openssl req -x509 -new -key key.pem > key-cert.pem
-
-    {
-      "app_name": "MyDomoAtHome",
-      "auth": null,
-      "tempmode": "C",
-      "https" : true,
-      "key" : "test/fixtures/keys/key.pem",
-      "cert": "test/fixtures/keys/key-cert.pem",
-      "domoticz": {
-         "ssl": false,
-         "host": "127.0.0.1",
-         "port": 8080,
-         "path": "/"
-      },
-     "port": 3002,
-     "passcode": ""
-    }
+  - start in https mode:
+	
+~~~~
+      openssl genrsa 1024 > key.pem
+      openssl req -x509 -new -key key.pem > key-cert.pem
+	
+~~~~
+      {
+        "app_name": "MyDomoAtHome",
+        "auth": null,
+        "tempmode": "C",
+        "https" : true,
+        "key" : "test/fixtures/keys/key.pem",
+        "cert": "test/fixtures/keys/key-cert.pem",
+        "domoticz": {
+          "ssl": false,
+          "host": "127.0.0.1",
+          "port": 8080,
+          "path": "/"
+        },
+       "port": 3002,
+       "passcode": ""
+      }
   
 ### Stuck on a pre 0.1.x version
 
