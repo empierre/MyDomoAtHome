@@ -62,6 +62,7 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 
 M4 milestone will provide extended support to other platforms with Docker and Synology 
 - [X] End to end authentificaton
+- [X] Support domoticz Farenheit
 - [X] Synology
   - [X] Synology hosted package
 - [X] Debian package - noarch
@@ -172,6 +173,7 @@ And check again
     {
       "app_name": "MyDomoAtHome",
       "auth": null,
+      "tempmode": "C",
        "domoticz": {
         "ssl": false,
         "host": "127.0.0.1",

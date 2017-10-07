@@ -121,6 +121,11 @@ function getConf(){
         app.set('port', process.env.PORT || nconf.get('port'));
         app_name = nconf.get('app_name') || "MyDomoAtHome";
         passcode = nconf.get('passcode') || passcode;
+	if (nconf.get('tempmode') == 'F') {
+        	tempmode = 'F';
+	} else {
+        	tempmode = 'C';
+	}
     }
     if (!(nconf.get('domoticz:host') || (nconf.get('domoticz:port')))) {
         logger.warn('domoticz access configuration not found in /etc/mydomoathome/config.json, defaulting')
@@ -1318,7 +1323,7 @@ function DevTH(data) {
 			}
 			
             params = [];
-            params.push({"key": "Value", "value": data.Temp, "unit": "°C","graphable": "true"});
+            params.push({"key": "Value", "value": data.Temp, "unit": "°"+tempmode,"graphable": "true"});
             myfeed.params = params;
             return (myfeed);
         case 'Humidity':
@@ -1345,7 +1350,7 @@ function DevTH(data) {
 			
             var params = [];
             params.push({"key": "Hygro", "value": data.Humidity, "unit": "%", "graphable": "true"});
-            params.push({"key": "Temp", "value": data.Temp, "unit": "°C", "graphable": "true"});
+            params.push({"key": "Temp", "value": data.Temp, "unit": "°"+tempmode, "graphable": "true"});
             myfeed.params = params;
             return (myfeed);
         case 'Temp + Humidity + Baro':
@@ -1360,7 +1365,7 @@ function DevTH(data) {
 			
             var params = [];
             params.push({"key": "Hygro", "value": data.Humidity, "unit": "%", "graphable": "true"});
-            params.push({"key": "Temp", "value": data.Temp, "unit": "°C", "graphable": "true"});
+            params.push({"key": "Temp", "value": data.Temp, "unit": "°"+tempmode, "graphable": "true"});
             myfeed.params = params;
             combo.push(myfeed);
 
