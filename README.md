@@ -205,7 +205,6 @@ And check again
     openssl genrsa 1024 > key.pem
     openssl req -x509 -new -key key.pem > key-cert.pem
 
-
     {
       "app_name": "MyDomoAtHome",
       "auth": null,
@@ -222,8 +221,6 @@ And check again
      "port": 3002,
      "passcode": ""
     }
-
-
   
 ### Stuck on a pre 0.1.x version
 
