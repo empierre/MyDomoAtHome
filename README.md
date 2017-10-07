@@ -62,6 +62,7 @@ The initial goal is to provide a REST API to ImperiHome ISS that would only allo
 
 M4 milestone will provide extended support to other platforms with Docker and Synology 
 - [X] End to end authentificaton
+- [X] HTTPS support
 - [X] Support domoticz Farenheit
 - [X] Synology
   - [X] Synology hosted package
@@ -168,7 +169,7 @@ And check again
 
 ### config.json
 
-  It works in a "key":"value" mode. Basic value is:
+  It works in a "key":"value" mode. Basic values are:
 
     {
       "app_name": "MyDomoAtHome",
@@ -198,6 +199,30 @@ And check again
     },
 
   - manage login/pass on domoticz, do the same in domoticz:path
+
+  - start in https mode
+
+    openssl genrsa 1024 > key.pem
+    openssl req -x509 -new -key key.pem > key-cert.pem
+
+
+    {
+      "app_name": "MyDomoAtHome",
+      "auth": null,
+      "tempmode": "C",
+      "https" : true,
+      "key" : "test/fixtures/keys/key.pem",
+      "cert": "test/fixtures/keys/key-cert.pem",
+      "domoticz": {
+         "ssl": false,
+         "host": "127.0.0.1",
+         "port": 8080,
+         "path": "/"
+      },
+     "port": 3002,
+     "passcode": ""
+    }
+
 
   
 ### Stuck on a pre 0.1.x version
