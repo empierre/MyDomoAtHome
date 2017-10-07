@@ -2433,6 +2433,7 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevSwitch(data.result[i]));
                                 break;
                             case 'Selector':
+                            case 'Selector Switch':
                                 result.push(DevMultiSwitch(data.result[i]));
                                 break;
                             case 'Media Player':
