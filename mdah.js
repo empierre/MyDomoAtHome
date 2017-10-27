@@ -99,6 +99,16 @@ function loadGlobalConf() {
 		return;
 	}
     }
+    if (fileExists('/var/packages/MyDomoAtHome/etc/config.json')) {
+	    try {
+		nconf.use('file', {file: '/etc/mydomoathome/config.json'}, onError);
+	    } catch (err) {
+		// This will not catch the throw!
+		logger.error("Global conf parsing issue !");
+		logger.error(err);
+		return;
+	}
+    }
 }
 function loadConf() {
     try {
