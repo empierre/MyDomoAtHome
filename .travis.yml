@@ -15,7 +15,7 @@ sources:
 before_install:
   - sudo apt-get -qq update
   - sudo apt-cache search libboost
-  - sudo apt-get install -y libboost-thread1.48.0 libboost-system1.48.0
+#  - sudo apt-get install -y libboost-thread1.48.0 libboost-system1.48.0
   - npm install -g npm@2.x
   - npm install express
   - npm install supervisor -g
@@ -26,11 +26,11 @@ before_install:
   - npm install gulp-jshint gulp-concat gulp-uglify gulp-rename --save-dev 
   - npm install underscore moment path request body-parser basic-auth errorhandler sync-request morgan http method-override
   - npm install
-  - mkdir domoticz
-  - cd domoticz
-  - wget https://releases.domoticz.com/releases/beta/domoticz_linux_x86_64.tgz
-  - tar xvzf domoticz_linux_x86_64.tgz
-  - wget http://www.e-nef.com/domoticz/mdah/domoticz.db
+#  - mkdir domoticz
+#  - cd domoticz
+#  - wget https://releases.domoticz.com/releases/beta/domoticz_linux_x86_64.tgz
+#  - tar xvzf domoticz_linux_x86_64.tgz
+#  - wget http://www.e-nef.com/domoticz/mdah/domoticz.db
   - cd ..
 notifications:
   recipients:
