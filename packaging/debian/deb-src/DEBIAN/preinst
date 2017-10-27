@@ -4,7 +4,7 @@ set -e
 npm config set loglevel error
 case "$1" in
     install)
-	npm cache clean
+	npm cache clean --force
 	if [ -d ~$SUDO_USER/.npm ]; then
 		sudo chown -R www-data ~$SUDO_USER/.npm
 	fi
