@@ -100,6 +100,7 @@ On RASPBIAN (Raspberry PI/PI2/PI3), please install first to have a stable nodeJS
 On all other (debian, ubuntu...), version 4 is required (testing/unstable are fine):
 
     sudo apt-get remove node
+    sudo dpkg -r nodejs npm
     curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
     sudo apt-get install -y nodejs
   
