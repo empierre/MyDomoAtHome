@@ -44,7 +44,7 @@ notifications:
 #after_failure: "cat /home/travis/builds/npm-debug.log"
 install: npm i
 before_script: 
-  - npm i
-  - domoticz/domoticz &
+#  - npm i
+#  - domoticz/domoticz &
   - node mdah.js &
 script: "grunt"
