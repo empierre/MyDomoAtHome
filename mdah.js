@@ -425,9 +425,10 @@ function DevMultiSwitch(data) {
 	
     var ret = data.LevelNames.split('|');
     var mydev = {MaxDimLevel: null, Action: null, graph: null, Selector: ret};
-    //console.log(mydev);
+     console.log(mydev);
     device_tab[data.idx] = mydev;
-    var lvl = (data.Level) / 10;
+    var lvl = Math.round((data.Level) / 10);
+     console.log(lvl);
     params.push({"key": "Value", "value": ret[lvl].toString()});
     params.push({"key": "Choices", "value": res});
     myfeed.params = params;
