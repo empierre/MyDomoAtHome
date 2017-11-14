@@ -2297,13 +2297,15 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                     //logger.info("dt "+dt+" "+value);
                             var feeds = {"date": dt, "value": value};
-                            params.push(feeds);
+			    if (feeds.value)
+                                params.push(feeds);
                         } else {
                             var value = data.result[i][key]|| data.result[i]['v'];
                             var dt = moment(data.result[i].d, 'YYYY-MM-DD HH:mm:ss').valueOf();
                             var feeds = {"date": dt, "value": value};
                     //logger.info("dt "+dt+" "+value);
-                            params.push(feeds);
+                            if (feeds.value)
+				params.push(feeds);
                         }
                     }
                 }
