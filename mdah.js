@@ -2310,7 +2310,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
 
 
             var rest = {};
-            rest.values = params;
+            rest.values = params.filter(function(e) {return e.value}) ;
             res.json(rest);
             }
         } else {
