@@ -32,7 +32,7 @@ The goal of this project is to provide a REST API to ImperiHome ISS that would a
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M1 Goal reached - first version in Perl Dancer after ISS has been announced
 
 ![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M2 Goal reached - full rewrite to node js with debian packaging, simpler install and upgrade, better performance, less dependencies
-- [X] Free  [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
+- [X] Free but you can show you like it ! [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 - [X] Multi-platform (Linux, Mac OS X, Windows)
   - [X] Dependency-less 
