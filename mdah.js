@@ -129,7 +129,7 @@ function getConf(){
     if (!(nconf.get('port') || (nconf.get('app_name')))) {
         logger.warn('basic configuration not found in /etc/mydomoathome/config.json, defaulting')
     } else {
-        app.set('port', process.env.PORT || nconf.get('port'));
+        app.set('port', nconf.get('port') || process.env.PORT );
         app_name = nconf.get('app_name') || "MyDomoAtHome";
         passcode = nconf.get('passcode') || passcode;
 	if (nconf.get('tempmode') == 'F') {
@@ -213,9 +213,9 @@ function getURL() {
   }
 
   if (secure) {
-    var url = protocole + '://' + secure + host + ':' + port + path + cmd;
+    var url = protocole + '://' + secure + host + ':' + app.get('port') + path + cmd;
   } else {
-    var url = protocole + '://' + host + ':' + port + path + cmd;
+    var url = protocole + '://' + host + ':' + app.get('port') + path + cmd;
   }
   if (process.env.DOMO) {
       return process.env.DOMO+"/json.htm";
@@ -2792,10 +2792,8 @@ if (nconf.get('https') == true) {
 } else {
  	server = http.createServer(app);
 }
-/*{
-    logger.info('MDAH port: ' + app.get('port'));
-});*/
-server.listen(port);
+
+server.listen(app.get('port'));
 
 server.on('error', function (e) {
     if (e.code == 'EADDRINUSE') {
