@@ -213,9 +213,9 @@ function getURL() {
   }
 
   if (secure) {
-    var url = protocole + '://' + secure + host + ':' + app.get('port') + path + cmd;
+    var url = protocole + '://' + secure + host + ':' + port + path + cmd;
   } else {
-    var url = protocole + '://' + host + ':' + app.get('port') + path + cmd;
+    var url = protocole + '://' + host + ':' + port + path + cmd;
   }
   if (process.env.DOMO) {
       return process.env.DOMO+"/json.htm";
