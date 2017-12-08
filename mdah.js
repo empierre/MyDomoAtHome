@@ -1,3 +1,4 @@
+
 //##############################################################################
 //  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
 //      Copyright (C) 2014-2017 Emmanuel PIERRE (domoticz@e-nef.com)
@@ -50,6 +51,7 @@ var device = {MaxDimLevel: null, Action: null, graph: null, Selector: null, Prot
 var app_name = "MyDomoAtHome";
 var port = process.env.PORT || '3002';
 var passcode=process.env.SEC||'';
+var tempmode = 'C';
 
 app.set('port', port);
 app.set('view engine', 'ejs');
