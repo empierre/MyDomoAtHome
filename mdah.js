@@ -2356,7 +2356,13 @@ app.get("/devices", auth, function (req, res) {
     };
     request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            var data = JSON.parse(body);
+            var data;
+	    try {
+		data = JSON.parse(body);
+	    } catch (e) {
+                //logger.info(e);
+		return console.error(e);
+	    }
             var result = [];
             //my ID string
             var myfeed = {"id": "S0", "name": "MyDomoAtHome", "type": "DevGenericSensor"};
