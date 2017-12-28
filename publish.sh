@@ -26,9 +26,10 @@ cd ..
 cd binary
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-$1.deb
 dpkg-sig -k A5435C9B --sign builder node-mydomoathome-latest.deb
-rm -f Packages Packages.gz Release InRelease Release.gpg
+rm -f Packages Packages.gz Packages.bz2 Release InRelease Release.gpg
 apt-ftparchive packages . > Packages
 gzip -c Packages > Packages.gz
+bzip2 -c Packages > Packages.bz2
 apt-ftparchive release . >Release
 gpg --clearsign -o InRelease Release
 gpg -abs -o Release.gpg Release
