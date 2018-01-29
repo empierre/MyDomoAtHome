@@ -54,7 +54,7 @@ M2 Goal reached - full rewrite to node js with debian packaging, simpler install
   - [X] RGB lamps (Limitless/Applamp/Hue) (depending on Domoticz)
   - [X] Push On buttons (depending on Imperihome)
 
-![Reached](https://cdn3.iconfinder.com/data/icons/10con/512/checkmark_tick-16.png) M3 Goal reached - full graphs, flexible room usage and UI improvements
+M3 Goal reached - full graphs, flexible room usage and UI improvements
 - [X] Support major type of sensors/feature of Domoticz
   - [X] Devices following planID
   - [X] Graphs
