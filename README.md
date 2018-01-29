@@ -118,7 +118,7 @@ And check again
 
 ### Installing the software Debian package .deb
 
-    wget -qO - http://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
+    wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
     sudo nano /etc/apt/sources.list
    
   Add the line:
