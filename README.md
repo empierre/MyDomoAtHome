@@ -89,7 +89,7 @@ M4 milestone will provide extended support to other platforms with Docker and Sy
 
 If not please do:
 
-On RASPBIAN (Raspberry PI/PI2/PI3), please install first to have a stable nodeJS :
+0. On RASPBIAN (Raspberry PI/PI2/PI3), please install first to have a stable nodeJS :
 
     sudo apt-get remove node
     wget -q http://www.e-nef.com/domoticz/mdah/nodejs_4.4.2_armhf.deb
@@ -118,21 +118,23 @@ And check again
 
 ### Installing the software Debian package .deb
 
+  1. start here:
+
     wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
     sudo nano /etc/apt/sources.list
    
-  Add the line:
+  2. Add the line:
   
     deb https://www.e-nef.com/domoticz/mdah/ /
 
-  Then:
+  3. Then:
 
     sudo apt-get update
     sudo apt-get install MyDomoAtHome 
 
   Important remark: do not install as root, but sudo as an unprivilegied user.
 
-  Edit the configuration file with your values:
+  4. Edit the configuration file with your values:
   
      sudo nano /etc/mydomoathome/config.json
   
@@ -171,7 +173,7 @@ And check again
 
 ### config.json
 
-  It works in a "key":"value" mode. Basic values are:
+  5. It works in a "key":"value" mode. Basic values are:
 
     {
       "app_name": "MyDomoAtHome",
@@ -188,6 +190,7 @@ And check again
       "passcode": ""
     }
 
+  - remark: if you have a configuration issue, check that you don't have },} as it is an error of syntax and should be }}
   - multi-instances: just change the app_name tag between instances
   - change the MDAH port: change the basic (top level) port (here 3002)
   - protected device code: change the passcode above
@@ -202,7 +205,7 @@ And check again
 
   - manage login/pass on domoticz, do the same in domoticz:path
 
-  - start in https mode:
+  - Variant: start in https mode:
 	
 ~~~~
       openssl genrsa 1024 > key.pem
