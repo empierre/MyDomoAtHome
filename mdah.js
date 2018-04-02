@@ -1324,7 +1324,7 @@ function DevTH(data) {
 			}
 			
             params = [];
-            params.push({"key": "Value", "value": data.Temp, "unit": "°"+tempmode,"graphable": "true"});
+            params.push({"key": "Value", "value": data.Temp, "unit": "Â°"+tempmode,"graphable": "true"});
             myfeed.params = params;
             return (myfeed);
         case 'Humidity':
@@ -1351,7 +1351,7 @@ function DevTH(data) {
 			
             var params = [];
             params.push({"key": "Hygro", "value": data.Humidity, "unit": "%", "graphable": "true"});
-            params.push({"key": "Temp", "value": data.Temp, "unit": "°"+tempmode, "graphable": "true"});
+            params.push({"key": "Temp", "value": data.Temp, "unit": "Â°"+tempmode, "graphable": "true"});
             myfeed.params = params;
             return (myfeed);
         case 'Temp + Humidity + Baro':
@@ -1366,7 +1366,7 @@ function DevTH(data) {
 			
             var params = [];
             params.push({"key": "Hygro", "value": data.Humidity, "unit": "%", "graphable": "true"});
-            params.push({"key": "Temp", "value": data.Temp, "unit": "°"+tempmode, "graphable": "true"});
+            params.push({"key": "Temp", "value": data.Temp, "unit": "Â°"+tempmode, "graphable": "true"});
             myfeed.params = params;
             combo.push(myfeed);
 
@@ -1524,7 +1524,7 @@ function DevWind(data) {
     var params = [];
     params.push({"key": "Speed", "value": data.Speed, "unit": "km/h", "graphable": "true"});
     if (typeof data.Direction !== 'undefined' && data.Direction !== null) {
-        params.push({"key": "Direction", "value": data.Direction.toString(), "unit": "°", "graphable": "true"});
+        params.push({"key": "Direction", "value": data.Direction.toString(), "unit": "Â°", "graphable": "true"});
     }
     myfeed.params = params;
     return (myfeed);
@@ -2390,6 +2390,9 @@ app.get("/devices", auth, function (req, res) {
                 }
 				
                 switch (data.result[i].Type) {
+					case 'Color Switch':
+						result.push(DevRGBLight(data.result[i]));
+						break;
                     case (data.result[i].Type.match(/Light/) || {}).input:
                         switch (data.result[i].SwitchType) {
                             case 'On/Off':
