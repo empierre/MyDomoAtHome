@@ -2390,6 +2390,9 @@ app.get("/devices", auth, function (req, res) {
                 }
 				
                 switch (data.result[i].Type) {
+					case 'Color Switch':
+						result.push(DevRGBLight(data.result[i]));
+						break;
                     case (data.result[i].Type.match(/Light/) || {}).input:
                         switch (data.result[i].SwitchType) {
                             case 'On/Off':
