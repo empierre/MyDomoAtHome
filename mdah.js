@@ -1524,7 +1524,7 @@ function DevWind(data) {
     var params = [];
     params.push({"key": "Speed", "value": data.Speed, "unit": "km/h", "graphable": "true"});
     if (typeof data.Direction !== 'undefined' && data.Direction !== null) {
-        params.push({"key": "Direction", "value": data.Direction.toString(), "unit": "Â°", "graphable": "true"});
+        params.push({"key": "Direction", "value": data.Direction.toString(), "unit": "°", "graphable": "true"});
     }
     myfeed.params = params;
     return (myfeed);
