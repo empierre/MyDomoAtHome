@@ -23,6 +23,7 @@
     "should": "^7.1.1",
     "supertest": "^1.1.0",
     "underscore": "1.4.4",
+    "is-base64": "0.0.4",
     "winston": "^2.1.1"
   },
   "repository": {
