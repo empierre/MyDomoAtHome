@@ -19,6 +19,7 @@
     "request": "^2.67.0",
     "sync-request": "3.0.0",
     "underscore": "1.4.4",
+    "is-base64": "0.0.4",
     "winston": "^1.0.1"
   },
   "devDependencies": {

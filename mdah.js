@@ -1,6 +1,6 @@
 //##############################################################################
 //  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
-//      Copyright (C) 2014-2017 Emmanuel PIERRE (domoticz@e-nef.com)
+//      Copyright (C) 2014-2018 Emmanuel PIERRE (domoticz@e-nef.com)
 //
 // MyDomoAtHome is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ var errorHandler = require('errorhandler');
 var requester = require('sync-request');
 var winston = require('winston');
 var pjson = require('./package.json');
+var isBase64 = require('is-base64');
 var app = express();
 global.logger = winston;
 
@@ -418,13 +419,19 @@ function DevMultiSwitch(data) {
     params.push({"key": "LastRun", "value": dt});
     var status;
     //console.log("L:"+data.Level);
-    var res = data.LevelNames.split('|').join(',');
+    var dataLevelNames;
+    if (isBase64(data.LevelNames)) {
+        dataLevelNames = new Buffer(data.LevelNames, 'base64').toString("ascii");; // Ta-da
+    } else {
+	dataLevelNames=data.LevelNames;
+    }
+    var res = dataLevelNames.split('|').join(',');
 	
 	if(data.LevelOffHidden) {
 		res = res.replace ("Off,","");
 	}
 	
-    var ret = data.LevelNames.split('|');
+    var ret = dataLevelNames.split('|');
     var mydev = {MaxDimLevel: null, Action: null, graph: null, Selector: ret};
      console.log(mydev);
     device_tab[data.idx] = mydev;
