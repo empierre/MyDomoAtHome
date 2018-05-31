@@ -2448,6 +2448,7 @@ app.get("/devices", auth, function (req, res) {
                                 result.push(DevMotion(data.result[i]));
                                 break;
                             case 'Door Lock':
+                            case 'Door Lock Inverted':
 								result.push(DevLock(data.result[i]));
 								break;
                             case 'Door Contact':
