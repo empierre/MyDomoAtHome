@@ -132,13 +132,12 @@ And check again
     sudo apt-get update
     sudo apt-get install MyDomoAtHome 
 
-  Important remark: do not install as root, but sudo as an unprivilegied user.
+  Important remark: do not install as root, but sudo as an unprivileged user.
 
   4. Edit the configuration file with your values:
   
-     sudo nano /etc/mydomoathome/config.json
-  
-     sudo service mydomoathome restart
+    sudo nano /etc/mydomoathome/config.json	
+    sudo service mydomoathome restart
 
 ### Installing the software on Synology
 
