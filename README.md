@@ -120,7 +120,7 @@ And check again
 
   1. start here:
 
-    wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.key | sudo apt-key add -
+    wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.mykey | sudo apt-key add -
     sudo nano /etc/apt/sources.list
    
   2. Add the line:
