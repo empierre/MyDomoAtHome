@@ -6,7 +6,7 @@ REST Gateway between Domoticz and Imperihome ISS
 ![REST](https://travis-ci.org/empierre/MyDomoAtHome.svg?branch=nodejs)
 ![DOCKER](https://img.shields.io/docker/pulls/epierre/iss-mdah.svg)
 ![DOCKER](https://img.shields.io/docker/stars/epierre/iss-mdah.svg)
-[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
+[![PayPal donate button](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 ![LICENSE](https://img.shields.io/github/license/empierre/MyDomoAtHome.svg)
 ![MP](https://img.shields.io/badge/Platform-Independant-green.svg)
@@ -32,7 +32,7 @@ The goal of this project is to provide a REST API to ImperiHome ISS that would a
 M1 Goal reached - first version in Perl Dancer after ISS has been announced
 
 M2 Goal reached - full rewrite to node js with debian packaging, simpler install and upgrade, better performance, less dependencies
-- [X] Free but you can show you like it ! [![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
+- [X] Free but you can show you like it ! [![PayPal donate button](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 - [X] Multi-platform (Linux, Mac OS X, Windows)
   - [X] Dependency-less 
@@ -120,7 +120,8 @@ And check again
 
   1. start here:
 
-    wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.mykey | sudo apt-key add -
+    wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.mykey |
+    sudo apt-key add gpg.mykey
     sudo nano /etc/apt/sources.list
    
   2. Add the line:
