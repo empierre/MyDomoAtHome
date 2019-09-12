@@ -75,7 +75,7 @@ M4 milestone will provide extended support to other platforms with Docker and Sy
   - [ ] Alarm pannel (partial with ImperiHome)
   - [ ] Auto updatable through button
 
-[![PayPal donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
+[![PayPal donate button](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=epierre@e-nef.com&currency_code=EUR&amount=&item_name=thanks "Donate once-off to this project using Paypal")
 
 # Standalone installation (PI, cubie, odroid, intel...)
 [![NPM](https://nodei.co/npm/node-mydomoathome.png?downloads=true&downloadRank=true)](https://nodei.co/npm/node-mydomoathome/)
