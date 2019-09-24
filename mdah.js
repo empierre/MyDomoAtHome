@@ -914,7 +914,7 @@ function DevGenericSensor(data) {
 }
 function DevGenericSensorT(data) {
 
-    var ptrn = /([0-9]+(?:\.[0-9]+)?) ?(.+)/;
+    var ptrn = /(-?[0-9]+(?:\.[0-9]+)?) ?(.+)/;
     var res = data.Data.match(ptrn).slice(1);
     var value = res[0];
     var suffix = res[1];
