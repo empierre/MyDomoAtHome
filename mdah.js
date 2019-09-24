@@ -1549,6 +1549,8 @@ function DevThermostat(data) {
     params.push({"key": "cursetpoint", "value": data.SetPoint.toString()});
     params.push({"key": "curtemp", "value": data.SetPoint.toString()});
     params.push({"key": "step", "value": "0.5"});
+    params.push({"key": "minVal", "value": "0"});
+    params.push({"key": "maxVal", "value": "100"});
     params.push({"key": "curmode", "value": "default"});
     params.push({"key": "availablemodes", "value": "default"});
     myfeed.params = params;
