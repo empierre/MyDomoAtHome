@@ -433,10 +433,10 @@ function DevMultiSwitch(data) {
 	
     var ret = dataLevelNames.split('|');
     var mydev = {MaxDimLevel: null, Action: null, graph: null, Selector: ret};
-     console.log(mydev);
+     //console.log(mydev);
     device_tab[data.idx] = mydev;
     var lvl = Math.round((data.Level) / 10);
-     console.log(lvl);
+     //console.log(lvl);
     params.push({"key": "Value", "value": ret[lvl].toString()});
     params.push({"key": "Choices", "value": res});
     myfeed.params = params;
@@ -711,7 +711,7 @@ function DevShutter(data) {
     } else {
 	    params.push({"key": "Level", "value": lvl.toString()});
     }
-    console.log(data.idx+" "+data.Status+" "+status+" "+lvl);
+    //console.log(data.idx+" "+data.Status+" "+status+" "+lvl);
     params.push({"key": "stopable", "value": stoppable.toString()});
     params.push({"key": "pulsable", "value": "0"});
 
