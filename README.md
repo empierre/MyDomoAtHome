@@ -98,6 +98,10 @@ On RASPBIAN (Raspberry PI/PI2/PI3), please install first to have a stable nodeJS
     sudo dpkg -i npm_2.14.7_armhf.deb
     sudo npm install -g npm@2.x
 
+On Debian buster :
+
+    sudo apt-get install nodejs npm
+
 On all other (debian, ubuntu...), version 4 is required (testing/unstable are fine):
 
     sudo apt-get remove node
@@ -108,8 +112,7 @@ On all other (debian, ubuntu...), version 4 is required (testing/unstable are fi
    The following commands install npm and then upgrade it to the latest 2.x version.
   
     sudo npm install -g npm@2.x
-  
-  Note: npm version 3 is the latest version, but is currently not recommended for use.
+        
 
 And check again 
 
@@ -120,8 +123,7 @@ And check again
 
   1. start here:
 
-    wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.mykey |
-    sudo apt-key add gpg.mykey
+    wget -qO - https://www.e-nef.com/domoticz/mdah/gpg.mykey | sudo apt-key add -
     sudo nano /etc/apt/sources.list
    
   2. Add the line:
