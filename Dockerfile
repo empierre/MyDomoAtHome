@@ -1,5 +1,5 @@
 # DOCKER-VERSION 0.3.4
-FROM node:4-slim
+FROM node:10-slim
 #FROM google/nodejs
 #FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
@@ -46,7 +46,7 @@ RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tz
 
 #RUN cachebuster=b953b35 git clone -b nodejs https://github.com/empierre/MyDomoAtHome.git dist
 #RUN cd MyDomoAtHome && bash run-once.sh
-RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
 #RUN apt-get install npm
 RUN npm install -g npm@2.x
