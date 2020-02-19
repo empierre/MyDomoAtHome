@@ -1,55 +1,119 @@
 {
   "name": "node-mydomoathome",
-  "description": "Rest interface for Domoticz to Imperihome",
-  "version": "0.0.12",
-  "private": false,
+  "description": "Imperihome ISS API gateway to Domoticz",
+  "version": "0.2.40",
   "dependencies": {
-    "assert": "^1.3.0",
-    "basic-auth": "^1.0.3",
+    "basic-auth": "1.0.3",
     "body-parser": "^1.5.2",
+    "cors": "^2.7.1",
+    "ejs": "^2.4.1",
     "errorhandler": "^1.1.1",
     "express": "^4.8.0",
     "express-session": "^1.7.2",
-    "forever": "0.15.1",
-    "jade": "^1.5.0",
+    "forever": "1.0.0",
     "method-override": "^2.1.2",
-    "mocha": "^2.3.4",
     "moment": "^2.10.6",
-    "mongoose": "^4.2.6",
     "morgan": "^1.6.1",
     "multer": "^0.1.3",
     "nconf": "^0.8.2",
     "request": "^2.67.0",
-    "should": "^7.1.1",
-    "supertest": "^1.1.0",
+    "sync-request": "3.0.0",
     "underscore": "1.4.4",
     "is-base64": "0.0.4",
-    "winston": "^2.1.1"
+    "winston": "^1.0.1"
+  },
+  "devDependencies": {
+    "assert": "^1.3.0",
+    "chai": "^3.0.0",
+    "grunt": "^1.0.4",
+    "grunt-express-server": "^0.5.1",
+    "grunt-simple-mocha": "^0.4.0",
+    "gulp": "4.0.2",
+    "gulp-jshint": "^2.0.0",
+    "istanbul": "^0.3.14",
+    "jshint": "^2.9.1",
+    "json-loader": "^0.5.4",
+    "mocha": "^6.2.0",
+    "should": "^6.0.3",
+    "superagent": ">=3.7.0",
+    "webpack": "^1.13.2",
+    "xunit-file": "0.0.6"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/empierre/MyDomoAtHome.git"
   },
+  "directories": {
+    "bin": "./bin",
+    "routes": "./routes"
+  },
   "author": "Emmanuel PIERRE",
+  "contributors": [
+    {
+      "name": "Emmanuel PIERRE",
+      "email": "domoticz@e-nef.com"
+    },
+    {
+      "name": "jonferreira"
+    }
+  ],
   "license": "GPL-2.0",
   "bugs": {
     "url": "https://github.com/empierre/MyDomoAtHome/issues"
   },
   "homepage": "https://github.com/empierre/MyDomoAtHome#readme",
   "main": "mdah.js",
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "grunt",
+    "release": "standard-version",
     "start": "nodejs mdah.js"
   },
   "node_deb": {
-    "start_command": "/usr/bin/nodejs mdah.js"
+    "start_command": "nodejs mdah.js"
   },
   "keywords": [
     "Imperihome",
     "Domoticz",
-    "ISS",
+    "ISS API",
     "DSM",
+    "IoT",
     "Synology"
-  ]
+  ],
+  "jshintConfig": {
+    "node": true,
+    "undef": true,
+    "noarg": true,
+    "white": true,
+    "esnext": true,
+    "strict": true,
+    "newcap": true,
+    "nonbsp": true,
+    "eqeqeq": true,
+    "unused": true,
+    "maxlen": 80,
+    "indent": 2,
+    "bitwise": true,
+    "noempty": true,
+    "latedef": "nofunc",
+    "maxdepth": 5,
+    "quotmark": "single",
+    "trailing": true,
+    "camelcase": true,
+    "maxparams": 8,
+    "globalstrict": true,
+    "maxcomplexity": 10,
+    "maxstatements": 40,
+    "predef": [
+      "ApiError",
+      "ActErr",
+      "logger",
+      "util",
+      "sendErrorAndLog",
+      "shipError",
+      "sendJSONResponse",
+      "config",
+      "MessageTypes",
+      "safeGet"
+    ]
+  }
 }
