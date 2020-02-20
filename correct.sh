@@ -5,9 +5,9 @@ if [ $# -eq 0 ]
 fi
 git commit -a
 ver=$1
-cd ./packaging/nodejs/ && sudo bash ./redeb.sh
+cd ./packaging/debian/ && sudo bash ./redeb.sh
 cd ../..
-mv -f ./packaging/nodejs/node-mydomoathome-1.deb ./binary/
+mv -f ./packaging/debian/node-mydomoathome-1.deb ./binary/
 cp -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-latest.deb
 mv -f ./binary/node-mydomoathome-1.deb ./binary/node-mydomoathome-$1.deb
 cd binary
