@@ -50,8 +50,8 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs
 #RUN apt-get install npm
 RUN npm install -g npm@2.x
-RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-.deb
-RUN dpkg -i node-mydomoathome-.deb
+RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.2.42.deb
+RUN dpkg -i node-mydomoathome-0.2.42.deb
 RUN mv /etc/mydomoathome/config.json /etc/mydomoathome/config.json.old
 VOLUME /etc/mydomoathome/
 
