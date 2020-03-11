@@ -18,13 +18,12 @@ Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs
 ![MyDomoAtHome](http://domoticz.com/wiki/images/f/f1/Imperihome2.png "MyDomoAtHome ISS")
 
 # Important update
-Our repository has moved to https, so if you have an update message, please do the following:
 
-    sudo nano /etc/apt/sources.list
+More and more npm (node package manager, needed with node interpreter) are making inssues while installing MDAH, breaking it without any change.
 
-Add modify to https the line to have this :
-
-    deb https://www.e-nef.com/domoticz/mdah/ /
+if NPM version is below 2.x.x please do the following, and then relaunch the upgrade through apt !
+> npm -v 1.4.21
+sudo npm install -g npm
 
 # Features and goals
 The goal of this project is to provide a REST API to ImperiHome ISS that would allow to see the current state of sensors and interact with them in case of an actuator. 
