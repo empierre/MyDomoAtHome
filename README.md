@@ -22,8 +22,9 @@ Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs
 More and more npm (node package manager, needed with node interpreter) are making inssues while installing MDAH, breaking it without any change.
 
 if NPM version is below 2.x.x please do the following, and then relaunch the upgrade through apt !
-> npm -v 1.4.21
-sudo npm install -g npm
+
+    npm -v 1.4.21
+    sudo npm install -g npm
 
 # Features and goals
 The goal of this project is to provide a REST API to ImperiHome ISS that would allow to see the current state of sensors and interact with them in case of an actuator. 
