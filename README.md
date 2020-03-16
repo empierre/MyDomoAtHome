@@ -21,7 +21,7 @@ Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs
 
 More and more npm (node package manager, needed with node interpreter) are making inssues while installing MDAH, breaking it without any change.
 
-if NPM version is below 2.x.x please do the following, and then relaunch the upgrade through apt !
+if NPM version is below 2.x.x and you're running *Buster* please do the following, and then relaunch the upgrade through apt !
 
     npm -v 1.4.21
     sudo npm install -g npm
