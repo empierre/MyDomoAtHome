@@ -19,4 +19,6 @@ gzip -c Packages > Packages.gz
 apt-ftparchive release . >Release
 gpg --clearsign -o InRelease Release
 gpg -abs -o Release.gpg Release
+./make.buster.sh
+./make.oldstable.sh
 sitecopy -u mdah

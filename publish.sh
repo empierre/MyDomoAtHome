@@ -33,6 +33,8 @@ bzip2 -c Packages > Packages.bz2
 apt-ftparchive release . >Release
 gpg --clearsign -o InRelease Release
 gpg -abs -o Release.gpg Release
+./make.buster.sh
+./make.oldstable.sh
 sitecopy -u mdah
 cd ..
 #NPM repository
