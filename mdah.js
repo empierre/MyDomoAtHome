@@ -2754,8 +2754,14 @@ if (nconf.get("debug") === true)
     extended: false
 }));
 
+
+const { spawn } = require("child_process");
+const ls = spawn("npm", ["-v"]);
 logger.info("Domoticz server: " + getURL());
 logger.info("Node version: " + process.versions.node);
+ls.stdout.on("data", data => {
+    logger.info("NPM version: " + `${data}`);
+});
 logger.info("MDAH version: " + app_name + " " + ver);
 logger.info("OS version: " + os.type() + " " + os.platform() + " " + os.release());
 if (process.env.CONTAINER) {
