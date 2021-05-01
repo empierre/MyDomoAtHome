@@ -1,5 +1,5 @@
 # DOCKER-VERSION 0.3.4
-FROM node:10-slim
+FROM node:12-slim
 #FROM google/nodejs
 #FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
@@ -17,7 +17,7 @@ RUN apt-get install -yq curl
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get install tzdata
 RUN apt-get -y install git git-core
-RUN apt-get -y install wget curl
+RUN apt-get -y install wget curl 
 
 ##################################################
 # Set environment variables                      #
@@ -46,12 +46,12 @@ RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tz
 
 #RUN cachebuster=b953b35 git clone -b nodejs https://github.com/empierre/MyDomoAtHome.git dist
 #RUN cd MyDomoAtHome && bash run-once.sh
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
-#RUN apt-get install npm
-RUN npm install -g npm@2.x
-RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.2.43.deb
-RUN dpkg -i node-mydomoathome-0.2.43.deb
+RUN apt-get install -y npm
+RUN npm install -g npm@6.x
+RUN wget http://www.e-nef.com/domoticz/mdah/dists/buster/contrib/binary-all/node-mydomoathome-0.2.43.deb
+RUN dpkg --force-all -i node-mydomoathome-0.2.43.deb
 RUN mv /etc/mydomoathome/config.json /etc/mydomoathome/config.json.old
 VOLUME /etc/mydomoathome/
 
