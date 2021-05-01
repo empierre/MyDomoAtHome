@@ -39,6 +39,7 @@ cd ..
 sitecopy -u mdah
 #cd ..
 #NPM repository
-npm publish 
+node --max-old-space-size=8000 $(which npm) publish
+
 curl -X POST --data-urlencode 'payload={"channel": "#general", "username": "webhookbot", "text": "New package version '"$1"' available at <http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb|node-mydomoathome-'"$1"'.deb>", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
 #./make.docker.sh

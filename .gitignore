@@ -15,3 +15,5 @@ gen
 coverage
 credentials.json
 locales/zz-ZZ
+binary-old/*
+
