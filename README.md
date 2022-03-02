@@ -17,7 +17,15 @@ REST Gateway between Domoticz and Imperihome ISS
 Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs/README_FR.md
 ![MyDomoAtHome](http://domoticz.com/wiki/images/f/f1/Imperihome2.png "MyDomoAtHome ISS")
 
-# Important update
+# Important update for Bullseyes
+
+Do the following to install
+
+    wget https://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.2.46.deb
+    sudo dpkg -i node-mydomoathome-0.2.46.deb
+
+
+# Important update for Buster
 
 More and more npm (node package manager, needed with node interpreter) are making inssues while installing MDAH, breaking it without any change.
 
