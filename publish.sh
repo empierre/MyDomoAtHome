@@ -36,6 +36,7 @@ gpg -abs -o Release.gpg Release
 cd ..
 ./make.buster.sh
 ./make.oldstable.sh
+cp InRelease Release /home/in/prod/e-nef/domoticz/mdah
 sitecopy -u mdah
 #cd ..
 #NPM repository

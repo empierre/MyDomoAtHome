@@ -4,7 +4,7 @@ FROM node:12-slim
 #FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
-LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="1.0"
+LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.2.45"
 
 ##################################################
 # Install tools                                  #
@@ -50,8 +50,8 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y npm
 RUN npm install -g npm@6.x
-RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.2.45.deb
-RUN dpkg --force-all -i node-mydomoathome-0.2.43.deb
+RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.2.46.deb
+RUN dpkg --force-all -i node-mydomoathome-0.2.45.deb
 RUN mv /etc/mydomoathome/config.json /etc/mydomoathome/config.json.old
 VOLUME /etc/mydomoathome/
 
