@@ -21,8 +21,10 @@ Documentation en Français: https://github.com/empierre/MyDomoAtHome/blob/nodejs
 
 Do the following to install
 
-    wget https://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.2.46.deb
-    sudo dpkg -i node-mydomoathome-0.2.46.deb
+    curl -fsSL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    wget https://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.2.48.deb
+    sudo dpkg -i node-mydomoathome-0.2.48.deb
 
 
 # Important update for Buster
