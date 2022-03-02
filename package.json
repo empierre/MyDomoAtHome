@@ -1,7 +1,7 @@
 {
   "name": "node-mydomoathome",
   "description": "Imperihome ISS API gateway to Domoticz",
-  "version": "0.2.45",
+  "version": "0.2.46",
   "dependencies": {
     "basic-auth": "1.0.3",
     "body-parser": "^1.18.2",
@@ -35,6 +35,7 @@
     "json-loader": "^0.5.4",
     "mocha": "^6.2.0",
     "should": "^6.0.3",
+    "standard-version": "^9.3.2",
     "superagent": ">=3.8.1",
     "webpack": "^5.36.2",
     "xunit-file": "0.0.6"
