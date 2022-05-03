@@ -16,7 +16,11 @@
     "moment": "^2.29.1",
     "morgan": "^1.9.1",
     "multer": "^1.0.0",
+<<<<<<< HEAD
     "nconf": "^0.12.0",
+=======
+    "nconf": "^0.11.4",
+>>>>>>> 474e53b18f07cc490052e0df8a4ea1c1e2f30309
     "request": "^2.82.0",
     "sync-request": "3.0.0",
     "underscore": "1.12.1",
@@ -25,7 +29,7 @@
   "devDependencies": {
     "assert": "^1.3.0",
     "chai": "^3.0.0",
-    "grunt": "^1.3.0",
+    "grunt": "^1.5.2",
     "grunt-express-server": "^0.5.1",
     "grunt-simple-mocha": "^0.4.0",
     "gulp": "^3.9.1",
