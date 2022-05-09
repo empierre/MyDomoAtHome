@@ -10,7 +10,7 @@
     "errorhandler": "^1.1.1",
     "express": "^4.17.1",
     "express-session": "^1.15.6",
-    "forever": "^0.15.3",
+    "forever": "^4.0.3",
     "is-base64": "0.0.4",
     "method-override": "^2.3.10",
     "moment": "^2.29.1",
