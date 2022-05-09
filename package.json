@@ -10,17 +10,13 @@
     "errorhandler": "^1.1.1",
     "express": "^4.17.1",
     "express-session": "^1.15.6",
-    "forever": "^0.15.3",
+    "forever": "^4.0.3",
     "is-base64": "0.0.4",
     "method-override": "^2.3.10",
     "moment": "^2.29.1",
     "morgan": "^1.9.1",
     "multer": "^1.0.0",
-<<<<<<< HEAD
     "nconf": "^0.12.0",
-=======
-    "nconf": "^0.11.4",
->>>>>>> 474e53b18f07cc490052e0df8a4ea1c1e2f30309
     "request": "^2.82.0",
     "sync-request": "3.0.0",
     "underscore": "1.12.1",
