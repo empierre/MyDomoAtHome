@@ -4,7 +4,7 @@
   "version": "0.2.49",
   "dependencies": {
     "basic-auth": "1.0.3",
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.20.0",
     "cors": "^2.7.1",
     "ejs": "^3.1.6",
     "errorhandler": "^1.1.1",
