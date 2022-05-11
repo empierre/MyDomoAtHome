@@ -4,14 +4,14 @@
   "version": "0.2.49",
   "dependencies": {
     "basic-auth": "1.0.3",
-    "body-parser": "^1.18.2",
-    "cors": "^2.8.5",
+    "body-parser": "^1.20.0",
+    "cors": "^2.7.1",
     "ejs": "^3.1.6",
     "errorhandler": "^1.1.1",
     "express": "^4.17.1",
     "express-session": "^1.15.6",
     "forever": "^4.0.3",
-    "is-base64": "0.0.4",
+    "is-base64": "0.1.0",
     "method-override": "^2.3.10",
     "moment": "^2.29.1",
     "morgan": "^1.9.1",
@@ -19,7 +19,7 @@
     "nconf": "^0.12.0",
     "request": "^2.82.0",
     "sync-request": "3.0.0",
-    "underscore": "1.12.1",
+    "underscore": "1.13.2",
     "winston": "^3.7.2"
   },
   "devDependencies": {
