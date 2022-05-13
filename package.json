@@ -8,7 +8,7 @@
     "cors": "^2.7.1",
     "ejs": "^3.1.6",
     "errorhandler": "^1.1.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.15.6",
     "forever": "^4.0.3",
     "is-base64": "0.1.0",
