@@ -1,5 +1,5 @@
 # DOCKER-VERSION 0.3.4
-FROM node:18.1.0-slim
+FROM node:18.3-slim
 #FROM google/nodejs
 #FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
