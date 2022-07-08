@@ -9,7 +9,7 @@
     "ejs": "^3.1.8",
     "errorhandler": "^1.1.1",
     "express": "^4.18.1",
-    "express-session": "^1.15.6",
+    "express-session": "^1.17.3",
     "forever": "^4.0.3",
     "is-base64": "0.1.0",
     "method-override": "^2.3.10",
