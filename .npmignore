@@ -28,3 +28,4 @@ superagent
 webpack
 xunit-file
 binary-old/**/*
+git-release.sh
