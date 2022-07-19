@@ -7,6 +7,6 @@ Replaces: MyDomoAtHome
 Architecture: all
 Homepage: https://github.com/empierre/MyDomoAtHome
 Installed-Size: SIZE
-Depends: nodejs (>= 8.11), npm (>= 2.4.17)
+Depends: nodejs (>= 8.11)
 Maintainer: Emmanuel PIERRE <epierre@e-nef.com>
 Description: Node MyDomoAtHome Gateway between Imperihome ISS and Domoticz. Exist also as NPM package, Docker image or Synology package
