@@ -21,7 +21,7 @@
     "sync-request": "3.0.1",
     "underscore": "1.13.6",
     "winston": "^3.8.1",
-    "minimist": ">=1.2.6",
+    "minimist": ">=1.2.8",
     "minimatch": ">=5.1.1",
     "glob-parent": ">=5.1.2"
   },
@@ -42,7 +42,7 @@
     "superagent": ">=3.8.1",
     "webpack": "^5.36.2",
     "xunit-file": "0.0.6",
-    "minimist": ">=1.2.6",
+    "minimist": ">=1.2.8",
     "minimatch": ">=5.1.1",
     "glob-parent": ">=5.1.2"
   },
