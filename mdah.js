@@ -65,7 +65,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 if (process.env.MDAH_HOME) {
     app.use(express.static(path.join(process.env.MDAH_HOME + '/public')));
     app.set('views', path.resolve(process.env.MDAH_HOME + '/views'));
-    logger.add(winston.transports.File, {filename: process.env.MDAH_HOME+'/var/usage.log'});
+    logger.add(winston.transports.File({filename: process.env.MDAH_HOME+'/var/usage.log'}));
 } else {
     app.use(express.static(path.join(__dirname + '/public')));
     app.set('views', path.resolve(__dirname + '/views'));
@@ -431,7 +431,7 @@ function DevMultiSwitch(data) {
     //console.log("L:"+data.Level);
     var dataLevelNames;
     if (isBase64(data.LevelNames)) {
-        dataLevelNames = new Buffer(data.LevelNames, 'base64').toString("ascii");; // Ta-da
+        dataLevelNames = Buffer.from(data.LevelNames, 'base64').toString("ascii");; // Ta-da
     } else {
 	dataLevelNames=data.LevelNames;
     }
@@ -2749,7 +2749,7 @@ getConf();
 
 
 if (nconf.get("debug") === true)
-    app.use(logger('dev'));
+    //app.use(logger('dev'));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
     extended: false
@@ -2833,7 +2833,7 @@ if (nconf.get('https') == true) {
  	server = http.createServer(app);
 }
 
-server.listen(app.get('port'));
+server.listen(app.get('port'),my_ip);
 
 server.on('error', function (e) {
     if (e.code == 'EADDRINUSE') {
@@ -2841,7 +2841,7 @@ server.on('error', function (e) {
 
         setTimeout(function () {
             server.close();
-            server.listen(port);
+            server.listen(port,my_ip);
         }, 4000);
     }
 });
