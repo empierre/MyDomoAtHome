@@ -1,7 +1,7 @@
 
 //##############################################################################
 //  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
-//      Copyright (C) 2014-2020 Emmanuel PIERRE (domoticz@e-nef.com)
+//      Copyright (C) 2014-2023 Emmanuel PIERRE (domoticz@e-nef.com)
 //
 // MyDomoAtHome is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ if (process.env.MDAH_HOME) {
 } else {
     app.use(express.static(path.join(__dirname + '/public')));
     app.set('views', path.resolve(__dirname + '/views'));
-    logger.add(winston.transports.File, {filename: '/var/log/mydomoathome/usage.log'});
+    logger.add(new winston.transports.File({filename: '/var/log/mydomoathome-usage.log'}));
 
 }
 
