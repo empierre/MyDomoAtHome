@@ -1630,12 +1630,9 @@ function DevMultiSwitchHeating(data) {
 }
 
 function getDeviceType(deviceId) {
-    logger.info("In");
     var url = getURL() + "?type=command&param=getdevices&rid=" + deviceId;
-    logger.info("Out "+url);
     var res = requester('GET', url);
     if (res.statusCode!=200) {return({})};
-    logger.info(url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].Type);
 };
@@ -2121,9 +2118,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
 	type='temp';
 	key='ba';
     } else {
-    logger.info("P3 "+deviceId);
 	type=getDeviceType(deviceId).toLowerCase();
-    logger.info("P3 out");
     }
     var ptype = type;
     var curl = "&method=1";
