@@ -261,7 +261,7 @@ function getLastVersion() {
     }
 }
 function getSettingsSecPassword() {
-        var url = getURL(req) +  "?type=settings";
+        var url = getURL(req) +  "?type=command&param=getsettings";
         var res = requester('GET', url);
     	if (res.statusCode!=200) {return({})};
         logger.info(url);
@@ -1630,7 +1630,9 @@ function DevMultiSwitchHeating(data) {
 }
 
 function getDeviceType(deviceId) {
-    var url = getURL(req) +  "?type=devices&rid=" + deviceId;
+    logger.info("In");
+    var url = getURL() + "?type=command&param=getdevices&rid=" + deviceId;
+    logger.info("Out "+url);
     var res = requester('GET', url);
     if (res.statusCode!=200) {return({})};
     logger.info(url);
@@ -1639,7 +1641,8 @@ function getDeviceType(deviceId) {
 };
 
 function getDeviceSubType(deviceId) {
-    var url = getURL(req) + "?type=devices&rid=" + deviceId;
+    var url = getURL() + "?type=command&param=devices&rid=" + deviceId;
+    logger.info(url);
     var res = requester('GET', url);
     if (res.statusCode!=200) {return({})};
     var js = JSON.parse(res.body.toString('utf-8'));
@@ -1647,7 +1650,7 @@ function getDeviceSubType(deviceId) {
 };
 
 function DevCamera(req) {
-    var url = getURL(req) + "?type=cameras&rid=";
+    var url = getURL(req) + "?type=command&param=getcameras&rid=";
     var res = requester('GET', url);
     if (res.statusCode!=200) {return({})};
     var data = JSON.parse(res.body.toString('utf-8'));
@@ -1722,7 +1725,7 @@ app.get("/rooms", auth, function (req, res) {
     //TODO: add hidden rooms
     res.type('json');    
     var options = {
-    url: getURL(req)+"?type=plans&order=name&used=true",
+    url: getURL(req)+"?type=command&param=getplans&order=name&used=true",
 	  headers: {
 	  'User-Agent': 'request'
           }
@@ -1940,7 +1943,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setSetPoint':
             res.type('json');
             var options = {
-                url: getURL(req) + "?type=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam +"&passcode="+passcode,
+                url: getURL(req) + "?type=command&param=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam +"&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -2118,12 +2121,13 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
 	type='temp';
 	key='ba';
     } else {
-	type =getDeviceType(deviceId).toLowerCase();
+    logger.info("P3 "+deviceId);
+	type=getDeviceType(deviceId).toLowerCase();
+    logger.info("P3 out");
     }
     var ptype = type;
     var curl = "&method=1";
     logger.info(deviceId +"/"+PLine+" "+type+" "+ptype);
-
 
     if ((type === "lux") || (type === "energy") || (type == "rfxmeter")) {
         type = "counter";
@@ -2157,7 +2161,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     }
     res.type('json');
     var options = {
-        url: getURL(req) + "?type=graph&sensor=" + type + curl + "&idx=" + deviceId + "&range=" + range,
+        url: getURL(req) + "?type=command&param=graph&sensor=" + type + curl + "&idx=" + deviceId + "&range=" + range,
         headers: {
             'User-Agent': 'request'
         }
@@ -2194,7 +2198,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     		if ((deviceId)&&((deviceId.match(/_1/)))) {
 			key='ba';
 		}
-                //logger.info('rawkey='+key+" "+type+" "+ptype);
+                logger.info('rawkey='+key+" "+type+" "+ptype);
                 if (key === 'tm') {key='te';}
                 if (paramKey === 'temp') {
                     key = 'te';
