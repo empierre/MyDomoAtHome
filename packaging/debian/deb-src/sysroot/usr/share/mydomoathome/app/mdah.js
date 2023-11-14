@@ -1,6 +1,7 @@
+
 //##############################################################################
 //  This file is part of MyDomoAtHome - https://github.com/empierre/MyDomoAtHome
-//      Copyright (C) 2014-2018 Emmanuel PIERRE (domoticz@e-nef.com)
+//      Copyright (C) 2014-2023 Emmanuel PIERRE (domoticz@e-nef.com)
 //
 // MyDomoAtHome is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -64,11 +65,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 if (process.env.MDAH_HOME) {
     app.use(express.static(path.join(process.env.MDAH_HOME + '/public')));
     app.set('views', path.resolve(process.env.MDAH_HOME + '/views'));
-    logger.add(winston.transports.File, {filename: process.env.MDAH_HOME+'/var/usage.log'});
+    logger.add(winston.transports.File({filename: process.env.MDAH_HOME+'/var/usage.log'}));
 } else {
     app.use(express.static(path.join(__dirname + '/public')));
     app.set('views', path.resolve(__dirname + '/views'));
-    logger.add(winston.transports.File, {filename: '/var/log/mydomoathome/usage.log'});
+    logger.add(new winston.transports.File({filename: '/var/log/mydomoathome/usage.log'}));
 
 }
 
@@ -260,7 +261,7 @@ function getLastVersion() {
     }
 }
 function getSettingsSecPassword() {
-        var url = getURL(req) +  "?type=settings";
+        var url = getURL(req) +  "?type=command&param=getsettings";
         var res = requester('GET', url);
     	if (res.statusCode!=200) {return({})};
         logger.info(url);
@@ -430,7 +431,7 @@ function DevMultiSwitch(data) {
     //console.log("L:"+data.Level);
     var dataLevelNames;
     if (isBase64(data.LevelNames)) {
-        dataLevelNames = new Buffer(data.LevelNames, 'base64').toString("ascii");; // Ta-da
+        dataLevelNames = Buffer.from(data.LevelNames, 'base64').toString("ascii");; // Ta-da
     } else {
 	dataLevelNames=data.LevelNames;
     }
@@ -1629,16 +1630,16 @@ function DevMultiSwitchHeating(data) {
 }
 
 function getDeviceType(deviceId) {
-    var url = getURL(req) +  "?type=devices&rid=" + deviceId;
+    var url = getURL() + "?type=command&param=getdevices&rid=" + deviceId;
     var res = requester('GET', url);
     if (res.statusCode!=200) {return({})};
-    logger.info(url);
     var js = JSON.parse(res.body.toString('utf-8'));
     return (js.result[0].Type);
 };
 
 function getDeviceSubType(deviceId) {
-    var url = getURL(req) + "?type=devices&rid=" + deviceId;
+    var url = getURL() + "?type=command&param=devices&rid=" + deviceId;
+    logger.info(url);
     var res = requester('GET', url);
     if (res.statusCode!=200) {return({})};
     var js = JSON.parse(res.body.toString('utf-8'));
@@ -1646,7 +1647,7 @@ function getDeviceSubType(deviceId) {
 };
 
 function DevCamera(req) {
-    var url = getURL(req) + "?type=cameras&rid=";
+    var url = getURL(req) + "?type=command&param=getcameras&rid=";
     var res = requester('GET', url);
     if (res.statusCode!=200) {return({})};
     var data = JSON.parse(res.body.toString('utf-8'));
@@ -1721,7 +1722,7 @@ app.get("/rooms", auth, function (req, res) {
     //TODO: add hidden rooms
     res.type('json');    
     var options = {
-    url: getURL(req)+"?type=plans&order=name&used=true",
+    url: getURL(req)+"?type=command&param=getplans&order=name&used=true",
 	  headers: {
 	  'User-Agent': 'request'
           }
@@ -1939,7 +1940,7 @@ app.get("/devices/:deviceId/action/:actionName/:actionParam?", auth, function (r
         case 'setSetPoint':
             res.type('json');
             var options = {
-                url: getURL(req) + "?type=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam +"&passcode="+passcode,
+                url: getURL(req) + "?type=command&param=setused&idx=" + deviceId + "&used=true&setpoint=" + actionParam +"&passcode="+passcode,
                 headers: {
                     'User-Agent': 'request'
                 }
@@ -2117,12 +2118,11 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
 	type='temp';
 	key='ba';
     } else {
-	type =getDeviceType(deviceId).toLowerCase();
+	type=getDeviceType(deviceId).toLowerCase();
     }
     var ptype = type;
     var curl = "&method=1";
     logger.info(deviceId +"/"+PLine+" "+type+" "+ptype);
-
 
     if ((type === "lux") || (type === "energy") || (type == "rfxmeter")) {
         type = "counter";
@@ -2156,7 +2156,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     }
     res.type('json');
     var options = {
-        url: getURL(req) + "?type=graph&sensor=" + type + curl + "&idx=" + deviceId + "&range=" + range,
+        url: getURL(req) + "?type=command&param=graph&sensor=" + type + curl + "&idx=" + deviceId + "&range=" + range,
         headers: {
             'User-Agent': 'request'
         }
@@ -2193,7 +2193,7 @@ app.get("/devices/:deviceId/:paramKey/histo/:startdate/:enddate", auth, function
     		if ((deviceId)&&((deviceId.match(/_1/)))) {
 			key='ba';
 		}
-                //logger.info('rawkey='+key+" "+type+" "+ptype);
+                logger.info('rawkey='+key+" "+type+" "+ptype);
                 if (key === 'tm') {key='te';}
                 if (paramKey === 'temp') {
                     key = 'te';
@@ -2748,14 +2748,20 @@ getConf();
 
 
 if (nconf.get("debug") === true)
-    app.use(logger('dev'));
+    //app.use(logger('dev'));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
     extended: false
 }));
 
+
+const { spawn } = require("child_process");
+const ls = spawn("npm", ["-v"]);
 logger.info("Domoticz server: " + getURL());
 logger.info("Node version: " + process.versions.node);
+ls.stdout.on("data", data => {
+    logger.info("NPM version: " + `${data}`);
+});
 logger.info("MDAH version: " + app_name + " " + ver);
 logger.info("OS version: " + os.type() + " " + os.platform() + " " + os.release());
 if (process.env.CONTAINER) {
@@ -2826,7 +2832,7 @@ if (nconf.get('https') == true) {
  	server = http.createServer(app);
 }
 
-server.listen(app.get('port'));
+server.listen(app.get('port'),my_ip);
 
 server.on('error', function (e) {
     if (e.code == 'EADDRINUSE') {
@@ -2834,7 +2840,7 @@ server.on('error', function (e) {
 
         setTimeout(function () {
             server.close();
-            server.listen(port);
+            server.listen(port,my_ip);
         }, 4000);
     }
 });
