@@ -69,7 +69,7 @@ if (process.env.MDAH_HOME) {
 } else {
     app.use(express.static(path.join(__dirname + '/public')));
     app.set('views', path.resolve(__dirname + '/views'));
-    logger.add(new winston.transports.File({filename: '/var/log/mydomoathome-usage.log'}));
+    logger.add(new winston.transports.File({filename: '/var/log/mydomoathome/usage.log'}));
 
 }
 

@@ -1,10 +1,10 @@
 # DOCKER-VERSION 0.3.4
-FROM node:current-bullseye-slim
+FROM node:current-bookworm-slim
 #FROM google/nodejs
 #FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
-LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.2.45"
+LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.3.1"
 
 ##################################################
 # Install tools                                  #
@@ -46,12 +46,17 @@ RUN echo "Europe/Paris" > /etc/timezone && dpkg-reconfigure -f noninteractive tz
 
 #RUN cachebuster=b953b35 git clone -b nodejs https://github.com/empierre/MyDomoAtHome.git dist
 #RUN cd MyDomoAtHome && bash run-once.sh
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+#RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get install -y ca-certificates curl gnupg
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update
 RUN apt-get install -y nodejs
-RUN apt-get install -y npm
+#RUN apt-get install -y npm
 RUN npm install -g npm@6.x
-RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.3.1.deb
-RUN dpkg --force-all -i node-mydomoathome-0.2.45.deb
+RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.3.2.deb
+RUN dpkg --force-all -i node-mydomoathome-0.3.1.deb
 RUN mv /etc/mydomoathome/config.json /etc/mydomoathome/config.json.old
 VOLUME /etc/mydomoathome/
 

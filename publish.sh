@@ -37,10 +37,10 @@ cd ..
 ./make.buster.sh
 ./make.oldstable.sh
 cp InRelease Release /home/in/prod/e-nef/domoticz/mdah
-sitecopy -u mdah
+sitecopy -ukk mdah
 #cd ..
 #NPM repository
 node --max-old-space-size=8000 $(which npm) publish
 
-curl -X POST --data-urlencode 'payload={"channel": "#general", "username": "webhookbot", "text": "New package version '"$1"' available at <http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb|node-mydomoathome-'"$1"'.deb>", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
+curl -X POST --data-urlencode 'payload={"channel": "#general", "username": "webhookbot", "text": "New package version '"$1"' available at <http://www.e-nef.com/domoticz/mdah/node-mydomoathome-latest.deb|node-mydomoathome-'"$1"'.deb>", "icon_emoji": ":ghost:"}' 'https://hooks.slack.com/services/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'
 #./make.docker.sh
