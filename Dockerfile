@@ -4,7 +4,7 @@ FROM node:current-bookworm-slim
 #FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
-LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.3.4"
+LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.3.5"
 
 ##################################################
 # Install tools                                  #
