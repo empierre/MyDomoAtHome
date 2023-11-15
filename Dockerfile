@@ -4,11 +4,7 @@ FROM node:current-bookworm-slim
 #FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
-<<<<<<< HEAD
 LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.3.5"
-=======
-LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.3.4"
->>>>>>> f45bb89c98b4d88f8a3b55e70e8425a69dbb4f57
 
 ##################################################
 # Install tools                                  #
@@ -76,4 +72,5 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
   npm install -g forever nodemon mocha supervisor
 #CMD ["forever", "start","--minUptime 1000 --spinSleepTime 1000 --max-old-space-size=128", "/usr/share/mydomoathome/app/mdah.js"]
 RUN cd /usr/share/mydomoathome/app/
-CMD ["forever", "/usr/share/mydomoathome/app/mdah.js"]
+#CMD ["forever", "/usr/share/mydomoathome/app/mdah.js"]
+CMD ["forever", "-c","node --harmony","/usr/share/mydomoathome/app/mdah.js"]
