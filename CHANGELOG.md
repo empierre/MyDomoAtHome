@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.6](https://github.com/empierre/MyDomoAtHome/compare/v0.3.5...v0.3.6) (2023-11-21)
+
+
+### Bug Fixes
+
+* upgrade winston from 3.9.0 to 3.11.0 ([e03f4c8](https://github.com/empierre/MyDomoAtHome/commit/e03f4c88d7b763b459ce20220431be018d49f384))
+
 ### [0.3.5](https://github.com/empierre/MyDomoAtHome/compare/v0.3.4...v0.3.5) (2023-11-14)
 
 ### [0.3.4](https://github.com/empierre/MyDomoAtHome/compare/v0.3.3...v0.3.4) (2023-11-14)
