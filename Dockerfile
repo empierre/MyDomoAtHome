@@ -1,10 +1,10 @@
-# DOCKER-VERSION 0.3.4
+# DOCKER-VERSION 0.3.6
 FROM node:current-bookworm-slim
 #FROM google/nodejs
 #FROM node:4.4-wheezy
 MAINTAINER  Emmanuel PIERRE epierre@e-nef.com
 USER root
-LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.3.5"
+LABEL Description="This image is used to start the MyDomoAtHome executable" Vendor="Domoticz" Version="0.3.6"
 
 ##################################################
 # Install tools                                  #
@@ -55,8 +55,8 @@ RUN apt-get update
 RUN apt-get install -y nodejs
 #RUN apt-get install -y npm
 RUN npm install -g npm@6.x
-RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.3.4.deb
-RUN dpkg --force-all -i node-mydomoathome-0.3.4.deb
+RUN wget http://www.e-nef.com/domoticz/mdah/node-mydomoathome-0.3.5.deb
+RUN dpkg --force-all -i node-mydomoathome-0.3.5.deb
 RUN mv /etc/mydomoathome/config.json /etc/mydomoathome/config.json.old
 VOLUME /etc/mydomoathome/
 

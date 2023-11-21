@@ -1638,7 +1638,7 @@ function getDeviceType(deviceId) {
 };
 
 function getDeviceSubType(deviceId) {
-    var url = getURL() + "?type=command&param=devices&rid=" + deviceId;
+    var url = getURL() + "?type=command&param=getdevices&rid=" + deviceId;
     logger.info(url);
     var res = requester('GET', url);
     if (res.statusCode!=200) {return({})};
