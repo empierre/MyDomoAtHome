@@ -1,12 +1,12 @@
 {
   "name": "mydomoathome",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "mydomoathome",
-      "version": "0.3.6",
+      "version": "0.3.7",
       "license": "GPL-2.0",
       "dependencies": {
         "basic-auth": "1.1.0",
