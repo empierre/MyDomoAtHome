@@ -2348,7 +2348,7 @@ app.get("/devices", auth, function (req, res) {
     res.type('json');
 	
 	var options = {
-		url: getURL(req) + "?type=devices&filter=utility&order=Name",
+		url: getURL(req) + "?type=command&param=getdevices&filter=utility&order=Name",
 		headers: {
 			'User-Agent': 'request'
 		}
@@ -2371,7 +2371,7 @@ app.get("/devices", auth, function (req, res) {
 	})
 
     var options = {
-        url: getURL(req) + "?type=devices&filter=all&used=true&order=Name",
+        url: getURL(req) + "?type=command&param=getdevices&filter=all&used=true&order=Name",
         headers: {
             'User-Agent': 'request'
         }
