@@ -23,7 +23,7 @@
     "node-gyp": "^11.0.0",
     "request": "^2.82.0",
     "sync-request": "3.0.1",
-    "underscore": "1.13.6",
+    "underscore": "1.13.7",
     "winston": "^3.12.0"
   },
   "devDependencies": {
