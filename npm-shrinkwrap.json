@@ -5792,21 +5792,22 @@
       "integrity": "sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A=="
     },
     "node_modules/multer": {
-      "version": "2.0.2",
-      "resolved": "https://registry.npmjs.org/multer/-/multer-2.0.2.tgz",
-      "integrity": "sha512-u7f2xaZ/UG8oLXHvtF/oWTRvT44p9ecwBBqTwgJVq0+4BW1g8OW01TyMEGWBHbyMOYVHXslaut7qEQ1meATXgw==",
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/multer/-/multer-2.1.1.tgz",
+      "integrity": "sha512-mo+QTzKlx8R7E5ylSXxWzGoXoZbOsRMpyitcht8By2KHvMbf3tjwosZ/Mu/XYU6UuJ3VZnODIrak5ZrPiPyB6A==",
       "license": "MIT",
       "dependencies": {
         "append-field": "^1.0.0",
         "busboy": "^1.6.0",
         "concat-stream": "^2.0.0",
-        "mkdirp": "^0.5.6",
-        "object-assign": "^4.1.1",
-        "type-is": "^1.6.18",
-        "xtend": "^4.0.2"
+        "type-is": "^1.6.18"
       },
       "engines": {
         "node": ">= 10.16.0"
+      },
+      "funding": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/express"
       }
     },
     "node_modules/multer/node_modules/concat-stream": {
@@ -6735,19 +6736,6 @@
         "statuses": "~2.0.2",
         "toidentifier": "~1.0.1"
       },
-      "engines": {
-        "node": ">= 0.8"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/express"
-      }
-    },
-    "node_modules/raw-body/node_modules/statuses": {
-      "version": "2.0.2",
-      "resolved": "https://registry.npmjs.org/statuses/-/statuses-2.0.2.tgz",
-      "integrity": "sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==",
-      "license": "MIT",
       "engines": {
         "node": ">= 0.8"
       },
@@ -9248,6 +9236,7 @@
       "version": "4.0.2",
       "resolved": "https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz",
       "integrity": "sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==",
+      "dev": true,
       "engines": {
         "node": ">=0.4"
       }
