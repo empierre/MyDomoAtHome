@@ -20,7 +20,7 @@
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
     "nconf": "^0.13.0",
-    "node-gyp": "^11.4.2",
+    "node-gyp": "^11.5.0",
     "request": "^2.82.0",
     "sync-request": "3.0.1",
     "underscore": "1.13.7",
