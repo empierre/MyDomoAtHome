@@ -14,13 +14,13 @@
         "cors": "^2.7.1",
         "ejs": "^3.1.10",
         "errorhandler": "^1.1.1",
-        "express": "^4.22.0",
+        "express": "^4.22.1",
         "express-session": "^1.18.2",
         "forever": "^4.0.3",
         "glob-parent": ">=5.1.2",
         "is-base64": "0.1.0",
         "method-override": "^3.0.0",
-        "minimatch": ">=10.0.3",
+        "minimatch": ">=10.1.1",
         "minimist": ">=1.2.6",
         "moment": "^2.30.1",
         "morgan": "^1.10.1",
@@ -30,7 +30,7 @@
         "request": "^2.82.0",
         "sync-request": "3.0.1",
         "underscore": "1.13.7",
-        "winston": "^3.18.3"
+        "winston": "^3.19.0"
       },
       "bin": {
         "mydomoathome": "bin/mydomoathome"
@@ -1115,15 +1115,6 @@
       }
     },
     "node_modules/body-parser/node_modules/statuses": {
-      "version": "2.0.2",
-      "resolved": "https://registry.npmjs.org/statuses/-/statuses-2.0.2.tgz",
-      "integrity": "sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==",
-      "license": "MIT",
-      "engines": {
-        "node": ">= 0.8"
-      }
-    },
-    "node_modules/brace-expansion": {
       "version": "2.0.2",
       "resolved": "https://registry.npmjs.org/statuses/-/statuses-2.0.2.tgz",
       "integrity": "sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==",
@@ -5783,19 +5774,23 @@
       }
     },
     "node_modules/morgan": {
-      "version": "1.10.1",
-      "resolved": "https://registry.npmjs.org/morgan/-/morgan-1.10.1.tgz",
-      "integrity": "sha512-223dMRJtI/l25dJKWpgij2cMtywuG/WiUKXdvwfbhGKBhy1puASqXwFzmWZ7+K73vUPoR7SS2Qz2cI/g9MKw0A==",
+      "version": "1.11.0",
+      "resolved": "https://registry.npmjs.org/morgan/-/morgan-1.11.0.tgz",
+      "integrity": "sha512-zSkVu3t18r39pw4ixfBKvfZi3y2UOqr7d4WYwcj3m8nXpEQK4rPO6GLzs/CExoRgmX3y9EjmmcXqv6jq0SK46g==",
       "license": "MIT",
       "dependencies": {
         "basic-auth": "~2.0.1",
         "debug": "2.6.9",
         "depd": "~2.0.0",
-        "on-finished": "~2.3.0",
+        "on-finished": "~2.4.1",
         "on-headers": "~1.1.0"
       },
       "engines": {
         "node": ">= 0.8.0"
+      },
+      "funding": {
+        "type": "opencollective",
+        "url": "https://opencollective.com/express"
       }
     },
     "node_modules/morgan/node_modules/basic-auth": {
@@ -5804,17 +5799,6 @@
       "integrity": "sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==",
       "dependencies": {
         "safe-buffer": "5.1.2"
-      },
-      "engines": {
-        "node": ">= 0.8"
-      }
-    },
-    "node_modules/morgan/node_modules/on-finished": {
-      "version": "2.3.0",
-      "resolved": "https://registry.npmjs.org/on-finished/-/on-finished-2.3.0.tgz",
-      "integrity": "sha512-ikqdkGAAyf/X/gPhXGvfgAytDZtDbr+bkNUJ0N9h5MI/dmdgCs3l6hoHrcUv41sRKew3jIwrp4qQDXiK99Utww==",
-      "dependencies": {
-        "ee-first": "1.1.1"
       },
       "engines": {
         "node": ">= 0.8"
@@ -6777,19 +6761,6 @@
         "setprototypeof": "~1.2.0",
         "statuses": "~2.0.2",
         "toidentifier": "~1.0.1"
-      },
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/express"
-      }
-    },
-    "node_modules/raw-body/node_modules/statuses": {
-      "version": "2.0.2",
-      "resolved": "https://registry.npmjs.org/statuses/-/statuses-2.0.2.tgz",
-      "integrity": "sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==",
-      "license": "MIT",
-      "engines": {
-        "node": ">= 0.8"
       },
       "funding": {
         "type": "opencollective",
